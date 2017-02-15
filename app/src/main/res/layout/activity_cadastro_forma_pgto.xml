@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_cadastro_forma_pgto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.forcavenda.Telas.Cadastros.CadastroFormaPgtoActivity">
+
+    <LinearLayout
+        android:id="@+id/linear1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/txt_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:background="@color/Branco"
+            android:hint="Forma de pagamento"
+            app:layout_scrollFlags="scroll|enterAlways" />
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/chk_ativo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ativo" />
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_salvar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/linear1"
+        app:layout_anchorGravity="bottom|right|end"
+        android:src="@drawable/ic_done_white_24dp"
+        app:backgroundTint="@android:color/holo_blue_light">
+    </android.support.design.widget.FloatingActionButton>
+
+
+
+
+</android.support.design.widget.CoordinatorLayout>

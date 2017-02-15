@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Força de Vendas</string>
+    <string name="erro_login">Erro ao autenticar</string>
+    <string name="tela_cadastrar_usuario">Cadastrar usuário</string>
+    <string name="tela_cadastrar_cliente">Cadastrar cliente</string>
+    <string name="tela_cadastrar_forma_pgto">Cadastrar forma de pagamento</string>
+    <string name="tela_cadastrar_produto">Cadastrar produto</string>
+    <string name="tela_cadastrar_pedido">Cadastrar pedido</string>
+    <string name="tela_lista_cliente">Lista de clientes</string>
+    <string name="itens_do_pedido">Itens do pedido</string>
+    <string name="adicionar">Adicionar</string>
+    <string name="novo">Novo</string>
+    <string name="cliente">Cliente</string>
+    <string name="forma_de_pagamento">Forma de Pagamento</string>
+    <string name="tela_lista_produto">Lista de produtos</string>
+    <string name="tela_lista_formapgto">Formas de pagamento</string>
+    <string name="title_activity_principal2">Principal2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>

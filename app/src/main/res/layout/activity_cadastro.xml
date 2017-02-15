@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_cadastro"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.forcavenda.Telas.Cadastros.CadastroUsuarioActivity">
+
+
+    <TextView
+        android:id="@+id/lbl_usuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="Email" />
+
+    <EditText
+        android:id="@+id/txt_usuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/lbl_usuario"
+        android:background="@color/FundoTxt"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/txt_senha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/txt_usuario"
+        android:layout_marginTop="40dp"
+        android:background="@color/FundoTxt"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/lbl_senha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/txt_usuario"
+        android:layout_marginTop="22dp"
+        android:text="Senha" />
+
+    <Button
+        android:id="@+id/btn_cadastro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/txt_senha"
+        android:layout_marginTop="18dp"
+        android:text="Cadastrar" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center|bottom"
+        android:visibility="gone"
+        android:layout_below="@+id/btn_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp" />
+
+</RelativeLayout>
