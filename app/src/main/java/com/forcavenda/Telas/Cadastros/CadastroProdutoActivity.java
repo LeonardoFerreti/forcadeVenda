@@ -1,6 +1,7 @@
 package com.forcavenda.Telas.Cadastros;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ public class CadastroProdutoActivity extends AppCompatActivity {
     EditText txt_nome;
     EditText txt_preco;
     android.support.v7.widget.AppCompatCheckBox checkBox;
-    Button btn_salvar;
+    FloatingActionButton btn_salvar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class CadastroProdutoActivity extends AppCompatActivity {
         txt_nome = (EditText) findViewById(R.id.txt_nome);
         txt_preco = (EditText) findViewById(R.id.txt_preco);
         checkBox = (android.support.v7.widget.AppCompatCheckBox) findViewById(R.id.chk_ativo);
-        btn_salvar = (Button) findViewById(R.id.btn_salvar);
+        btn_salvar = (FloatingActionButton) findViewById(R.id.btn_salvar);
         produto = (Produto) getIntent().getSerializableExtra("produto");
 
         if (produto != null) {

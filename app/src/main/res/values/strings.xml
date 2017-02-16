@@ -3,7 +3,7 @@
     <string name="erro_login">Erro ao autenticar</string>
     <string name="tela_cadastrar_usuario">Cadastrar usuário</string>
     <string name="tela_cadastrar_cliente">Cadastrar cliente</string>
-    <string name="tela_cadastrar_forma_pgto">Cadastrar forma de pagamento</string>
+    <string name="tela_cadastrar_forma_pgto">Nova forma de pagamento</string>
     <string name="tela_cadastrar_produto">Cadastrar produto</string>
     <string name="tela_cadastrar_pedido">Cadastrar pedido</string>
     <string name="tela_lista_cliente">Lista de clientes</string>
@@ -20,4 +20,17 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="hint_nome_produto">Nome do produto</string>
+    <string name="hint_preco_produto">Preço</string>
+    <string name="hint_forma_pgto">Forma de pagamento</string>
+    <string name="hint_nome_cliente">Nome</string>
+    <string name="hint_email_cliente">E-mail</string>
+    <string name="hint_cep_cliente">CEP</string>
+    <string name="hint_rua_cliente">Rua</string>
+    <string name="hint_numero_rua_cliente">Número da rua</string>
+    <string name="hint_complemento_endereco_cliente">Complemento</string>
+    <string name="hint_referencia_endereco_cliente">Ponto de referência</string>
+    <string name="hint_ramal_cliente">Ramal</string>
+    <string name="hint_telefone_cliente">Telefone</string>
+    <string name="hint_ddd_cliente">DDD</string>
 </resources>

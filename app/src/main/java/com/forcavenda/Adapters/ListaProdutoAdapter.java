@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.Produto;
+import com.forcavenda.R;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
 public class ListaProdutoAdapter extends ArrayAdapter<Produto> {
 
     public ListaProdutoAdapter(Context context, List<Produto> produtos) {
-        super(context, android.R.layout.simple_list_item_1, produtos);
+        super(context,  R.layout.layout_lista, produtos);
     }
 
     @Override
@@ -34,10 +35,10 @@ public class ListaProdutoAdapter extends ArrayAdapter<Produto> {
     private View initView(int position, View convertView) {
         if (convertView == null)
             convertView = View.inflate(getContext(),
-                    android.R.layout.simple_list_item_1,
+                    R.layout.layout_lista,
                     null);
-        TextView tvText1 = (TextView) convertView.findViewById(android.R.id.text1);
-        tvText1.setText(getItem(position).getNome());
+        TextView txt1 = (TextView) convertView.findViewById(R.id.txt_1);
+        txt1.setText(getItem(position).getNome());
         return convertView;
     }
 }

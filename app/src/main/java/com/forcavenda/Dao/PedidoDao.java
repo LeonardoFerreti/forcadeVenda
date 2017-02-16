@@ -56,19 +56,18 @@ public class PedidoDao {
         //Recupera a instancia do Banco de dados da aplicação
         final FirebaseDatabase banco = FirebaseDatabase.getInstance();
 
-        DatabaseReference refContadorPedido = banco.getReference("pedido").child("contadorPedido");
+        DatabaseReference refContadorPedido = banco.getReference("contadores").child("contadorPedido");
 
         refContadorPedido.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData currentData) {
-                if (currentData.getValue() != null) {
-                    novoIdentificador = (Long) currentData.getValue() + 1;
-                    banco.getReference("pedido").child(pedido_insupd.getChave()).child("idPedido").setValue(novoIdentificador);
-                    currentData.setValue(novoIdentificador);
+                if (currentData.getValue() == null) {
+                    novoIdentificador = Long.valueOf(1);
                 } else {
-                    currentData.setValue(1);
-                    novoIdentificador = (Long) currentData.getValue();
+                    novoIdentificador = (Long) currentData.getValue() + 1;
                 }
+                currentData.setValue(novoIdentificador);
+                banco.getReference("pedido").child(pedido_insupd.getChave()).child("idPedido").setValue(novoIdentificador);
 
                 return Transaction.success(currentData);
             }

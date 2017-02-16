@@ -32,7 +32,7 @@
         app:layout_anchor="@id/lista"
         app:layout_anchorGravity="bottom|right|end"
         android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/Branco">
+        app:backgroundTint="@color/colorAccent">
     </android.support.design.widget.FloatingActionButton>
 
 </android.support.design.widget.CoordinatorLayout>

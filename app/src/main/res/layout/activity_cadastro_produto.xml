@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_cadastro_produto"
     android:layout_width="match_parent"
@@ -9,31 +10,55 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:fitsSystemWindows="true"
     tools:context="com.forcavenda.Telas.Cadastros.CadastroProdutoActivity">
 
-    <EditText
-        android:id="@+id/txt_nome"
+    <LinearLayout
+        android:id="@+id/linear1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nome do produto" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/txt_preco"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Preço"
-        android:inputType="numberDecimal" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <android.support.v7.widget.AppCompatCheckBox
-        android:id="@+id/chk_ativo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ativo" />
+            <EditText
+                android:id="@+id/txt_nome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_nome_produto" />
 
-    <Button
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_preco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/txt_preco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_preco_produto"
+                android:inputType="numberDecimal" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/chk_ativo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ativo" />
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_salvar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:text="Salvar" />
-</LinearLayout>
+        android:src="@drawable/ic_done_white_24dp"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:layout_anchor="@id/linear1"
+        app:layout_anchorGravity="bottom|right|end"></android.support.design.widget.FloatingActionButton>
+
+</android.support.design.widget.CoordinatorLayout>

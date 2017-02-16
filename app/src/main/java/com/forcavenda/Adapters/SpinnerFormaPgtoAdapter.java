@@ -19,7 +19,7 @@ import java.util.List;
 public class SpinnerFormaPgtoAdapter extends ArrayAdapter<FormaPgto> {
 
     public SpinnerFormaPgtoAdapter(Context context, List<FormaPgto> formaPgtos) {
-        super(context, android.R.layout.simple_spinner_item, formaPgtos);
+        super(context, R.layout.layout_spinner, formaPgtos);
     }
 
     @Override
@@ -35,9 +35,9 @@ public class SpinnerFormaPgtoAdapter extends ArrayAdapter<FormaPgto> {
     private View initView(int position, View convertView) {
         if (convertView == null)
             convertView = View.inflate(getContext(),
-                    android.R.layout.simple_spinner_dropdown_item,
+                    R.layout.layout_spinner,
                     null);
-        TextView tvText1 = (TextView) convertView.findViewById(android.R.id.text1);
+        TextView tvText1 = (TextView) convertView.findViewById(R.id.txt_1);
         tvText1.setText(getItem(position).getNome());
 
         return convertView;

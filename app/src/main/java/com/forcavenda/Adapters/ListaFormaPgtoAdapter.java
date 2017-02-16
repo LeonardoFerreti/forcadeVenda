@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.forcavenda.Entidades.FormaPgto;
+import com.forcavenda.R;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 public class ListaFormaPgtoAdapter extends ArrayAdapter<FormaPgto> {
 
     public ListaFormaPgtoAdapter(Context context, List<FormaPgto> formaPgtos) {
-        super(context, android.R.layout.simple_list_item_1, formaPgtos);
+        super(context, R.layout.layout_lista, formaPgtos);
     }
 
     @Override
@@ -33,9 +34,9 @@ public class ListaFormaPgtoAdapter extends ArrayAdapter<FormaPgto> {
     private View initView(int position, View convertView) {
         if (convertView == null)
             convertView = View.inflate(getContext(),
-                    android.R.layout.simple_list_item_1,
+                    R.layout.layout_lista,
                     null);
-        TextView tvText1 = (TextView) convertView.findViewById(android.R.id.text1);
+        TextView tvText1 = (TextView) convertView.findViewById(R.id.txt_1);
         tvText1.setText(getItem(position).getNome());
         return convertView;
     }

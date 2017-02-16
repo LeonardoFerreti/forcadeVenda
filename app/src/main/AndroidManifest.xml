@@ -14,6 +14,7 @@
         <activity
             android:name=".Telas.Cadastros.CadastroClienteActivity"
             android:label="@string/tela_cadastrar_cliente"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".Telas.Listas.ListaClienteActivity" />
         <activity
             android:name=".Telas.LoginActivity"
@@ -31,14 +32,17 @@
         <activity
             android:name=".Telas.Cadastros.CadastroFormaPgtoActivity"
             android:label="@string/tela_cadastrar_forma_pgto"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".Telas.Listas.ListaFormaPgtoActivity" />
         <activity
             android:name=".Telas.Cadastros.CadastroProdutoActivity"
             android:label="@string/tela_cadastrar_produto"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".Telas.PrincipalActivity" />
         <activity
             android:name=".Telas.Cadastros.CadastroPedidoActivity"
             android:label="@string/tela_cadastrar_pedido"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".Telas.Listas.ListaProdutoActivity" />
         <activity
             android:name=".Telas.PrincipalActivity"

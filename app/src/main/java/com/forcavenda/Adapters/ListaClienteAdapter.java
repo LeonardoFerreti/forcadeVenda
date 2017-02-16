@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.forcavenda.Entidades.Cliente;
+import com.forcavenda.R;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 public class ListaClienteAdapter extends ArrayAdapter<Cliente> {
 
     public ListaClienteAdapter(Context context, List<Cliente> clientes) {
-        super(context, android.R.layout.simple_list_item_1, clientes);
+        super(context, R.layout.layout_lista, clientes);
     }
 
     @Override
@@ -33,9 +34,9 @@ public class ListaClienteAdapter extends ArrayAdapter<Cliente> {
     private View initView(int position, View convertView) {
         if (convertView == null)
             convertView = View.inflate(getContext(),
-                    android.R.layout.simple_list_item_1,
+                    R.layout.layout_lista,
                     null);
-        TextView tvText1 = (TextView) convertView.findViewById(android.R.id.text1);
+        TextView tvText1 = (TextView) convertView.findViewById(R.id.txt_1);
         tvText1.setText(getItem(position).getNome());
         return convertView;
     }
