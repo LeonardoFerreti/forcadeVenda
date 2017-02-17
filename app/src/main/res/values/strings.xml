@@ -33,4 +33,7 @@
     <string name="hint_ramal_cliente">Ramal</string>
     <string name="hint_telefone_cliente">Telefone</string>
     <string name="hint_ddd_cliente">DDD</string>
+    <string name="hint_senha_email">Senha</string>
+    <string name="tela_reset_senha_usuario">Esqueci a senha</string>
+    <string name="info_reset_senha">Um link será enviado para seu e-mail para que você defina sua nova senha.</string>
 </resources>

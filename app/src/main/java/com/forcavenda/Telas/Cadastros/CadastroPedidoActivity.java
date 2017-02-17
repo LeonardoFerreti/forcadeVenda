@@ -222,7 +222,6 @@ public class CadastroPedidoActivity extends AppCompatActivity {
             }
         });
 
-
         btn_Salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

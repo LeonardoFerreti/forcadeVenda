@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView txt_Senha;
     private Button btnlogin;
     private Button btnCadastrar;
+    private Button btnEsqueci;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,16 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         btnlogin = (Button) findViewById(R.id.btn_login);
         btnCadastrar = (Button) findViewById(R.id.btn_cadastrar);
+        btnEsqueci= (Button) findViewById(R.id.btn_esqueci);
+
+        btnEsqueci.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, ResetSenhaUsuarioActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override

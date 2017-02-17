@@ -14,8 +14,8 @@
         <activity
             android:name=".Telas.Cadastros.CadastroClienteActivity"
             android:label="@string/tela_cadastrar_cliente"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".Telas.Listas.ListaClienteActivity" />
+            android:parentActivityName=".Telas.Listas.ListaClienteActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Telas.LoginActivity"
             android:label="@string/app_name">
@@ -32,18 +32,18 @@
         <activity
             android:name=".Telas.Cadastros.CadastroFormaPgtoActivity"
             android:label="@string/tela_cadastrar_forma_pgto"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".Telas.Listas.ListaFormaPgtoActivity" />
+            android:parentActivityName=".Telas.Listas.ListaFormaPgtoActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Telas.Cadastros.CadastroProdutoActivity"
             android:label="@string/tela_cadastrar_produto"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".Telas.PrincipalActivity" />
+            android:parentActivityName=".Telas.PrincipalActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Telas.Cadastros.CadastroPedidoActivity"
             android:label="@string/tela_cadastrar_pedido"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".Telas.Listas.ListaProdutoActivity" />
+            android:parentActivityName=".Telas.Listas.ListaProdutoActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Telas.PrincipalActivity"
             android:label="@string/app_name" />
@@ -59,6 +59,10 @@
             android:name=".Telas.Listas.ListaFormaPgtoActivity"
             android:label="@string/tela_lista_formapgto"
             android:parentActivityName=".Telas.PrincipalActivity" />
+        <activity
+            android:name=".Telas.ResetSenhaUsuarioActivity"
+            android:label="@string/tela_reset_senha_usuario"
+            android:parentActivityName=".Telas.LoginActivity"></activity>
     </application>
 
 </manifest>

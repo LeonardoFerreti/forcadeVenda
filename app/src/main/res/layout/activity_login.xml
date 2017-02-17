@@ -10,43 +10,33 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.forcavenda.Telas.LoginActivity">
 
-    <TextView
-        android:id="@+id/lbl_usuario"
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_usuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/txt_usuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_email_cliente"
+            android:inputType="textEmailAddress" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_senha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/input_usuario">
 
-        android:text="Email" />
-
-    <EditText
-        android:id="@+id/txt_usuario"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/lbl_usuario"
-        android:background="@color/FundoTxt"
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/txt_senha"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/txt_usuario"
-        android:layout_marginTop="40dp"
-        android:background="@color/FundoTxt"
-        android:inputType="textPassword" />
-
-    <TextView
-        android:id="@+id/lbl_senha"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/txt_usuario"
-        android:layout_marginTop="22dp"
-        android:text="Senha" />
+        <EditText
+            android:id="@+id/txt_senha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_senha_email"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/btn_login"
@@ -54,9 +44,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/txt_senha"
+        android:layout_below="@+id/input_senha"
         android:layout_marginTop="18dp"
-        android:text="Entrar" />
+        android:background="@color/colorPrimary"
+        android:text="Entrar"
+        android:textColor="@color/Branco" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -71,22 +63,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="Esqueci a senha" />
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:text="Esqueci a senha"
+            android:textColor="@color/Branco" />
 
         <Button
             android:id="@+id/btn_cadastrar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="Cadastrar conta" />
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:text="Cadastrar conta"
+            android:textColor="@color/Branco" />
     </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_gravity="center|bottom"
-        android:visibility="gone"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_gravity="center|bottom"
+        android:visibility="gone" />
 </RelativeLayout>
