@@ -1,8 +1,12 @@
 package com.forcavenda;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
+import android.view.WindowManager;
 
 /**
  * Created by Leo on 14/02/2017.
@@ -22,5 +26,17 @@ public class Util {
         return conectado;
     }
 
+    public static ProgressDialog CriaProgressDialog(Context context) {
+        ProgressDialog dialog = new ProgressDialog(context);
+        try {
+            dialog.show();
+        } catch (WindowManager.BadTokenException e) {
+            Log.i("Erro: ", e.getMessage().toString());
+        }
+        dialog.setCancelable(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.progress_dialog);
+        return dialog;
+    }
 
 }

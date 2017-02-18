@@ -34,7 +34,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CadastroPedidoActivity extends AppCompatActivity {
 
@@ -228,15 +230,19 @@ public class CadastroPedidoActivity extends AppCompatActivity {
                 DatabaseReference tabPedido = banco.getReference("pedido");
                 Cliente cliente;
                 FormaPgto formaPgto;
+                List<ItemPedido> itensPedido;
+
                 cliente = adapterCliente.getItembyName(txt_cliente.getText().toString().trim());
                 formaPgto = (FormaPgto) cboFormaPgto.getItemAtPosition(cboFormaPgto.getSelectedItemPosition());
+                itensPedido = listaitemPedidos;
+
                 final Pedido pedido = new Pedido(Long.valueOf(String.valueOf(0)), "", cliente, formaPgto, itensVendaAdapter.getItems(),
                         Double.valueOf(String.valueOf(50)), Double.valueOf(String.valueOf(0)), Double.valueOf(String.valueOf(50)), false);
 
-                final Pedido novo_pedido = InsereNovoPedido(pedido);
+                final Pedido novo_pedido = InsereNovoPedido(pedido,cliente,formaPgto,itensPedido);
 
                 PedidoDao pedidoDao = new PedidoDao(getApplicationContext(), novo_pedido);
-                pedidoDao.IncluirIdPedido();
+                pedidoDao.IncluirIdPedido(CadastroPedidoActivity.this);
 
             }
         });
@@ -244,7 +250,7 @@ public class CadastroPedidoActivity extends AppCompatActivity {
 
 
     //Rotina responsavel por incluir um cliente
-    public Pedido InsereNovoPedido(Pedido pedido_ins) {
+    public Pedido InsereNovoPedido(Pedido pedido_ins,Cliente cliente, FormaPgto formaPgto, List<ItemPedido> itensPedido) {
         //Recupera a instancia do Banco de dados da aplicação
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         //Recupera a raiz do nó do banco de dados
@@ -257,6 +263,17 @@ public class CadastroPedidoActivity extends AppCompatActivity {
 
         PedidoDao pedidoDao = new PedidoDao(getApplicationContext(), pedido);
         DatabaseReference refNovoPedido = pedidoDao.IncluirNoRegistro(ref, chave, Pedido.MapPedido(pedido));
+
+
+        Map<String, Object> objDao = new HashMap<>();
+        objDao.put("cliente", cliente);
+        refNovoPedido.updateChildren(objDao);
+
+        objDao = new HashMap<>();
+        objDao.put("formaPgto", formaPgto);
+        refNovoPedido.updateChildren(objDao);
+
+
 
         return pedido;
     }
