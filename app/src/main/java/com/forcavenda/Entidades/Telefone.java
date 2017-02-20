@@ -10,7 +10,7 @@ import java.util.Map;
 public class Telefone implements Serializable {
 
     //Parametros
-    private String ddd;
+
     private String numero;
     private String ramal;
 
@@ -19,15 +19,9 @@ public class Telefone implements Serializable {
     }
 
     //Construtor com os parametros
-    public Telefone(String ddd, String numero, String ramal) {
-        this.ddd = ddd;
+    public Telefone(String numero, String ramal) {
         this.numero = numero;
         this.ramal = ramal;
-    }
-
-    //retorna o DDD
-    public String getDdd() {
-        return ddd;
     }
 
     //Retorna o numero do telefone
@@ -43,7 +37,6 @@ public class Telefone implements Serializable {
     //Retorna um HasMap com a propriedades e os valores de um objeto telefone
     public static Map<String, Object> MapTelefone(Telefone telefone) {
         HashMap<String, Object> resultado = new HashMap<>();
-        resultado.put("ddd", telefone.getDdd());
         resultado.put("numero", telefone.getNumero());
         resultado.put("ramal", telefone.getRamal());
         return resultado;

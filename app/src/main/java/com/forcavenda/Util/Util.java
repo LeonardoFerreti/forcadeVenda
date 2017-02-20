@@ -1,4 +1,4 @@
-package com.forcavenda;
+package com.forcavenda.Util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.WindowManager;
+
+import com.forcavenda.R;
 
 /**
  * Created by Leo on 14/02/2017.

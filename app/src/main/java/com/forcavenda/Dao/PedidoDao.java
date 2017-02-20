@@ -2,15 +2,10 @@ package com.forcavenda.Dao;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.forcavenda.Entidades.Cliente;
-import com.forcavenda.Entidades.FormaPgto;
-import com.forcavenda.Entidades.ItemPedido;
 import com.forcavenda.Entidades.Pedido;
-import com.forcavenda.Util;
+import com.forcavenda.Util.Util;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,13 +13,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Leo on 09/02/2017.

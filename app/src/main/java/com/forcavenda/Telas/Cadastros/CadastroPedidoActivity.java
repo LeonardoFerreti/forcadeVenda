@@ -23,6 +23,7 @@ import com.forcavenda.Entidades.FormaPgto;
 import com.forcavenda.Entidades.ItemPedido;
 import com.forcavenda.Entidades.Pedido;
 import com.forcavenda.Entidades.Produto;
+import com.forcavenda.Enums.Status;
 import com.forcavenda.R;
 import com.forcavenda.Telas.PrincipalActivity;
 import com.google.firebase.database.ChildEventListener;
@@ -259,7 +260,7 @@ public class CadastroPedidoActivity extends AppCompatActivity {
         String chave = ref.child("pedido").push().getKey();
         //Mapeia o objeto pedido
         Pedido pedido = new Pedido(chave, pedido_ins.getIdPedido(), pedido_ins.getValorTotal(), pedido_ins.getDesconto(),
-                pedido_ins.getValorPago(), pedido_ins.getOnline());
+                pedido_ins.getValorPago(), pedido_ins.getOnline(), Status.Pendente);
 
         PedidoDao pedidoDao = new PedidoDao(getApplicationContext(), pedido);
         DatabaseReference refNovoPedido = pedidoDao.IncluirNoRegistro(ref, chave, Pedido.MapPedido(pedido));
@@ -272,6 +273,15 @@ public class CadastroPedidoActivity extends AppCompatActivity {
         objDao = new HashMap<>();
         objDao.put("formaPgto", formaPgto);
         refNovoPedido.updateChildren(objDao);
+
+        for (ItemPedido item : itensPedido) {
+            //captura o identificador do item do pedido
+            String chave_item = refNovoPedido.child("itens").push().getKey();
+
+            objDao = new HashMap<>();
+            objDao.put("item", item);
+            refNovoPedido.child("itens").child(chave_item).updateChildren(objDao);
+        }
 
 
 

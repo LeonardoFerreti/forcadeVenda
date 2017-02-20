@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.forcavenda.R;
 import com.forcavenda.Telas.Cadastros.CadastroUsuarioActivity;
-import com.forcavenda.Util;
+import com.forcavenda.Util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

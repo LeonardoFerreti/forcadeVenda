@@ -10,9 +10,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.forcavenda.Dao.ClienteDao;
 import com.forcavenda.Dao.EnderecoDao;
@@ -22,6 +24,8 @@ import com.forcavenda.Entidades.Endereco;
 import com.forcavenda.Entidades.Telefone;
 import com.forcavenda.R;
 import com.forcavenda.Telas.Listas.ListaClienteActivity;
+import com.forcavenda.Util.Mask;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.okhttp.Callback;
@@ -38,11 +42,11 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
     private DatabaseReference ref; //Instancia uma variavel para recuperar a referencia do nó
     private OkHttpClient client = new OkHttpClient();
 
-    TextView txt_rua;
-    TextView txt_numero;
-    TextView txt_complemento;
-    TextView txt_referencia;
-    TextView txt_cep;
+    EditText txt_rua;
+    EditText txt_numero;
+    EditText txt_complemento;
+    EditText txt_referencia;
+    EditText txt_cep;
     ProgressBar progressBar;
 
     @Override
@@ -57,23 +61,25 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
         ref = database.getReference();
 
         //Dados do cliente
-        final TextView txt_nome = (TextView) findViewById(R.id.txt_nome);
-        final TextView txt_email = (TextView) findViewById(R.id.txt_email);
+        final EditText txt_nome = (EditText) findViewById(R.id.txt_nome);
+        final EditText txt_email = (EditText) findViewById(R.id.txt_email);
 
         //Dados do endereço do cliente
-        txt_rua = (TextView) findViewById(R.id.txt_rua);
-        txt_numero = (TextView) findViewById(R.id.txt_numero_endereco);
-        txt_complemento = (TextView) findViewById(R.id.txt_complemento);
-        txt_referencia = (TextView) findViewById(R.id.txt_referencia);
-        txt_cep = (TextView) findViewById(R.id.txt_cep);
+        txt_rua = (EditText) findViewById(R.id.txt_rua);
+        txt_numero = (EditText) findViewById(R.id.txt_numero_endereco);
+        txt_complemento = (EditText) findViewById(R.id.txt_complemento);
+        txt_referencia = (EditText) findViewById(R.id.txt_referencia);
+        txt_cep = (EditText) findViewById(R.id.txt_cep);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         txt_cep.addTextChangedListener(this);
 
         //Dados do telefone do cliente
-        final TextView txt_ddd = (TextView) findViewById(R.id.txt_ddd);
-        final TextView txt_numero_telefone = (TextView) findViewById(R.id.txt_telefone);
-        final TextView txt_ramal = (TextView) findViewById(R.id.txt_ramal);
+        final EditText txt_numero_telefone = (EditText) findViewById(R.id.txt_telefone);
+        final EditText txt_ramal = (EditText) findViewById(R.id.txt_ramal);
+
+        txt_numero_telefone.addTextChangedListener(Mask.insert("(##)#####-####", txt_numero_telefone));
+
 
         //recupera o botão salvar
         FloatingActionButton btn_salvar = (FloatingActionButton) findViewById(R.id.btn_salvar);
@@ -88,10 +94,9 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
                 Endereco endereco = new Endereco(txt_rua.getText().toString().trim(), txt_numero.getText().toString().trim(), txt_complemento.getText().toString().trim(),
                         txt_cep.getText().toString(), txt_referencia.getText().toString().trim());
 
-
                 //ArrayList<Telefone> telefones = new ArrayList<Telefone>();
                 //telefones.add(new Telefone(txt_ddd.getText().toString().trim(), txt_numero_telefone.getText().toString().trim(), txt_ramal.getText().toString()));
-                Telefone telefone = new Telefone(txt_ddd.getText().toString().trim(), txt_numero_telefone.getText().toString().trim(), txt_ramal.getText().toString());
+                Telefone telefone = new Telefone(txt_numero_telefone.getText().toString().trim(), txt_ramal.getText().toString());
 
 
                 Cliente cliente = new Cliente("", txt_nome.getText().toString().trim(), txt_email.getText().toString().trim(), endereco, telefone);
@@ -148,7 +153,12 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
     @Override
     public void afterTextChanged(Editable s) {
 
-        String cep = String.valueOf(s);
+        String cep = String.valueOf(txt_cep.getText().toString().trim());
+
+        if (cep.length() == 8) {
+            cep = cep.substring(0, 5) + "-" + cep.substring(5, 8);
+            txt_cep.setText(cep);
+        }
 
         if (cep.length() == 9) {
             progressBar.setVisibility(View.VISIBLE);
@@ -176,9 +186,7 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
                                 progressBar.setVisibility(View.GONE);
-
                             }
                         });
                     }

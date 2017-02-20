@@ -10,51 +10,71 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.forcavenda.Telas.Cadastros.CadastroUsuarioActivity">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_usuario"
+    <!--<android.support.design.widget.TextInputLayout-->
+    <!--android:id="@+id/input_usuario"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <!--<EditText-->
+    <!--android:id="@+id/txt_usuario"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:hint="@string/hint_email_cliente"-->
+    <!--android:inputType="textEmailAddress" />-->
+    <!--</android.support.design.widget.TextInputLayout>-->
+
+    <!--<android.support.design.widget.TextInputLayout-->
+    <!--android:id="@+id/input_senha"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/input_usuario">-->
+
+    <!--<EditText-->
+    <!--android:id="@+id/txt_senha"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:hint="@string/hint_senha_email"-->
+    <!--android:inputType="textPassword" />-->
+    <!--</android.support.design.widget.TextInputLayout>-->
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/txt_usuario"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/linear_cadastro"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:hint="@string/hint_email_cliente" />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_height="match_parent">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_senha"
-        android:layout_below="@+id/input_usuario"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/txt_senha"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:hint="@string/hint_senha_email" />
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/btn_cadastro"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/Branco"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/input_senha"
-        android:layout_marginTop="18dp"
-        android:text="Cadastrar" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center|bottom"
-        android:visibility="gone"
-        android:layout_below="@+id/btn_login"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp" />
-
+            <LinearLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+            <Button
+                android:id="@+id/btn_cadastro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/container"
+                android:layout_marginTop="18dp"
+                android:background="@color/colorPrimary"
+                android:text="Cadastrar"
+                android:textColor="@color/Branco" />
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/btn_login"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center|bottom"
+                android:layout_marginTop="14dp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
+
+
+

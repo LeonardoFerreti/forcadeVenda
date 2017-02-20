@@ -1,5 +1,7 @@
 package com.forcavenda.Entidades;
 
+import com.forcavenda.Enums.Status;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,14 @@ public class Pedido implements Serializable {
     //Atributos
     private Long idPedido;
     private String chave;
+    private Cliente cliente;
+    private FormaPgto formaPgto;
+    private List<ItemPedido> listaItens;
+    private Double valorTotal;
+    private Double desconto;
+    private Double valorPago;
+
+    private Status status;
 
     public void setChave(String chave) {
         this.chave = chave;
@@ -46,21 +56,12 @@ public class Pedido implements Serializable {
         this.online = online;
     }
 
-    private Cliente cliente;
-    private FormaPgto formaPgto;
-    private List<ItemPedido> listaItens;
-    private Double valorTotal;
-    private Double desconto;
-    private Double valorPago;
-
-
     //retorna se o pedido foi feito pelo Cliente(true), ou não
     public Boolean getOnline() {
         return online;
     }
 
     private Boolean online;
-
 
     //retorna a chave gerada automaticamente(GUID)
     public String getChave() {
@@ -106,6 +107,11 @@ public class Pedido implements Serializable {
         return valorPago;
     }
 
+    //retorna o status do pedido
+    public Status getStatus() {
+        return status;
+    }
+
     //Construtor padrão
     public Pedido() {
     }
@@ -124,13 +130,14 @@ public class Pedido implements Serializable {
     }
 
     //Construtor com os parametros
-    public Pedido(String chave, Long idPedido, Double valorTotal, Double desconto, Double valorPago, Boolean online) {
+    public Pedido(String chave, Long idPedido, Double valorTotal, Double desconto, Double valorPago, Boolean online,Status status) {
         this.chave = chave;
         this.idPedido = idPedido;
         this.valorTotal = valorTotal;
         this.desconto = desconto;
         this.valorPago = valorPago;
         this.online = online;
+        this.status = status;
     }
 
     //retorna um HasMap com as propriedades e valores de um objeto Cliente
@@ -142,7 +149,7 @@ public class Pedido implements Serializable {
         resultado.put("desconto", pedido.getDesconto());
         resultado.put("valorPago", pedido.getValorPago());
         resultado.put("online", pedido.getOnline());
+        resultado.put("status", pedido.getStatus());
         return resultado;
     }
-
 }
