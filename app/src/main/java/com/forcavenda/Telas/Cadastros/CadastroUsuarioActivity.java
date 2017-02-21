@@ -12,6 +12,7 @@ import android.support.annotation.StringDef;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -36,13 +37,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CadastroUsuarioActivity extends FragmentActivity {
+public class CadastroUsuarioActivity extends AppCompatActivity {
     private Button btnCadastrar;
     TextInputLayout input_email;
     TextInputLayout input_senha;
@@ -92,8 +94,15 @@ public class CadastroUsuarioActivity extends FragmentActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (!task.isSuccessful()) {
-                                            Toast.makeText(CadastroUsuarioActivity.this, "Cadastro de usuário falhou:" + task.getException(),
-                                                    Toast.LENGTH_SHORT).show();
+
+                                            if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                                Snackbar.make(findViewById(android.R.id.content), "Esse e-mail já está sendo usado por outro usuário.", Snackbar.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(CadastroUsuarioActivity.this, "Cadastro de usuário falhou:" + task.getException(),
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                            progressBar.setVisibility(View.GONE);
+
                                         } else {
 //                                            String chaveUsuario = FirebaseAuth.getInstance().getCurrentUser().getUid();
 //
@@ -170,7 +179,7 @@ public class CadastroUsuarioActivity extends FragmentActivity {
             input_repita_senha.setError("");
         }
 
-        if (validado && (!txt_senha.getText().equals(txt_repita_senha.getText()))) {
+        if (validado && (!txt_senha.getText().toString().equals(txt_repita_senha.getText().toString()))) {
             validado = false;
             input_repita_senha.setError("Senhas não coincidem.");
         } else {

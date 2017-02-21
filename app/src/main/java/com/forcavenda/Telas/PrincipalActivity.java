@@ -45,6 +45,7 @@ public class PrincipalActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //se nao foi encontrado um valor valido para o email, entao insere o cliente com os dados do usuario atual
                 if (dataSnapshot.getValue() == null) {
+                    Log.i("cliente-usuario:","Cliente ainda não cadastrado, será cadastrado e vinculado ao usuário.");
                     //Gera um identificador para o cliente
                     String chave = ref.child("cliente").push().getKey();
 
@@ -66,9 +67,10 @@ public class PrincipalActivity extends AppCompatActivity {
                     // admin que cadastrou, entao usuario completa seu cadastro.)
                     if (cliente.getId_usuario() == null || cliente.getId_usuario().equals("")) {
                         ref.child("cliente").child(cliente.getId()).child("id_usuario").setValue(user.getUid());
+                        Log.i("cliente-usuario:","Email já cadastrado anteriormente, vinculando usuário.");
+                    } else {
+                        Log.i("cliente-usuario:", "Email já vinculado ao usuário.");
                     }
-
-                    Toast.makeText(getApplicationContext(), "Email já cadastrado anteriormente, vinculando usuário...", Toast.LENGTH_SHORT).show();
                 }
             }
 
