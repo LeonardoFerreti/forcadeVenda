@@ -20,6 +20,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
@@ -44,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         btnlogin = (Button) findViewById(R.id.btn_login);
         btnCadastrar = (Button) findViewById(R.id.btn_cadastrar);
-        btnEsqueci= (Button) findViewById(R.id.btn_esqueci);
+        btnEsqueci = (Button) findViewById(R.id.btn_esqueci);
 
         btnEsqueci.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, getString(R.string.erro_login), Toast.LENGTH_LONG).show();
                                     } else {
                                         progressBar.setVisibility(View.GONE); //Mostra a progressBar
+
                                         Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
                                         startActivity(intent);
                                         finish();
@@ -103,8 +110,41 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // O usuário estpa conectado
+                    // O usuário esta conectado
                     Log.d("TAG", "onAuthStateChanged:conectado:" + user.getUid());
+
+                    String chaveUsuarioAtual = user.getUid();
+
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+
+                    ref.child("usuario").addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    Log.i("chave de usuario:", chaveUsuarioAtual);
 
                     // Autenticado com sucesso
                     Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);

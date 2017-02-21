@@ -207,12 +207,17 @@ public class CadastroClienteFragment extends Fragment {
         }
 
         if (validado) {
-            Telefone telefone = new Telefone(txt_numero_telefone.toString().trim(), txt_ramal.getText().toString().trim());
+            Telefone telefone = new Telefone(txt_numero_telefone.getText().toString().trim(), txt_ramal.getText().toString().trim());
             Endereco endereco = new Endereco(txt_rua.getText().toString().trim(), txt_numero.getText().toString().trim(),
                     txt_complemento.getText().toString().trim(), txt_cep.getText().toString().trim(),
                     txt_referencia.getText().toString().trim());
-            cliente = new Cliente(cliente.getId(), txt_nome.getText().toString().trim(),
-                    txt_email.getText().toString().trim(), endereco, telefone);
+
+            String chaveCliente = "";
+            if (cliente!= null){
+                chaveCliente = cliente.getId().toString();
+            }
+            cliente = new Cliente(chaveCliente , txt_nome.getText().toString().trim(),
+                    txt_email.getText().toString().trim(),"", endereco, telefone);
         }
         return validado;
     }

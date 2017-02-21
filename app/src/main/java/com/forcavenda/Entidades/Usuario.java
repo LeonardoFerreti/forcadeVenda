@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class Usuario {
     //Atributos
+    private String email;
     private String idUsuario;
     private String idCliente;
     private Boolean admin;
@@ -28,15 +29,20 @@ public class Usuario {
         return admin;
     }
 
+    //retorna o Email do usuário
+    public String getEmail() {
+        return email;
+    }
     //Construtor padrao
     public Usuario() {
     }
 
     //Construtor com os parametros
-    public Usuario(String idUsuario, String idCliente, Boolean admin) {
+    public Usuario(String idUsuario, String idCliente,String email, Boolean admin) {
         this.idUsuario = idUsuario;
         this.idCliente = idCliente;
         this.admin = admin;
+        this.email = email;
     }
 
     //Retorna um HasMap com a propriedades e os valores de um objeto Usuario
@@ -45,6 +51,7 @@ public class Usuario {
         resultado.put("idUsuario", usuario.getIdUsuario());
         resultado.put("idCliente", usuario.getIdCliente());
         resultado.put("admin", usuario.getAdmin());
+        resultado.put("email",usuario.getEmail());
         return resultado;
     }
 }

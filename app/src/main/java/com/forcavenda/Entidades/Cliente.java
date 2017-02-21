@@ -15,6 +15,8 @@ public class Cliente implements Serializable {
     String id;
     String nome;
     String email;
+    String id_usuario;
+
     Endereco endereco;
     Telefone telefone;
 
@@ -23,19 +25,26 @@ public class Cliente implements Serializable {
     }
 
     //Construtor com os parametros: identificador, nome e email
-    public Cliente(String id, String nome, String email) {
+    public Cliente(String id, String nome, String email, String id_usuario) {
         this.id = id;
         this.nome = nome;
         this.email = email;
+        this.id_usuario = id_usuario;
     }
 
     //Construtor com todos os parametros
-    public Cliente(String id, String nome, String email, Endereco endereco, Telefone telefone) {
+    public Cliente(String id, String nome, String email, String id_usuario, Endereco endereco, Telefone telefone) {
         this.id = id;
         this.nome = nome;
         this.email = email;
+        this.id_usuario = id_usuario;
         this.endereco = endereco;
         this.telefone = telefone;
+    }
+
+    //retorna o identificador do usuario
+    public String getId_usuario() {
+        return id_usuario;
     }
 
     //retorna o identificador do cliente
@@ -69,6 +78,7 @@ public class Cliente implements Serializable {
         resultado.put("id", cliente.getId());
         resultado.put("nome", cliente.getNome());
         resultado.put("email", cliente.getEmail());
+        resultado.put("id_usuario", cliente.getId_usuario());
         return resultado;
     }
 
