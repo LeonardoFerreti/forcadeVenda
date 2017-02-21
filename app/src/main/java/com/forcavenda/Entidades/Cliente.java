@@ -16,7 +16,7 @@ public class Cliente implements Serializable {
     String nome;
     String email;
     String id_usuario;
-
+    Boolean isAdmin;
     Endereco endereco;
     Telefone telefone;
 
@@ -25,21 +25,23 @@ public class Cliente implements Serializable {
     }
 
     //Construtor com os parametros: identificador, nome e email
-    public Cliente(String id, String nome, String email, String id_usuario) {
+    public Cliente(String id, String nome, String email, String id_usuario,Boolean isAdmin) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.id_usuario = id_usuario;
+        this.isAdmin = isAdmin;
     }
 
     //Construtor com todos os parametros
-    public Cliente(String id, String nome, String email, String id_usuario, Endereco endereco, Telefone telefone) {
+    public Cliente(String id, String nome, String email, String id_usuario, Boolean isAdmin, Endereco endereco, Telefone telefone) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.id_usuario = id_usuario;
         this.endereco = endereco;
         this.telefone = telefone;
+        this.isAdmin = isAdmin;
     }
 
     //retorna o identificador do usuario
@@ -47,6 +49,10 @@ public class Cliente implements Serializable {
         return id_usuario;
     }
 
+    //retorna se o usuario vinculado é admin ou não
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
     //retorna o identificador do cliente
     public String getId() {
         return id;
@@ -79,6 +85,7 @@ public class Cliente implements Serializable {
         resultado.put("nome", cliente.getNome());
         resultado.put("email", cliente.getEmail());
         resultado.put("id_usuario", cliente.getId_usuario());
+        resultado.put("isAdmin",cliente.getAdmin());
         return resultado;
     }
 

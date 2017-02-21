@@ -1,5 +1,6 @@
 package com.forcavenda.Entidades;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
  * Created by Leo on 16/02/2017.
  */
 
-public class Usuario {
+public class Usuario implements Serializable {
     //Atributos
     private String email;
     private String idUsuario;

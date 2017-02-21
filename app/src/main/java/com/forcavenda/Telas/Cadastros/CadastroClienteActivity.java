@@ -99,7 +99,7 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
                 Telefone telefone = new Telefone(txt_numero_telefone.getText().toString().trim(), txt_ramal.getText().toString());
 
 
-                Cliente cliente = new Cliente("", txt_nome.getText().toString().trim(), txt_email.getText().toString().trim(),"", endereco, telefone);
+                Cliente cliente = new Cliente("", txt_nome.getText().toString().trim(), txt_email.getText().toString().trim(),"",false, endereco, telefone);
                 InsereNovoCliente(cliente);
             }
         });
@@ -112,7 +112,7 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
         String chave = ref.child("cliente").push().getKey();
 
         //Mapeia o objeto cliente com os parametros identificador, nome e email
-        Cliente cliente = new Cliente(chave, cliente_ins.getNome(), cliente_ins.getEmail(),"");
+        Cliente cliente = new Cliente(chave, cliente_ins.getNome(), cliente_ins.getEmail(),"",false);
 
         //Chama a classe de CRUD de cliente, fazendo referencia ao nó raiz do cadastro de cliente
         ClienteDao clienteDao = new ClienteDao();

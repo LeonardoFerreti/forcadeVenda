@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.forcavenda.Dao.UsuarioDao;
+import com.forcavenda.Entidades.Usuario;
 import com.forcavenda.R;
 import com.forcavenda.Telas.Cadastros.CadastroUsuarioActivity;
 import com.forcavenda.Util.Util;
@@ -25,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
@@ -108,49 +111,12 @@ public class LoginActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // O usuário esta conectado
-                    Log.d("TAG", "onAuthStateChanged:conectado:" + user.getUid());
 
-                    String chaveUsuarioAtual = user.getUid();
-
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-
-                    ref.child("usuario").addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-                    Log.i("chave de usuario:", chaveUsuarioAtual);
-
-                    // Autenticado com sucesso
                     Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
+                    finish();
 
                 } else {
                     //Usuário saindo do sistema

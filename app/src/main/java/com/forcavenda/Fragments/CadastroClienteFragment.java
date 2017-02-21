@@ -217,7 +217,7 @@ public class CadastroClienteFragment extends Fragment {
                 chaveCliente = cliente.getId().toString();
             }
             cliente = new Cliente(chaveCliente , txt_nome.getText().toString().trim(),
-                    txt_email.getText().toString().trim(),"", endereco, telefone);
+                    txt_email.getText().toString().trim(),"",false, endereco, telefone);
         }
         return validado;
     }
