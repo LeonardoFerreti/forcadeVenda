@@ -20,16 +20,13 @@
         <activity
             android:name=".Telas.LoginActivity"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Telas.Cadastros.CadastroUsuarioActivity"
             android:label="@string/tela_cadastrar_usuario"
-            android:parentActivityName=".Telas.LoginActivity" />
+            android:parentActivityName=".Telas.LoginActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Telas.Cadastros.CadastroFormaPgtoActivity"
             android:label="@string/tela_cadastrar_forma_pgto"
@@ -63,7 +60,18 @@
         <activity
             android:name=".Telas.ResetSenhaUsuarioActivity"
             android:label="@string/tela_reset_senha_usuario"
-            android:parentActivityName=".Telas.LoginActivity"></activity>
+            android:parentActivityName=".Telas.LoginActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Telas.Nav_PrincipalActivity"
+            android:label="@string/title_activity_nav__principal"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

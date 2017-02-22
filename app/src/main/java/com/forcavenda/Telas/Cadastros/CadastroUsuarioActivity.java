@@ -37,7 +37,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -96,9 +98,13 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                                         if (!task.isSuccessful()) {
 
                                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                                Snackbar.make(findViewById(android.R.id.content), "Esse e-mail já está sendo usado por outro usuário.", Snackbar.LENGTH_SHORT).show();
+                                                Snackbar.make(findViewById(android.R.id.content),R.string.email_ja_sendo_usado,  Snackbar.LENGTH_SHORT).show();
+                                            } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                                Snackbar.make(findViewById(android.R.id.content), R.string.email_invalido , Snackbar.LENGTH_SHORT).show();
+                                            } else if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
+                                                Snackbar.make(findViewById(android.R.id.content), R.string.senha_insegura, Snackbar.LENGTH_SHORT).show();
                                             } else {
-                                                Toast.makeText(CadastroUsuarioActivity.this, "Cadastro de usuário falhou:" + task.getException(),
+                                                Toast.makeText(CadastroUsuarioActivity.this, R.string.cadastro_usuario_falha + task.getException().getMessage(),
                                                         Toast.LENGTH_SHORT).show();
                                             }
                                             progressBar.setVisibility(View.GONE);

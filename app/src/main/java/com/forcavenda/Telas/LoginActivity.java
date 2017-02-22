@@ -3,6 +3,7 @@ package com.forcavenda.Telas;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,8 +20,13 @@ import com.forcavenda.Telas.Cadastros.CadastroUsuarioActivity;
 import com.forcavenda.Util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -35,6 +41,9 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    private TextInputLayout input_email;
+    private TextInputLayout input_senha;
+
     private TextView txt_Email;
     private TextView txt_Senha;
     private Button btnlogin;
@@ -48,6 +57,8 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
+        input_email = (TextInputLayout) findViewById(R.id.input_email);
+        input_senha = (TextInputLayout) findViewById(R.id.input_senha);
         txt_Email = (TextView) findViewById(R.id.txt_usuario);
         txt_Senha = (TextView) findViewById(R.id.txt_senha);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -76,29 +87,46 @@ public class LoginActivity extends AppCompatActivity {
         btnlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                input_email.setError("");
+                input_senha.setError("");
                 if (Util.estaConectadoInternet(getApplicationContext())) {
-                    progressBar.setVisibility(View.VISIBLE); //Mostra a progressBar
+                    if (validaDados()) {
+                        progressBar.setVisibility(View.VISIBLE); //Mostra a progressBar
 
-                    //autenticando usuário
-                    auth.signInWithEmailAndPassword(txt_Email.getText().toString().trim(), txt_Senha.getText().toString().trim())
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    progressBar.setVisibility(View.VISIBLE);
-                                    if (!task.isSuccessful()) {
-                                        progressBar.setVisibility(View.GONE);
-                                        Toast.makeText(LoginActivity.this, getString(R.string.erro_login), Toast.LENGTH_LONG).show();
-                                    } else {
-                                        progressBar.setVisibility(View.GONE); //Mostra a progressBar
+                        //autenticando usuário
+                        auth.signInWithEmailAndPassword(txt_Email.getText().toString().trim(), txt_Senha.getText().toString().trim())
+                                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        progressBar.setVisibility(View.VISIBLE);
+                                        if (!task.isSuccessful()) {
+                                            progressBar.setVisibility(View.GONE);
+                                            if (task.getException() instanceof FirebaseAuthException) {
+                                                FirebaseAuthException e = (FirebaseAuthException) task.getException();
+                                                switch (e.getErrorCode()) {
+                                                    case "ERROR_USER_NOT_FOUND":
+                                                        input_email.setError("Usuário não encontrado.");
+                                                        break;
+                                                    case "ERROR_WRONG_PASSWORD":
+                                                        input_senha.setError("Senha inválida.");
+                                                        break;
+                                                    default:
+                                                        Toast.makeText(LoginActivity.this, getString(R.string.erro_login) + e.getErrorCode(), Toast.LENGTH_LONG).show();
+                                                }
+                                            }
 
-                                        Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
-                                        startActivity(intent);
-                                        finish();
+                                        } else {
+                                            progressBar.setVisibility(View.GONE); //Mostra a progressBar
+
+                                            Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+
                                     }
+                                });
+                    }
 
-                                }
-                            });
 
                 } else {
 
@@ -124,6 +152,25 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
+    }
+
+    private boolean validaDados() {
+        boolean validado = true;
+        if (txt_Email.getText().length() ==0){
+            validado=false;
+            input_email.setError("Informe o e-mail.");
+        } else {
+            input_email.setError("");
+        }
+
+        if (txt_Senha.getText().length() ==0){
+            validado=false;
+            input_senha.setError("Informe a senha.");
+        } else {
+            input_senha.setError("");
+        }
+
+        return validado;
     }
 
     @Override

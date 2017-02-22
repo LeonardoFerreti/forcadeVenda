@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_cadastro"
     android:layout_width="match_parent"
@@ -42,10 +43,10 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:id="@+id/linear_cadastro"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/input_email"
@@ -64,7 +65,8 @@
                 android:id="@+id/input_senha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/input_usuario">
+                android:layout_below="@+id/input_usuario"
+                app:passwordToggleEnabled="true">
 
                 <EditText
                     android:id="@+id/txt_senha"
@@ -78,7 +80,8 @@
                 android:id="@+id/input_repita_senha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/input_usuario">
+                android:layout_below="@+id/input_usuario"
+                app:passwordToggleEnabled="true">
 
                 <EditText
                     android:id="@+id/txt_repita_senha"
@@ -87,6 +90,7 @@
                     android:hint="@string/hint__repita_senha_email"
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
+
             <Button
                 android:id="@+id/btn_cadastro"
                 android:layout_width="match_parent"
@@ -98,10 +102,12 @@
                 android:background="@color/colorPrimary"
                 android:text="Cadastrar"
                 android:textColor="@color/Branco" />
+
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+
                 android:layout_below="@+id/btn_login"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center|bottom"

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Força de Vendas</string>
-    <string name="erro_login">Erro ao autenticar</string>
+    <string name="erro_login">Erro ao autenticar: </string>
     <string name="tela_cadastrar_usuario">Cadastrar usuário</string>
     <string name="tela_cadastrar_cliente">Cadastrar cliente</string>
     <string name="tela_cadastrar_forma_pgto">Nova forma de pagamento</string>
@@ -37,8 +37,14 @@
     <string name="hint__repita_senha_email">Repita a senha</string>
     <string name="tela_reset_senha_usuario">Esqueci a senha</string>
     <string name="info_reset_senha">Um link será enviado para seu e-mail para que você defina sua nova senha.</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="nome_cliente_vazio">Informe o nome</string>
+    <string name="email_invalido">"O e-mail informado é inválido."</string>
+    <string name="email_ja_sendo_usado">Esse e-mail já está sendo usado por outro usuário.</string>
+    <string name="senha_insegura">A senha informada não é uma senha segura.</string>
+    <string name="cadastro_usuario_falha">O cadastro do usuário falhou:</string>
+    <string name="erro_envio_email">Erro ao enviar e-mail:</string>
+    <string name="conta_inexistente">Nenhuma conta vinculada ao e-mail informado.</string>
+    <string name="informe_email">Informe o email</string>
+    <string name="informe_senha">Informe a sua senha</string>
+    <string name="title_activity_nav__principal">Nav_PrincipalActivity</string>
 </resources>
