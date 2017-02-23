@@ -41,7 +41,6 @@ public class PrincipalActivity extends AppCompatActivity {
         refUsuarioCliente.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
-
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //se nao foi encontrado um valor valido para o email, entao insere o cliente com os dados do usuario atual
                 if (dataSnapshot.getValue() == null) {
@@ -57,12 +56,10 @@ public class PrincipalActivity extends AppCompatActivity {
                     clienteDao.Incluir(ref, chave, Cliente.MapCliente(cliente_usuario_ins));
 
                 } else {
-
                     Cliente cliente = null;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         cliente = snapshot.getValue(Cliente.class);
                     }
-
                     //verifico se o identificador desse cliente está vazio. Se estiver, tenho que vincular.(Esse caso foi o usuario
                     // admin que cadastrou, entao usuario completa seu cadastro.)
                     if (cliente.getId_usuario() == null || cliente.getId_usuario().equals("")) {

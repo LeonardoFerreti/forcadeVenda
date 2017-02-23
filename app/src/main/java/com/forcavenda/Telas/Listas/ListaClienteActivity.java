@@ -89,7 +89,6 @@ public class ListaClienteActivity extends AppCompatActivity {
             // ....
         });
 
-
         FloatingActionButton btn_adicionar = (FloatingActionButton) findViewById(R.id.btn_adicionar);
 
         btn_adicionar.setOnClickListener(new View.OnClickListener() {
