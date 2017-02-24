@@ -51,23 +51,14 @@ public class TrocaSenhaFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_cadastro, container, false);
+        View view = inflater.inflate(R.layout.fragment_troca_senha, container, false);
 
-        TextInputLayout input_senha_atual = (TextInputLayout) view.findViewById(R.id.input_senha_antiga);
-        input_senha_nova = (TextInputLayout) view.findViewById(R.id.input_senha_antiga);
-        input_repita_senha_nova = (TextInputLayout) view.findViewById(R.id.input_senha_antiga);
+        input_senha_nova = (TextInputLayout) view.findViewById(R.id.input_nova_senha);
+        input_repita_senha_nova = (TextInputLayout) view.findViewById(R.id.input_repita_nova_senha);
 
-        EditText txt_email = (EditText) view.findViewById(R.id.txt_email);
-
-        txt_senha = (EditText) view.findViewById(R.id.txt_senha);
-        txt_repita_senha = (EditText) view.findViewById(R.id.txt_repita_senha);
-        Button btn_salvar = (Button) view.findViewById(R.id.btn_cadastro);
-
-        txt_email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        txt_email.setEnabled(false);
-
-        txt_senha.setHint("Informe a nova senha");
-        txt_repita_senha.setHint("Repita a nova senha");
+        txt_senha = (EditText) view.findViewById(R.id.txt_nova_senha);
+        txt_repita_senha = (EditText) view.findViewById(R.id.txt_repita_nova_senha);
+        Button btn_salvar = (Button) view.findViewById(R.id.btn_salvar);
 
         btn_salvar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.forcavenda.Fragments.CadastroClienteFragment">
 
     <ScrollView
@@ -40,36 +44,6 @@
                     android:hint="@string/hint_email_cliente"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_senha"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/input_usuario">
-
-                <EditText
-                    android:id="@+id/txt_senha"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_senha_email"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPassword" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_repita_senha"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/input_usuario">
-
-                <EditText
-                    android:id="@+id/txt_repita_senha"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint__repita_senha_email"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
@@ -176,32 +150,27 @@
                     android:inputType="phone" />
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_ramal"
+            <Button
+                android:id="@+id/btn_salvar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/txt_ramal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_ramal_cliente"
-                    android:inputType="phone" />
-            </android.support.design.widget.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/container"
+                android:layout_marginTop="18dp"
+                android:background="@color/colorPrimary"
+                android:text="Salvar"
+                android:textColor="@color/Branco" />
 
         </LinearLayout>
     </ScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btn_salvar"
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_done_white_24dp"
-        android:visibility="gone"
-        app:backgroundTint="@color/colorPrimaryDark"
-        app:layout_anchor="@id/txt_ramal"
-        app:layout_anchorGravity="bottom|right|end">
-
-    </android.support.design.widget.FloatingActionButton>
-
+        android:layout_gravity="center"
+        android:indeterminate="false"
+        android:visibility="gone" />
 </android.support.design.widget.CoordinatorLayout>

@@ -49,11 +49,11 @@ public class PrincipalActivity extends AppCompatActivity {
                     String chave = ref.child("cliente").push().getKey();
 
                     //Chama a classe de CRUD de usuário, fazendo referencia ao nó do banco de dados
-                    Cliente cliente_usuario_ins = new Cliente(chave, "", user.getEmail(), user.getUid(), false);
+                    Cliente cliente_usuario_ins = new Cliente(chave, "", user.getEmail(), user.getUid(), false,"");
 
                     //Chama a classe de CRUD de cliente, fazendo referencia ao nó raiz do cadastro de cliente
                     ClienteDao clienteDao = new ClienteDao();
-                    clienteDao.Incluir(ref, chave, Cliente.MapCliente(cliente_usuario_ins));
+                    clienteDao.IncluirAlterar(ref, chave, Cliente.MapCliente(cliente_usuario_ins));
 
                 } else {
                     Cliente cliente = null;

@@ -17,24 +17,25 @@ public class Cliente implements Serializable {
     String email;
     String id_usuario;
     Boolean isAdmin;
+    String telefone;
     Endereco endereco;
-    Telefone telefone;
 
     //Construtor padrão
     public Cliente() {
     }
 
     //Construtor com os parametros: identificador, nome e email
-    public Cliente(String id, String nome, String email, String id_usuario,Boolean isAdmin) {
+    public Cliente(String id, String nome, String email, String id_usuario,Boolean isAdmin,String telefone) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.id_usuario = id_usuario;
         this.isAdmin = isAdmin;
+        this.telefone = telefone;
     }
 
     //Construtor com todos os parametros
-    public Cliente(String id, String nome, String email, String id_usuario, Boolean isAdmin, Endereco endereco, Telefone telefone) {
+    public Cliente(String id, String nome, String email, String id_usuario, Boolean isAdmin, Endereco endereco, String telefone) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -74,7 +75,7 @@ public class Cliente implements Serializable {
     }
 
     //retorna a lista de telefones de um cliente
-    public Telefone getTelefone() {
+    public String getTelefone() {
         return telefone;
     }
 
@@ -86,6 +87,7 @@ public class Cliente implements Serializable {
         resultado.put("email", cliente.getEmail());
         resultado.put("id_usuario", cliente.getId_usuario());
         resultado.put("isAdmin",cliente.getAdmin());
+        resultado.put("telefone",cliente.getTelefone());
         return resultado;
     }
 

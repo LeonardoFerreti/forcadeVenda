@@ -37,9 +37,10 @@ public class ClienteFragment extends Fragment {
     public ClienteFragment() {
     }
 
-    public static ClienteFragment newInstance() {
+    public static ClienteFragment newInstance( ) {
         ClienteFragment fragment = new ClienteFragment();
         Bundle args = new Bundle();
+
         fragment.setArguments(args);
         return fragment;
     }

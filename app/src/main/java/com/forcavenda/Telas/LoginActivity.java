@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                                         } else {
                                             progressBar.setVisibility(View.GONE); //Mostra a progressBar
 
-                                            Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
+                                            Intent intent = new Intent(LoginActivity.this, Nav_PrincipalActivity.class);
                                             startActivity(intent);
                                             finish();
                                         }
@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
 
-                    Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, Nav_PrincipalActivity.class);
                     startActivity(intent);
                     finish();
 

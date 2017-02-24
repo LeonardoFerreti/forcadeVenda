@@ -2,6 +2,10 @@ package com.forcavenda.Telas;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +13,7 @@ import android.support.design.widget.Snackbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -19,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -26,6 +32,7 @@ import com.forcavenda.Dao.ClienteDao;
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Fragments.ClienteFragment;
 import com.forcavenda.Fragments.FormaPgtoFragment;
+import com.forcavenda.Fragments.PerfilFragment;
 import com.forcavenda.Fragments.ProdutoFragment;
 import com.forcavenda.Fragments.TrocaSenhaFragment;
 import com.forcavenda.R;
@@ -43,8 +50,9 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     // private ProgressDialog progressDialog;
+    private Cliente clienteLogado;
     private boolean viewHome;
-
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +60,13 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         setContentView(R.layout.activity_nav_principal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        sharedpreferences = getSharedPreferences(Util.PREFERENCIA, Context.MODE_PRIVATE);
 
         //  progressDialog = Util.CriaProgressDialog(getApplicationContext());
         //  progressDialog.show();
 
         //Inserir nome e email do usuario no cabeçalho
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View header = navigationView.getHeaderView(0);
-        TextView txt_nome_usuario = (TextView) header.findViewById(R.id.txt_nome);
-        TextView txt_email_usuario = (TextView) header.findViewById(R.id.txt_email);
-        txt_nome_usuario.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-        txt_email_usuario.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        informacoesCabecalho();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -81,12 +85,24 @@ public class Nav_PrincipalActivity extends AppCompatActivity
 
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(this);
-        displayView(R.id.nav_clientes);
         verificaUsuarioSimples();
+        navView.getMenu().getItem(0).setChecked(true);
+    }
+
+    private void informacoesCabecalho() {
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header = navigationView.getHeaderView(0);
+
+        TextView txt_nome_usuario = (TextView) header.findViewById(R.id.txt_nome);
+        TextView txt_email_usuario = (TextView) header.findViewById(R.id.txt_email);
+
+        txt_nome_usuario.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        txt_email_usuario.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
     private void verificaUsuarioSimples() {
-
+        final SharedPreferences.Editor editor = sharedpreferences.edit();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
 
@@ -103,12 +119,17 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                     String chave = ref.child("cliente").push().getKey();
 
                     //Chama a classe de CRUD de usuário, fazendo referencia ao nó do banco de dados
-                    Cliente cliente_usuario_ins = new Cliente(chave, "", user.getEmail(), user.getUid(), false);
+                    Cliente cliente_usuario_ins = new Cliente(chave, "", user.getEmail(), user.getUid(), false, "");
 
                     //Chama a classe de CRUD de cliente, fazendo referencia ao nó raiz do cadastro de cliente
                     ClienteDao clienteDao = new ClienteDao();
-                    clienteDao.Incluir(ref, chave, Cliente.MapCliente(cliente_usuario_ins));
+                    clienteDao.IncluirAlterar(ref, chave, Cliente.MapCliente(cliente_usuario_ins));
+
                     escondeItensUsuarioSimples();
+                    clienteLogado = cliente_usuario_ins;
+                    editor.putString(Util.chaveCliente, chave);
+                    editor.putBoolean(Util.isAdmin, false);
+
                 } else {
                     Cliente cliente = null;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -125,6 +146,9 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                     if (!cliente.getAdmin()) {
                         escondeItensUsuarioSimples();
                     }
+                    clienteLogado = cliente;
+                    editor.putString(Util.chaveCliente, cliente.getId());
+                    editor.putBoolean(Util.isAdmin, cliente.getAdmin());
                 }
 
                 //        progressDialog.dismiss();
@@ -144,7 +168,6 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         nav_Menu.findItem(R.id.nav_clientes).setVisible(false);
         nav_Menu.findItem(R.id.nav_produtos).setVisible(false);
         nav_Menu.findItem(R.id.nav_forma_pgto).setVisible(false);
-
     }
 
     @Override
@@ -193,6 +216,10 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         String titulo = getString(R.string.app_name);
 
         switch (viewId) {
+            case R.id.nav_perfil:
+                fragment = PerfilFragment.newInstance(clienteLogado);
+                titulo = "Perfil";
+                break;
             case R.id.nav_clientes:
                 fragment = new ClienteFragment();
                 titulo = "Clientes";
@@ -213,16 +240,34 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                 titulo = "Trocar senha";
                 viewHome = false;
                 break;
-            case R.id.nav_perfil:
-                titulo = "Perfil";
-                break;
 
         }
-        if (fragment != null) {
+
+        if (viewId == R.id.nav_sair) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(Nav_PrincipalActivity.this);
+            builder.setMessage("Deseja realmente sair do sistema?");
+            builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(Nav_PrincipalActivity.this, LoginActivity.class));
+                    finish();
+                }
+            });
+            builder.create().show();
+
+        } else if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.nav_container, fragment);
             ft.commit();
         }
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(titulo);
         }

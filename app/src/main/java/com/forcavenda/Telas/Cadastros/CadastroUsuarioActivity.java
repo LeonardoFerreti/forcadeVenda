@@ -17,19 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.forcavenda.Dao.ClienteDao;
-import com.forcavenda.Dao.EnderecoDao;
-import com.forcavenda.Dao.TelefoneDao;
-import com.forcavenda.Dao.UsuarioDao;
-import com.forcavenda.Entidades.Cliente;
-import com.forcavenda.Entidades.Endereco;
-import com.forcavenda.Entidades.Telefone;
-import com.forcavenda.Entidades.Usuario;
-import com.forcavenda.Fragments.CadastroClienteFragment;
 import com.forcavenda.R;
 import com.forcavenda.Telas.LoginActivity;
 import com.forcavenda.Util.Util;
@@ -40,11 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
     private Button btnCadastrar;

@@ -2,6 +2,7 @@ package com.forcavenda.Util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,6 +16,10 @@ import com.forcavenda.R;
  */
 
 public class Util {
+
+    public static final String PREFERENCIA = "PREFERENCIA";
+    public static final String chaveCliente = "chaveCliente";
+    public static final String isAdmin = "isAdmin";
 
     public static boolean estaConectadoInternet(Context context) {
         Boolean conectado = false;

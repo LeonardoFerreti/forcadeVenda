@@ -9,7 +9,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,7 +21,7 @@ import com.forcavenda.Dao.EnderecoDao;
 import com.forcavenda.Dao.TelefoneDao;
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.Endereco;
-import com.forcavenda.Entidades.Telefone;
+
 import com.forcavenda.R;
 import com.forcavenda.Telas.Listas.ListaClienteActivity;
 import com.forcavenda.Util.Mask;
@@ -76,7 +76,7 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
 
         //Dados do telefone do cliente
         final EditText txt_numero_telefone = (EditText) findViewById(R.id.txt_telefone);
-        final EditText txt_ramal = (EditText) findViewById(R.id.txt_ramal);
+      //  final EditText txt_ramal = (EditText) findViewById(R.id.txt_ramal);
 
         txt_numero_telefone.addTextChangedListener(Mask.insert("(##)#####-####", txt_numero_telefone));
 
@@ -96,10 +96,10 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
 
                 //ArrayList<Telefone> telefones = new ArrayList<Telefone>();
                 //telefones.add(new Telefone(txt_ddd.getText().toString().trim(), txt_numero_telefone.getText().toString().trim(), txt_ramal.getText().toString()));
-                Telefone telefone = new Telefone(txt_numero_telefone.getText().toString().trim(), txt_ramal.getText().toString());
+               // Telefone telefone = new Telefone(txt_numero_telefone.getText().toString().trim(), txt_ramal.getText().toString());
 
 
-                Cliente cliente = new Cliente("", txt_nome.getText().toString().trim(), txt_email.getText().toString().trim(),"",false, endereco, telefone);
+                Cliente cliente = new Cliente("", txt_nome.getText().toString().trim(), txt_email.getText().toString().trim(),"",false, endereco, txt_numero_telefone.getText().toString());
                 InsereNovoCliente(cliente);
             }
         });
@@ -112,19 +112,18 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
         String chave = ref.child("cliente").push().getKey();
 
         //Mapeia o objeto cliente com os parametros identificador, nome e email
-        Cliente cliente = new Cliente(chave, cliente_ins.getNome(), cliente_ins.getEmail(),"",false);
+        Cliente cliente = new Cliente(chave, cliente_ins.getNome(), cliente_ins.getEmail(),"",false,"");
 
         //Chama a classe de CRUD de cliente, fazendo referencia ao nó raiz do cadastro de cliente
         ClienteDao clienteDao = new ClienteDao();
-        DatabaseReference refNovoCliente = clienteDao.Incluir(ref, chave, Cliente.MapCliente(cliente));
+        DatabaseReference refNovoCliente = clienteDao.IncluirAlterar(ref, chave, Cliente.MapCliente(cliente));
 
         //Chama a classe de CRUD de endereçc, fazendo referencia ao nó do cadastro de cliente
         EnderecoDao enderecoDao = new EnderecoDao();
         enderecoDao.Incluir(refNovoCliente, Endereco.MapEndereco(cliente_ins.getEndereco()));
 
         //Chama a classe de CRUD de telefone, fazendo referencia ao nó do cadastro de cliente
-        TelefoneDao telefoneDao = new TelefoneDao();
-        telefoneDao.Incluir(refNovoCliente, Telefone.MapTelefone(cliente_ins.getTelefone()));
+//      //  telefoneDao.Incluir(refNovoCliente, Telefone.MapTelefone(cliente_ins.getTelefone()));
 
     }
 

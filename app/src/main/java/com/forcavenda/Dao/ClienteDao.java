@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ClienteDao {
 
-    public DatabaseReference Incluir(DatabaseReference ref,String chave, Map<String, Object> cliente){
+    public DatabaseReference IncluirAlterar(DatabaseReference ref,String chave, Map<String, Object> cliente){
         Map<String, Object> objDao = new HashMap<>();
         objDao.put("cliente/" + chave, cliente);
         ref.updateChildren(objDao);

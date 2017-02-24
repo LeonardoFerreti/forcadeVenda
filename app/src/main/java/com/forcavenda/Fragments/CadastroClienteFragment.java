@@ -3,6 +3,7 @@ package com.forcavenda.Fragments;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,14 +11,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.Endereco;
-import com.forcavenda.Entidades.Telefone;
 import com.forcavenda.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -32,7 +40,7 @@ import java.io.IOException;
 public class CadastroClienteFragment extends Fragment {
     private static final String PARAM_CLIENTE = "cliente";
     public Cliente cliente;
-    private OkHttpClient client = new OkHttpClient();
+    private OkHttpClient httpClient = new OkHttpClient();
 
     TextInputLayout input_nome;
 
@@ -48,7 +56,7 @@ public class CadastroClienteFragment extends Fragment {
     EditText txt_cep;
 
     EditText txt_numero_telefone;
-    EditText txt_ramal;
+
 
     ProgressBar progressBar;
 
@@ -57,11 +65,10 @@ public class CadastroClienteFragment extends Fragment {
         // Construtor padrão
     }
 
-    public static CadastroClienteFragment newInstance(String param1) {
+    public static CadastroClienteFragment newInstance(Cliente cliente) {
         CadastroClienteFragment fragment = new CadastroClienteFragment();
         Bundle args = new Bundle();
-        args.putSerializable(PARAM_CLIENTE, param1);
-
+        args.putSerializable(PARAM_CLIENTE, cliente);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,8 +91,6 @@ public class CadastroClienteFragment extends Fragment {
         input_nome = (TextInputLayout) view.findViewById(R.id.input_nome);
         txt_nome = (EditText) view.findViewById(R.id.txt_nome);
         txt_email = (EditText) view.findViewById(R.id.txt_email);
-        txt_senha = (EditText) view.findViewById(R.id.txt_senha);
-        txt_repita_senha = (EditText) view.findViewById(R.id.txt_repita_senha);
 
         //Dados do endereço do cliente
         txt_rua = (EditText) view.findViewById(R.id.txt_rua);
@@ -131,10 +136,36 @@ public class CadastroClienteFragment extends Fragment {
 
         //Dados do telefone
         txt_numero_telefone = (EditText) view.findViewById(R.id.txt_telefone);
-        txt_ramal = (EditText) view.findViewById(R.id.txt_ramal);
 
         //Progressbar
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+
+        Button btn_salvar = (Button) view.findViewById(R.id.btn_salvar);
+
+        btn_salvar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                UserProfileChangeRequest updatePerfil = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(txt_nome.getText().toString())
+                        .build();
+
+                user.updateProfile(updatePerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            DatabaseReference ref = FirebaseDatabase.getInstance()
+                                    .getReference("cliente")
+                                    .child(cliente.getId());
+                            ref.updateChildren(Cliente.MapCliente(cliente));
+                            Toast.makeText(getActivity().getApplicationContext(), "Cliente alterado com sucesso.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), "Erro ao alterar nome: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
 
         if (cliente != null) {
             //Dados do cliente
@@ -147,8 +178,8 @@ public class CadastroClienteFragment extends Fragment {
             txt_referencia.setText(cliente.getEndereco().getReferencia().toString());
             txt_cep.setText(cliente.getEndereco().getCep().toString());
             //Dados do telefone
-            txt_numero_telefone.setText(cliente.getTelefone().getNumero().toString());
-            txt_ramal.setText(cliente.getTelefone().getRamal().toString());
+            txt_numero_telefone.setText(cliente.getTelefone().toString());
+
         }
 
         return view;
@@ -160,7 +191,7 @@ public class CadastroClienteFragment extends Fragment {
                 .url(url)
                 .build();
 
-        client.newCall(request)
+        httpClient.newCall(request)
                 .enqueue(new Callback() {
                     @Override
                     public void onFailure(Request request, IOException e) {
@@ -207,17 +238,16 @@ public class CadastroClienteFragment extends Fragment {
         }
 
         if (validado) {
-            Telefone telefone = new Telefone(txt_numero_telefone.getText().toString().trim(), txt_ramal.getText().toString().trim());
             Endereco endereco = new Endereco(txt_rua.getText().toString().trim(), txt_numero.getText().toString().trim(),
                     txt_complemento.getText().toString().trim(), txt_cep.getText().toString().trim(),
                     txt_referencia.getText().toString().trim());
 
             String chaveCliente = "";
-            if (cliente!= null){
+            if (cliente != null) {
                 chaveCliente = cliente.getId().toString();
             }
-            cliente = new Cliente(chaveCliente , txt_nome.getText().toString().trim(),
-                    txt_email.getText().toString().trim(),"",false, endereco, telefone);
+            cliente = new Cliente(chaveCliente, txt_nome.getText().toString().trim(),
+                    txt_email.getText().toString().trim(), "", false, endereco, txt_numero_telefone.getText().toString());
         }
         return validado;
     }

@@ -20,7 +20,10 @@
         <activity
             android:name=".Telas.LoginActivity"
             android:label="@string/app_name">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Telas.Cadastros.CadastroUsuarioActivity"
@@ -66,11 +69,7 @@
             android:name=".Telas.Nav_PrincipalActivity"
             android:label="@string/title_activity_nav__principal"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
