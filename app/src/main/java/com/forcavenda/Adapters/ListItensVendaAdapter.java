@@ -1,16 +1,20 @@
 package com.forcavenda.Adapters;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.forcavenda.Entidades.ItemPedido;
 import com.forcavenda.R;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -19,6 +23,7 @@ import java.util.List;
 
 public class ListItensVendaAdapter extends ArrayAdapter<ItemPedido> {
     private List<ItemPedido> items;
+    NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
     public List<ItemPedido> getItems() {
         return items;
@@ -50,7 +55,7 @@ public class ListItensVendaAdapter extends ArrayAdapter<ItemPedido> {
         if (itemPedido != null) {
             TextView txt_nome = (TextView) v.findViewById(R.id.txt_nome);
             final TextView txt_preco = (TextView) v.findViewById(R.id.txt_preco);
-            final TextView txt_qtde = (TextView) v.findViewById(R.id.txt_qtde);
+            final EditText txt_qtde = (EditText) v.findViewById(R.id.txt_qtde);
             ImageView btn_adiciona = (ImageView) v.findViewById(R.id.btn_adicionaQtde);
             btn_adiciona.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -59,7 +64,7 @@ public class ListItensVendaAdapter extends ArrayAdapter<ItemPedido> {
                     qtdeAtual += 1;
                     Double valor = itemPedido.getProduto().getPreco() * qtdeAtual;
                     txt_qtde.setText(String.valueOf(qtdeAtual));
-                    txt_preco.setText(String.valueOf(valor));
+                    txt_preco.setText(formatter.format(valor));
                 }
             });
 
@@ -72,26 +77,36 @@ public class ListItensVendaAdapter extends ArrayAdapter<ItemPedido> {
                         qtdeAtual -= 1;
                         Double valor = itemPedido.getProduto().getPreco() * qtdeAtual;
                         txt_qtde.setText(String.valueOf(qtdeAtual));
-                        txt_preco.setText(String.valueOf(valor));
+                        txt_preco.setText(formatter.format(valor));
                     }
                 }
             });
 
-            ImageView btn_delete = (ImageView) v.findViewById(R.id.btn_remover);
-            btn_delete.setOnClickListener(new View.OnClickListener() {
+
+            AppCompatCheckBox checkBox = (AppCompatCheckBox) v.findViewById(R.id.chk);
+
+            checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    items.remove(position);
-                    atualizalista();
+
                 }
             });
+
+//            ImageView btn_delete = (ImageView) v.findViewById(R.id.btn_remover);
+//            btn_delete.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    items.remove(position);
+//                    atualizalista();
+//                }
+//            });
 
             if (txt_nome != null) {
                 txt_nome.setText(itemPedido.getProduto().getNome());
             }
 
             if (txt_preco != null) {
-                txt_preco.setText(String.valueOf(itemPedido.getProduto().getPreco()));
+                txt_preco.setText(formatter.format(itemPedido.getProduto().getPreco()));
             }
 
             if (txt_qtde != null) {

@@ -12,6 +12,7 @@ public class Produto implements Serializable {
     //atributos da classe
     private String id;
     private String nome;
+    private String descricao;
     private Double preco;
     private Boolean ativo;
 
@@ -24,9 +25,15 @@ public class Produto implements Serializable {
     public Boolean getAtivo() {
         return ativo;
     }
+
     //retorna o nome do produto
     public String getNome() {
         return nome;
+    }
+
+    //retorna a descrição do Produto
+    public String getDescricao() {
+        return descricao;
     }
 
     //retorna o preco do produto
@@ -39,11 +46,12 @@ public class Produto implements Serializable {
     }
 
     //Construtor com os parametros
-    public Produto(String id, String nome, Double preco, Boolean ativo) {
+    public Produto(String id, String nome, Double preco, Boolean ativo, String descricao) {
         this.id = id;
         this.nome = nome;
         this.preco = preco;
-        this.ativo= ativo;
+        this.ativo = ativo;
+        this.descricao = descricao;
     }
 
     //Retorna um HasMap com a propriedades e os valores de um objeto Produto
@@ -51,8 +59,9 @@ public class Produto implements Serializable {
         HashMap<String, Object> resultado = new HashMap<>();
         resultado.put("id", produto.getId());
         resultado.put("nome", produto.getNome());
-        resultado.put("preco" , produto.getPreco());
-        resultado.put("ativo" , produto.getAtivo());
+        resultado.put("preco", produto.getPreco());
+        resultado.put("ativo", produto.getAtivo());
+        resultado.put("descricao", produto.getDescricao());
         return resultado;
     }
 

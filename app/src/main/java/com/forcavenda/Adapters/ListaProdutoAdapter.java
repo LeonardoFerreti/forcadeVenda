@@ -10,6 +10,7 @@ import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.Produto;
 import com.forcavenda.R;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
 public class ListaProdutoAdapter extends ArrayAdapter<Produto> {
 
     public ListaProdutoAdapter(Context context, List<Produto> produtos) {
-        super(context,  R.layout.layout_lista, produtos);
+        super(context, R.layout.layout_lista_produto, produtos);
     }
 
     @Override
@@ -35,10 +36,13 @@ public class ListaProdutoAdapter extends ArrayAdapter<Produto> {
     private View initView(int position, View convertView) {
         if (convertView == null)
             convertView = View.inflate(getContext(),
-                    R.layout.layout_lista,
+                    R.layout.layout_lista_produto,
                     null);
         TextView txt1 = (TextView) convertView.findViewById(R.id.txt_1);
         txt1.setText(getItem(position).getNome());
+        TextView txt2 = (TextView) convertView.findViewById(R.id.txt_2);
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        txt2.setText(formatter.format(getItem(position).getPreco()));
         return convertView;
     }
 }

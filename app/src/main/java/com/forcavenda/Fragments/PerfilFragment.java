@@ -75,6 +75,8 @@ public class PerfilFragment extends Fragment {
     ProgressBar progressBar;
     ProgressBar progressBar2;
 
+    Boolean consultaCep = true;
+
     public PerfilFragment() {
     }
 
@@ -133,18 +135,20 @@ public class PerfilFragment extends Fragment {
                     txt_cep.setText(cep);
                 }
 
-                if (cep.length() == 9) {
-                    progressBar.setVisibility(View.VISIBLE);
-                    cep = cep.replace("-", "");
+                if (consultaCep){
+                    if (cep.length() == 9 ) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        cep = cep.replace("-", "");
 
-                    try {
-                        buscaCEP("https://viacep.com.br/ws/" + cep + "/json/");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        try {
+                            buscaCEP("https://viacep.com.br/ws/" + cep + "/json/");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getActivity().getApplicationContext(), "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
-
                 }
+
             }
         });
 
@@ -162,11 +166,13 @@ public class PerfilFragment extends Fragment {
 
             if (cliente.getEndereco() != null) {
                 //Dados do endereço do cliente
+                consultaCep =false;
+                txt_cep.setText(cliente.getEndereco().getCep().toString().replace("-", ""));
                 txt_rua.setText(cliente.getEndereco().getLogradouro().toString());
                 txt_numero.setText(cliente.getEndereco().getNumero().toString());
                 txt_complemento.setText(cliente.getEndereco().getComplemento().toString());
                 txt_referencia.setText(cliente.getEndereco().getReferencia().toString());
-                txt_cep.setText(cliente.getEndereco().getCep().toString());
+                consultaCep =true;
             }
 
             //Dados do telefone
@@ -267,7 +273,7 @@ public class PerfilFragment extends Fragment {
                                 try {
                                     JSONObject jsonObject = new JSONObject(res);
                                     txt_rua.setText(jsonObject.getString("logradouro"));
-                                    txt_complemento.setText(jsonObject.getString("complemento"));
+                                    //txt_complemento.setText(jsonObject.getString("complemento"));
                                     int pos = txt_rua.getText().length();
                                     txt_rua.requestFocus();
                                     txt_rua.setSelection(pos);

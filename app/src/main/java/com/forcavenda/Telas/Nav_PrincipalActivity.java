@@ -1,7 +1,6 @@
 package com.forcavenda.Telas;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,14 +23,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.forcavenda.Dao.ClienteDao;
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Fragments.ClienteFragment;
 import com.forcavenda.Fragments.FormaPgtoFragment;
+import com.forcavenda.Fragments.PedidoFragment;
 import com.forcavenda.Fragments.PerfilFragment;
 import com.forcavenda.Fragments.ProdutoFragment;
 import com.forcavenda.Fragments.TrocaSenhaFragment;
@@ -39,6 +39,7 @@ import com.forcavenda.R;
 import com.forcavenda.Util.Util;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -108,6 +109,34 @@ public class Nav_PrincipalActivity extends AppCompatActivity
 
         final Query refUsuarioCliente = ref.child("cliente").orderByChild("email").equalTo(user.getEmail());
 
+        refUsuarioCliente.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                   clienteLogado = dataSnapshot.getValue(Cliente.class);
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         refUsuarioCliente.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -125,7 +154,6 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                     ClienteDao clienteDao = new ClienteDao();
                     clienteDao.IncluirAlterar(ref, chave, Cliente.MapCliente(cliente_usuario_ins));
 
-                    escondeItensUsuarioSimples();
                     clienteLogado = cliente_usuario_ins;
                     editor.putString(Util.chaveCliente, chave);
                     editor.putBoolean(Util.isAdmin, false);
@@ -143,8 +171,8 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                     } else {
                         Log.i("cliente-usuario:", "Email já vinculado ao usuário.");
                     }
-                    if (!cliente.getAdmin()) {
-                        escondeItensUsuarioSimples();
+                    if (cliente.getAdmin()) {
+                        mostraItensUsuarioSimples();
                     }
                     clienteLogado = cliente;
                     editor.putString(Util.chaveCliente, cliente.getId());
@@ -162,12 +190,12 @@ public class Nav_PrincipalActivity extends AppCompatActivity
 
     }
 
-    private void escondeItensUsuarioSimples() {
+    private void mostraItensUsuarioSimples() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
-        nav_Menu.findItem(R.id.nav_clientes).setVisible(false);
-        nav_Menu.findItem(R.id.nav_produtos).setVisible(false);
-        nav_Menu.findItem(R.id.nav_forma_pgto).setVisible(false);
+        nav_Menu.findItem(R.id.nav_clientes).setVisible(true);
+        nav_Menu.findItem(R.id.nav_produtos).setVisible(true);
+        nav_Menu.findItem(R.id.nav_forma_pgto).setVisible(true);
     }
 
     @Override
@@ -183,18 +211,14 @@ public class Nav_PrincipalActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.nav__principal, menu);
+       // getMenuInflater().inflate(R.menu.nav__principal, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -235,12 +259,16 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                 titulo = "Formas de pagamento";
                 viewHome = false;
                 break;
+            case R.id.nav_criar_pedido:
+                fragment = new PedidoFragment();
+                titulo = "Pedidos";
+                viewHome =false;
+                break;
             case R.id.nav_trocar_senha:
                 fragment = new TrocaSenhaFragment();
                 titulo = "Trocar senha";
                 viewHome = false;
                 break;
-
         }
 
         if (viewId == R.id.nav_sair) {

@@ -58,7 +58,7 @@ public class CadastroProdutoActivity extends AppCompatActivity {
                 String chave = (produto == null) ? ref.child("produto").push().getKey() : produto.getId();
 
                 //Mapeia o objeto produto com os parametros identificador, nome e preço.
-                Produto novoProduto = new Produto(chave, txt_nome.getText().toString().trim(), Double.valueOf(txt_preco.getText().toString().trim()), checkBox.isChecked());
+                Produto novoProduto = new Produto(chave, txt_nome.getText().toString().trim(), Double.valueOf(txt_preco.getText().toString().trim()), checkBox.isChecked(),"");
 
                 //Chama a classe de CRUD de produto, fazendo referencia ao nó raiz do cadastro de produto
                 ProdutoDao produtoDao = new ProdutoDao();
