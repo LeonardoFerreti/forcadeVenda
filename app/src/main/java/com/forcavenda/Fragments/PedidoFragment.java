@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -11,10 +12,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.forcavenda.Adapters.PedidoAdapter;
 import com.forcavenda.Entidades.Cliente;
+import com.forcavenda.Entidades.ItemPedido;
 import com.forcavenda.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Leo on 25/02/2017.
@@ -22,6 +28,7 @@ import com.forcavenda.R;
 public class PedidoFragment extends Fragment {
     private static final String ARG_CLIENTE = "cliente";
     Cliente cliente;
+    List<ItemPedido> itensSelecionados = new ArrayList<ItemPedido>();
 
     public PedidoFragment() {
     }
@@ -49,12 +56,13 @@ public class PedidoFragment extends Fragment {
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Selecionar itens"));
-        tabLayout.addTab(tabLayout.newTab().setText("Finalizar pedido"));
+        tabLayout.addTab(tabLayout.newTab().setText("Concluir pedido"));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
-        final PedidoAdapter adapter = new PedidoAdapter(getFragmentManager(), tabLayout.getTabCount());
+        final PedidoAdapter adapter = new PedidoAdapter(getFragmentManager());
+
 
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -62,11 +70,19 @@ public class PedidoFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+                Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
+
+                if (fragment instanceof FinalizaPedidoFragment) {
+                    ((FinalizaPedidoFragment) fragment).setListaItensPedido(itensSelecionados);
+                }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
+                if (fragment instanceof ListaItensFragment) {
+                    itensSelecionados = ((ListaItensFragment) fragment).getItensVenda();
+                }
             }
 
             @Override

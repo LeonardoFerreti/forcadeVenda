@@ -11,9 +11,14 @@ public class ItemPedido implements Serializable {
     private Produto produto;
     private int Quantidade;
 
+    public void setQuantidade(int quantidade) {
+        Quantidade = quantidade;
+    }
+
     public int getQuantidade() {
         return Quantidade;
     }
+
     public Produto getProduto() {
         return produto;
     }

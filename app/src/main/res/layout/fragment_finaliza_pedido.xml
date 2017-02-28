@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,18 +9,113 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="1">
 
-    <TextView
-        android:id="@+id/lbl_formaPgto"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Forma de pagamento" />
+        android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/cboFormapgto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:layout_marginTop="5dp"
-        android:background="@android:drawable/btn_dropdown" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/lbl_resumo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Resumo do pedido:" />
+
+            <ListView
+                android:id="@+id/lista_resumo_pedido"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/lbl_formaPgto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Forma de pagamento:" />
+
+            <Spinner
+                android:id="@+id/cboFormapgto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:layout_marginTop="5dp" />
+
+            <RelativeLayout
+                android:id="@+id/linearValorPago"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/lbl_ValorPago"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="R$ 50,00"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/lbl_TextoValorPago"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center_vertical"
+                    android:text="Valor pago:" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/linearTroco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/lbl_Troco"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="R$ 5,00" />
+
+                <TextView
+                    android:id="@+id/lbl_TextoTroco"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@+id/lbl_Troco"
+                    android:layout_toStartOf="@+id/lbl_Troco"
+                    android:text="Troco:" />
+            </RelativeLayout>
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:backgroundTint="@color/colorAccent"
+                android:text="Salvar pedido"
+                android:textColor="@color/Branco" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="false"
+        android:visibility="visible" />
+</android.support.design.widget.CoordinatorLayout>

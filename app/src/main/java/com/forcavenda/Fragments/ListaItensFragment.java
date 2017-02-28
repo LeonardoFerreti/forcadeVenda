@@ -29,6 +29,7 @@ import java.util.List;
  */
 
 public class ListaItensFragment extends Fragment {
+    ListItensVendaAdapter adapter;
     List<ItemPedido> listaItens = new ArrayList<ItemPedido>();
 
     @Nullable
@@ -39,13 +40,12 @@ public class ListaItensFragment extends Fragment {
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         ListView listView = (ListView) view.findViewById(R.id.lista);
 
-
         final FirebaseDatabase banco = FirebaseDatabase.getInstance();
         DatabaseReference tabProdutos = banco.getReference("produto");
 
         Query resultado = tabProdutos.orderByChild("nome");
 
-        final ListItensVendaAdapter adapter = new ListItensVendaAdapter(getActivity(),
+        adapter = new ListItensVendaAdapter(getActivity(),
                 R.layout.lista_itens_venda, listaItens);
         listView.setAdapter(adapter);
 
@@ -92,5 +92,9 @@ public class ListaItensFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public List<ItemPedido> getItensVenda() {
+        return adapter.getSelectedItens();
     }
 }

@@ -67,7 +67,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Telas.Nav_PrincipalActivity"
-            android:label="@string/title_activity_nav__principal"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>

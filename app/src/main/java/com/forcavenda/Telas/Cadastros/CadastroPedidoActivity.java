@@ -237,7 +237,7 @@ public class CadastroPedidoActivity extends AppCompatActivity {
                 formaPgto = (FormaPgto) cboFormaPgto.getItemAtPosition(cboFormaPgto.getSelectedItemPosition());
                 itensPedido = listaitemPedidos;
 
-                final Pedido pedido = new Pedido(Long.valueOf(String.valueOf(0)), "", cliente, formaPgto, itensVendaAdapter.getItems(),
+                final Pedido pedido = new Pedido(Long.valueOf(String.valueOf(0)), "", cliente, formaPgto, itensVendaAdapter.getItens(),
                         Double.valueOf(String.valueOf(50)), Double.valueOf(String.valueOf(0)), Double.valueOf(String.valueOf(50)), false);
 
                 final Pedido novo_pedido = InsereNovoPedido(pedido,cliente,formaPgto,itensPedido);
