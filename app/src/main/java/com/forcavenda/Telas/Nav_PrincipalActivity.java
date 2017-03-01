@@ -1,6 +1,8 @@
 package com.forcavenda.Telas;
 
 
+import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -29,6 +32,7 @@ import android.widget.Toast;
 
 import com.forcavenda.Dao.ClienteDao;
 import com.forcavenda.Entidades.Cliente;
+import com.forcavenda.Fragments.CadastroClienteFragment;
 import com.forcavenda.Fragments.ClienteFragment;
 import com.forcavenda.Fragments.FormaPgtoFragment;
 import com.forcavenda.Fragments.PedidoFragment;
@@ -50,10 +54,11 @@ import com.google.firebase.database.ValueEventListener;
 public class Nav_PrincipalActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    // private ProgressDialog progressDialog;
     private Cliente clienteLogado;
     private boolean viewHome;
+    ProgressDialog progressDialog;
     SharedPreferences sharedpreferences;
+    FloatingActionButton floatButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,19 +67,24 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sharedpreferences = getSharedPreferences(Util.PREFERENCIA, Context.MODE_PRIVATE);
-
-        //  progressDialog = Util.CriaProgressDialog(getApplicationContext());
-        //  progressDialog.show();
+        //  progressDialog = new ProgressDialog(this);
+        //progressDialog
+        progressDialog = Util.CriaProgressDialog(this);
+        progressDialog.show();
 
         //Inserir nome e email do usuario no cabeçalho
         informacoesCabecalho();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        floatButton = (FloatingActionButton) findViewById(R.id.fab);
+        floatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "chamar a acao de cadastrar pedidos", Snackbar.LENGTH_LONG)
-                        .setAction("Ação", null).show();
+                android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+                CadastroClienteFragment fragment = CadastroClienteFragment.newInstance(null);
+                fragment.show(fm, "Cadastrar cliente");
+
+               // Snackbar.make(view, "chamar a acao de cadastrar pedidos", Snackbar.LENGTH_LONG)
+                  //      .setAction("Ação", null).show();
             }
         });
 
@@ -117,7 +127,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                   clienteLogado = dataSnapshot.getValue(Cliente.class);
+                clienteLogado = dataSnapshot.getValue(Cliente.class);
 
             }
 
@@ -138,7 +148,6 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         });
 
         refUsuarioCliente.addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //se nao foi encontrado um valor valido para o email, entao insere o cliente com os dados do usuario atual
@@ -174,12 +183,14 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                     if (cliente.getAdmin()) {
                         mostraItensUsuarioSimples();
                     }
+                    Log.i("cliente admin:", cliente.getAdmin().toString());
+
                     clienteLogado = cliente;
                     editor.putString(Util.chaveCliente, cliente.getId());
                     editor.putBoolean(Util.isAdmin, cliente.getAdmin());
                 }
 
-                //        progressDialog.dismiss();
+                progressDialog.dismiss();
             }
 
             @Override
@@ -211,7 +222,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.nav__principal, menu);
+        // getMenuInflater().inflate(R.menu.nav__principal, menu);
         return true;
     }
 
@@ -243,26 +254,31 @@ public class Nav_PrincipalActivity extends AppCompatActivity
             case R.id.nav_perfil:
                 fragment = PerfilFragment.newInstance(clienteLogado);
                 titulo = "Perfil";
+                floatButton.setVisibility(View.GONE);
                 break;
             case R.id.nav_clientes:
                 fragment = new ClienteFragment();
                 titulo = "Clientes";
                 viewHome = true;
+                floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_produtos:
                 fragment = new ProdutoFragment();
                 titulo = "Produtos";
                 viewHome = false;
+                floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_forma_pgto:
                 fragment = new FormaPgtoFragment();
                 titulo = "Formas de pagamento";
                 viewHome = false;
+                floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_criar_pedido:
                 fragment = new PedidoFragment();
                 titulo = "Pedidos";
-                viewHome =false;
+                viewHome = false;
+                floatButton.setVisibility(View.GONE);
                 break;
             case R.id.nav_trocar_senha:
                 fragment = new TrocaSenhaFragment();
@@ -272,7 +288,6 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         }
 
         if (viewId == R.id.nav_sair) {
-
             AlertDialog.Builder builder = new AlertDialog.Builder(Nav_PrincipalActivity.this);
             builder.setMessage("Deseja realmente sair do sistema?");
             builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {

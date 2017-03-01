@@ -1,11 +1,8 @@
 package com.forcavenda.Fragments;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -13,15 +10,12 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -30,6 +24,8 @@ import com.forcavenda.Dao.EnderecoDao;
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.Endereco;
 import com.forcavenda.R;
+import com.forcavenda.Telas.Nav_PrincipalActivity;
+import com.forcavenda.Util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,12 +37,10 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.internal.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
@@ -72,8 +66,8 @@ public class PerfilFragment extends Fragment {
     EditText txt_cep;
 
     EditText txt_numero_telefone;
-    ProgressBar progressBar;
-    ProgressBar progressBar2;
+    ProgressBar progressBarCEP;
+    ProgressBar progressBarCadastro;
 
     Boolean consultaCep = true;
 
@@ -101,7 +95,7 @@ public class PerfilFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cadastro_cliente, container, false);
 
-        progressBar2 = (ProgressBar) view.findViewById(R.id.progressBar2);
+        progressBarCadastro = (ProgressBar) view.findViewById(R.id.progressBar2);
 
         //Dados do cliente
         input_nome = (TextInputLayout) view.findViewById(R.id.input_nome);
@@ -135,9 +129,9 @@ public class PerfilFragment extends Fragment {
                     txt_cep.setText(cep);
                 }
 
-                if (consultaCep){
-                    if (cep.length() == 9 ) {
-                        progressBar.setVisibility(View.VISIBLE);
+                if (consultaCep) {
+                    if (cep.length() == 9) {
+                        progressBarCEP.setVisibility(View.VISIBLE);
                         cep = cep.replace("-", "");
 
                         try {
@@ -155,8 +149,7 @@ public class PerfilFragment extends Fragment {
         //Dados do telefone
         txt_numero_telefone = (EditText) view.findViewById(R.id.txt_telefone);
         //Progressbar
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-
+        progressBarCEP = (ProgressBar) view.findViewById(R.id.progressBar);
 
         if (cliente != null) {
             //Dados do cliente
@@ -166,13 +159,13 @@ public class PerfilFragment extends Fragment {
 
             if (cliente.getEndereco() != null) {
                 //Dados do endereço do cliente
-                consultaCep =false;
+                consultaCep = false;
                 txt_cep.setText(cliente.getEndereco().getCep().toString().replace("-", ""));
                 txt_rua.setText(cliente.getEndereco().getLogradouro().toString());
                 txt_numero.setText(cliente.getEndereco().getNumero().toString());
                 txt_complemento.setText(cliente.getEndereco().getComplemento().toString());
                 txt_referencia.setText(cliente.getEndereco().getReferencia().toString());
-                consultaCep =true;
+                consultaCep = true;
             }
 
             //Dados do telefone
@@ -181,39 +174,46 @@ public class PerfilFragment extends Fragment {
         }
 
         Button btn_salvar = (Button) view.findViewById(R.id.btn_salvar);
+        btn_salvar.setVisibility(View.VISIBLE);
 
         btn_salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar2.setVisibility(View.VISIBLE);
-                if (com.forcavenda.Util.Util.estaConectadoInternet(getActivity().getApplicationContext())) {
-                    if (validaCampos()) {
+//                progressBarCadastro.setVisibility(View.VISIBLE);
+//                ProgressDialog progressDialog = Util.CriaProgressDialog(getActivity());
+//                progressDialog.show();
+//                if (com.forcavenda.Util.Util.estaConectadoInternet(getActivity().getApplicationContext())) {
+//                    if (validaCampos()) {
+//
+//                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                        UserProfileChangeRequest updatePerfil = new UserProfileChangeRequest.Builder()
+//                                .setDisplayName(txt_nome.getText().toString())
+//                                .build();
+//
+//                        user.updateProfile(updatePerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//                                    insereNovoCliente(cliente);
+//                                    Toast.makeText(getActivity().getApplicationContext(), "Cliente alterado com sucesso.", Toast.LENGTH_SHORT).show();
+//                                } else {
+//                                    Toast.makeText(getActivity().getApplicationContext(), "Erro ao alterar nome: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                        });
+//
+//                    } else {
+//                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Verifique os dados informados.", Snackbar.LENGTH_SHORT).show();
+//                    }
+//
+//                } else {
+//                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Verifique sua conexão com a internet.", Snackbar.LENGTH_SHORT).show();
+//                }
+//                progressDialog.dismiss();
+//                progressBarCadastro.setVisibility(View.GONE);
 
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        UserProfileChangeRequest updatePerfil = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(txt_nome.getText().toString())
-                                .build();
-
-                        user.updateProfile(updatePerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    insereNovoCliente(cliente);
-                                    Toast.makeText(getActivity().getApplicationContext(), "Cliente alterado com sucesso.", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(getActivity().getApplicationContext(), "Erro ao alterar nome: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-
-                    } else {
-                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Verifique os dados informados.", Snackbar.LENGTH_SHORT).show();
-                    }
-
-                } else {
-                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Verifique sua conexão com a internet.", Snackbar.LENGTH_SHORT).show();
-                }
-                progressBar2.setVisibility(View.GONE);
+                SalvaPerfil task = new SalvaPerfil((Nav_PrincipalActivity) getActivity());
+                task.execute();
             }
         });
 
@@ -259,7 +259,7 @@ public class PerfilFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                progressBar.setVisibility(View.GONE);
+                                progressBarCEP.setVisibility(View.GONE);
                             }
                         });
                     }
@@ -277,7 +277,7 @@ public class PerfilFragment extends Fragment {
                                     int pos = txt_rua.getText().length();
                                     txt_rua.requestFocus();
                                     txt_rua.setSelection(pos);
-                                    progressBar.setVisibility(View.GONE);
+                                    progressBarCEP.setVisibility(View.GONE);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     Log.i("Erro: ", "Erro ao retornar o array em JSON: " + e.getMessage());
@@ -311,6 +311,63 @@ public class PerfilFragment extends Fragment {
                     txt_email.getText().toString().trim(), FirebaseAuth.getInstance().getCurrentUser().getUid(), cliente.getAdmin(), endereco, txt_numero_telefone.getText().toString());
         }
         return validado;
+    }
+
+
+    private class SalvaPerfil extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+
+        public SalvaPerfil(Nav_PrincipalActivity activity) {
+            progressDialog = new ProgressDialog(activity);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog.setMessage("Salvando dados...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                if (com.forcavenda.Util.Util.estaConectadoInternet(getActivity().getApplicationContext())) {
+                    if (validaCampos()) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        UserProfileChangeRequest updatePerfil = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(cliente.getNome().toString())
+                                .build();
+
+                        user.updateProfile(updatePerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    insereNovoCliente(cliente);
+                                    Toast.makeText(getActivity().getApplicationContext(), "Cliente alterado com sucesso.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity().getApplicationContext(), "Erro ao alterar nome: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                    } else {
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Verifique os dados informados.", Snackbar.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Verifique sua conexão com a internet.", Snackbar.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+            }
+            return null;
+        }
     }
 
 }

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -69,6 +70,16 @@ public class ClienteFragment extends Fragment {
                 listaClientes);
         listView.setAdapter(adapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cliente cliente = (Cliente) parent.getItemAtPosition(position);
+                android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+                CadastroClienteFragment fragment = CadastroClienteFragment.newInstance(cliente);
+                fragment.show(fm, "Alterar cliente");
+            }
+        });
+
         resultado.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -91,7 +102,10 @@ public class ClienteFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                Cliente cliente = dataSnapshot.getValue(Cliente.class);
+                listaClientes.remove(cliente);
+                listaClientes.add(cliente);
+                adapter.notifyDataSetChanged();
             }
 
             @Override

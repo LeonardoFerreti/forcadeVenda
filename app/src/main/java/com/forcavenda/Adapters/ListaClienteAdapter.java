@@ -34,10 +34,12 @@ public class ListaClienteAdapter extends ArrayAdapter<Cliente> {
     private View initView(int position, View convertView) {
         if (convertView == null)
             convertView = View.inflate(getContext(),
-                    R.layout.layout_lista,
+                    R.layout.layout_lista_cliente,
                     null);
         TextView tvText1 = (TextView) convertView.findViewById(R.id.txt_1);
         tvText1.setText(getItem(position).getNome());
+        TextView tvText2 = (TextView) convertView.findViewById(R.id.txt_2);
+        tvText2.setText(getItem(position).getEmail());
         return convertView;
     }
 }

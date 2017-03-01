@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -40,6 +41,7 @@ public class FinalizaPedidoFragment extends Fragment {
     ResumoItensVendaAdapter resumoItensVendaAdapter;
     ListView listaResumoItens;
     TextView lblValorTotal;
+    Button btn_salvar;
     NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
     public void setListaItensPedido(List<ItemPedido> listaItensPedido) {
@@ -50,6 +52,7 @@ public class FinalizaPedidoFragment extends Fragment {
             listaResumoItens.setAdapter(resumoItensVendaAdapter);
             resumoItensVendaAdapter.notifyDataSetChanged();
             lblValorTotal.setText(formatter.format(resumoItensVendaAdapter.getValorTotal()));
+            btn_salvar.setEnabled(resumoItensVendaAdapter.getCount() > 0);
         }
     }
 
@@ -61,6 +64,7 @@ public class FinalizaPedidoFragment extends Fragment {
         cboFormaPgto = (Spinner) view.findViewById(R.id.cboFormapgto);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         listaResumoItens = (ListView) view.findViewById(R.id.lista_resumo_pedido);
+        btn_salvar = (Button) view.findViewById(R.id.btn_salvar);
 
         View header = (View) getLayoutInflater(savedInstanceState).inflate(R.layout.lista_resumo_pedido_header, null);
         View footer = (View) getLayoutInflater(savedInstanceState).inflate(R.layout.lista_resumo_pedido_footer, null);

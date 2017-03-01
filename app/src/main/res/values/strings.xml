@@ -49,4 +49,14 @@
     <string name="hint_senha_antiga_email">Digite a senha antiga</string>
     <string name="hint_repita_nova_senha_email">Repita a nova senha</string>
     <string name="hint_nova_senha_email">Informe a senha</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="salvar">Salvar</string>
+    <string name="cadastrar_cliente">Cadastrar cliente</string>
+    <string name="verificar_conexao">Verifique sua conexão com a internet.</string>
+    <string name="verificar_dados_informados">Verifique os dados informados</string>
+    <string name="email_cliente_vazio">Informe o e-mail do cliente.</string>
+    <string name="rua_cliente_vazio">Informe a rua do cliente.</string>
+    <string name="referencia_cliente_vazio">Informe uma referência.</string>
+    <string name="telefone_cliente_vazio">Informe o telefone do cliente.</string>
+    <string name="cliente_cadastrado_sucesso">Cliente cadastrado com sucesso.</string>
 </resources>
