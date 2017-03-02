@@ -200,7 +200,7 @@ public class CadastroPerfilFragment extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            //Recupera a instancia do Banco de dados da aplicação
+                                            //Recupera a instancia do Banco de dados da aplicação//
                                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                                             //recupera a raiz do nó do banco de dados
                                             ref = database.getReference();
