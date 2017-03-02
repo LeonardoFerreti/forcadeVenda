@@ -62,7 +62,7 @@ public class CadastroProdutoActivity extends AppCompatActivity {
 
                 //Chama a classe de CRUD de produto, fazendo referencia ao nó raiz do cadastro de produto
                 ProdutoDao produtoDao = new ProdutoDao();
-                produtoDao.Incluir(ref, chave, novoProduto.MapFormaPgto(novoProduto));
+                produtoDao.IncluirAlterar(ref, chave, novoProduto.MapFormaPgto(novoProduto));
 
                 String texto = (produto == null) ? "incluído" : "alterado";
                 Snackbar.make(findViewById(android.R.id.content), "Produto " + texto + " com sucesso .",

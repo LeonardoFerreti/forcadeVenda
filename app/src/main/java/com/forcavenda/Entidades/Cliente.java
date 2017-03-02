@@ -49,7 +49,6 @@ public class Cliente implements Serializable {
     public String getId_usuario() {
         return id_usuario;
     }
-
     //retorna se o usuario vinculado é admin ou não
     public Boolean getAdmin() {
         return isAdmin;
@@ -58,25 +57,32 @@ public class Cliente implements Serializable {
     public String getId() {
         return id;
     }
-
     //retorna o nome do cliente
     public String getNome() {
         return nome;
     }
-
     //retorna o email do cliente
     public String getEmail() {
         return email;
     }
-
     //retorna o endereco de um cliente
     public Endereco getEndereco() {
         return endereco;
     }
-
     //retorna a lista de telefones de um cliente
     public String getTelefone() {
         return telefone;
+    }
+
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     //retorna um HasMap com as propriedades e valores de um objeto Cliente

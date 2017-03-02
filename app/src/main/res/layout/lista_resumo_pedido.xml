@@ -4,29 +4,32 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="27777"
-        android:layout_marginRight="6dp"
         android:id="@+id/lblQtde"
         android:layout_width="43dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginRight="6dp"
+        android:text="1"
+        android:textColor="@color/Preto" />
 
     <TextView
-        android:text="Batata rostie - recheada"
         android:id="@+id/lbl_nomeProduto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/lblQtde"
         android:layout_toLeftOf="@+id/lbl_valorTotal"
         android:layout_toRightOf="@+id/lblQtde"
-        android:layout_toEndOf="@+id/lblQtde" />
+        android:text="Batata Frita"
+        android:textColor="@color/Preto" />
 
     <TextView
-        android:text="R$ 13,00"
         android:id="@+id/lbl_valorTotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentTop="true"
+        android:text="R$ 13,00"
+        android:textColor="@color/Preto" />
 
 </RelativeLayout>

@@ -52,7 +52,6 @@ public class ListItensVendaAdapter extends ArrayAdapter<ItemPedido> {
 
         View v = convertView;
 
-
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
@@ -66,7 +65,7 @@ public class ListItensVendaAdapter extends ArrayAdapter<ItemPedido> {
             TextView txt_nome = (TextView) v.findViewById(R.id.txt_nome);
             final TextView txt_preco = (TextView) v.findViewById(R.id.txt_preco);
             final EditText txt_qtde = (EditText) v.findViewById(R.id.txt_qtde);
-            ImageView btn_adiciona = (ImageView) v.findViewById(R.id.btn_adicionaQtde);
+            final ImageView btn_adiciona = (ImageView) v.findViewById(R.id.btn_adicionaQtde);
             btn_adiciona.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -81,7 +80,7 @@ public class ListItensVendaAdapter extends ArrayAdapter<ItemPedido> {
                 }
             });
 
-            ImageView btn_diminui = (ImageView) v.findViewById(R.id.btn_diminuiQtde);
+            final ImageView btn_diminui = (ImageView) v.findViewById(R.id.btn_diminuiQtde);
             btn_diminui.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -104,9 +103,15 @@ public class ListItensVendaAdapter extends ArrayAdapter<ItemPedido> {
                 @Override
                 public void onClick(View v) {
                     if (checkBox.isChecked()) {
+                        btn_adiciona.setVisibility(View.VISIBLE);
+                        btn_diminui.setVisibility(View.VISIBLE);
+                        txt_qtde.setVisibility(View.VISIBLE);
                         finalView.setBackgroundColor(Color.argb(100, 208, 215, 212));
                         itensSelecionados.add(itemPedido);
                     } else {
+                        btn_adiciona.setVisibility(View.GONE);
+                        btn_diminui.setVisibility(View.GONE);
+                        txt_qtde.setVisibility(View.GONE);
                         finalView.setBackgroundColor(Color.TRANSPARENT);
                         itensSelecionados.remove(itemPedido);
                     }

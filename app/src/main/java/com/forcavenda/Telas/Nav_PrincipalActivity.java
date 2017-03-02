@@ -1,7 +1,6 @@
 package com.forcavenda.Telas;
 
 
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,10 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 
 
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -27,17 +24,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.forcavenda.Dao.ClienteDao;
 import com.forcavenda.Entidades.Cliente;
-import com.forcavenda.Fragments.CadastroClienteFragment;
-import com.forcavenda.Fragments.ClienteFragment;
-import com.forcavenda.Fragments.FormaPgtoFragment;
+import com.forcavenda.Fragments.Cadastros.CadastroClienteFragment;
+import com.forcavenda.Fragments.Cadastros.CadastroFormaPgtoFragment;
+import com.forcavenda.Fragments.Cadastros.CadastroProdutoFragment;
+import com.forcavenda.Fragments.Listas.ClienteFragment;
+import com.forcavenda.Fragments.Listas.FormaPgtoFragment;
 import com.forcavenda.Fragments.PedidoFragment;
-import com.forcavenda.Fragments.PerfilFragment;
-import com.forcavenda.Fragments.ProdutoFragment;
+import com.forcavenda.Fragments.Cadastros.CadastroPerfilFragment;
+import com.forcavenda.Fragments.Listas.ProdutoFragment;
 import com.forcavenda.Fragments.TrocaSenhaFragment;
 import com.forcavenda.R;
 import com.forcavenda.Util.Util;
@@ -59,6 +57,9 @@ public class Nav_PrincipalActivity extends AppCompatActivity
     ProgressDialog progressDialog;
     SharedPreferences sharedpreferences;
     FloatingActionButton floatButton;
+    MenuItem itemSelecionado;
+    NavigationView navView;
+    boolean blnCommitFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,24 +68,32 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sharedpreferences = getSharedPreferences(Util.PREFERENCIA, Context.MODE_PRIVATE);
-        //  progressDialog = new ProgressDialog(this);
-        //progressDialog
         progressDialog = Util.CriaProgressDialog(this);
         progressDialog.show();
 
         //Inserir nome e email do usuario no cabeçalho
         informacoesCabecalho();
 
+        //Recupera o floatActionButton, botão que chama os novos cadastros das entidades
         floatButton = (FloatingActionButton) findViewById(R.id.fab);
         floatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-                CadastroClienteFragment fragment = CadastroClienteFragment.newInstance(null);
-                fragment.show(fm, "Cadastrar cliente");
-
-               // Snackbar.make(view, "chamar a acao de cadastrar pedidos", Snackbar.LENGTH_LONG)
-                  //      .setAction("Ação", null).show();
+                switch (itemSelecionado.getItemId()) {
+                    case R.id.nav_clientes:
+                        CadastroClienteFragment fragmentCliente = CadastroClienteFragment.newInstance(null);
+                        fragmentCliente.show(fm, "Cadastrar cliente");
+                        break;
+                    case R.id.nav_forma_pgto:
+                        CadastroFormaPgtoFragment fragmentFormaPgto = CadastroFormaPgtoFragment.newInstance(null);
+                        fragmentFormaPgto.show(fm, "Cadastrar forma de pagamento");
+                        break;
+                    case R.id.nav_produtos:
+                        CadastroProdutoFragment fragmentProduto = CadastroProdutoFragment.newInstance(null);
+                        fragmentProduto.show(fm, "Cadastrar Produto");
+                        break;
+                }
             }
         });
 
@@ -94,14 +103,12 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        navView = (NavigationView) findViewById(R.id.nav_view);
         navView.setNavigationItemSelectedListener(this);
         verificaUsuarioSimples();
-        navView.getMenu().getItem(0).setChecked(true);
     }
 
     private void informacoesCabecalho() {
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
 
@@ -116,37 +123,30 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         final SharedPreferences.Editor editor = sharedpreferences.edit();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-
         final Query refUsuarioCliente = ref.child("cliente").orderByChild("email").equalTo(user.getEmail());
 
         refUsuarioCliente.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 clienteLogado = dataSnapshot.getValue(Cliente.class);
-
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
         refUsuarioCliente.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -191,6 +191,10 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                 }
 
                 progressDialog.dismiss();
+
+                //Seleciona o primeiro item de Menu
+                navView.getMenu().getItem(0).setChecked(true);
+                onNavigationItemSelected(navView.getMenu().getItem(0));
             }
 
             @Override
@@ -198,7 +202,6 @@ public class Nav_PrincipalActivity extends AppCompatActivity
 
             }
         });
-
     }
 
     private void mostraItensUsuarioSimples() {
@@ -240,10 +243,10 @@ public class Nav_PrincipalActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        itemSelecionado = item;
         displayView(item.getItemId());
         return true;
     }
-
 
     public void displayView(int viewId) {
 
@@ -252,7 +255,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
 
         switch (viewId) {
             case R.id.nav_perfil:
-                fragment = PerfilFragment.newInstance(clienteLogado);
+                fragment = CadastroPerfilFragment.newInstance(clienteLogado);
                 titulo = "Perfil";
                 floatButton.setVisibility(View.GONE);
                 break;
@@ -308,7 +311,9 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         } else if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.nav_container, fragment);
-            ft.commit();
+            if (blnCommitFragment){
+                ft.commit();
+            }
         }
 
         if (getSupportActionBar() != null) {
@@ -316,5 +321,41 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        blnCommitFragment = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        blnCommitFragment = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        blnCommitFragment = false;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        blnCommitFragment = false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        blnCommitFragment = false;
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        blnCommitFragment = true;
     }
 }

@@ -1,4 +1,4 @@
-package com.forcavenda.Fragments;
+package com.forcavenda.Fragments.Listas;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -6,11 +6,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+
 import com.forcavenda.Adapters.ListaProdutoAdapter;
 import com.forcavenda.Entidades.Produto;
+import com.forcavenda.Fragments.Cadastros.CadastroProdutoFragment;
 import com.forcavenda.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -64,6 +66,16 @@ public class ProdutoFragment extends Fragment {
                 listaProdutos);
         listView.setAdapter(adapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Produto produto = (Produto) parent.getItemAtPosition(position);
+                android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+                CadastroProdutoFragment fragmentFormaPgto = CadastroProdutoFragment.newInstance(produto);
+                fragmentFormaPgto.show(fm, "Cadastrar produto");
+            }
+        });
+
         resultado.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -86,7 +98,17 @@ public class ProdutoFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                Produto produto = dataSnapshot.getValue(Produto.class);
+                for (Produto produtolista: listaProdutos) {
+                    if (produtolista.getId().equals(produto.getId())){
+                        produtolista.setNome(produto.getNome());
+                        produtolista.setPreco(produto.getPreco());
+                        produtolista.setDescricao(produto.getDescricao());
+                        produtolista.setAtivo(produto.getAtivo());
+                        break;
+                    }
+                }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -105,19 +127,6 @@ public class ProdutoFragment extends Fragment {
             }
             // ....
         });
-
-        FloatingActionButton btn_adicionar = (FloatingActionButton) view.findViewById(R.id.btn_adicionar);
-
-//        btn_adicionar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(ListaClienteActivity.this, CadastroClienteActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        });
-
-
 
         return view;
     }

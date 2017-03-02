@@ -60,7 +60,8 @@
         android:gravity="center_horizontal"
         android:text="1"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/btn_diminuiQtde"
@@ -71,7 +72,9 @@
         android:layout_toStartOf="@+id/txt_qtde"
         android:clickable="false"
         android:src="@drawable/ic_remove_circle_outline_black_24dp"
-        android:text="-" />
+        android:text="-"
+        android:visibility="gone" />
+
     <ImageView
         android:id="@+id/btn_adicionaQtde"
         android:layout_width="32dp"
@@ -79,6 +82,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/btn_diminuiQtde"
-        android:src="@drawable/ic_add_circle_outline_black_24dp" />
+        android:src="@drawable/ic_add_circle_outline_black_24dp"
+        android:visibility="gone" />
 
 </RelativeLayout>

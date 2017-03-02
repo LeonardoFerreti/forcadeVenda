@@ -1,18 +1,21 @@
-package com.forcavenda.Fragments;
+package com.forcavenda.Fragments.Listas;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.forcavenda.Adapters.ListaFormaPgtoAdapter;
-import com.forcavenda.Adapters.ListaProdutoAdapter;
-import com.forcavenda.Entidades.FormaPgto;
-import com.forcavenda.Entidades.Produto;
+import com.forcavenda.Adapters.ListaClienteAdapter;
+import com.forcavenda.Entidades.Cliente;
+import com.forcavenda.Fragments.Cadastros.CadastroClienteFragment;
 import com.forcavenda.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -25,19 +28,19 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Leo on 23/02/2017.
- */
 
-public class FormaPgtoFragment extends Fragment {
-    List<FormaPgto> listaFormaPgto = new ArrayList<FormaPgto>();
+public class ClienteFragment extends Fragment {
 
-    public FormaPgtoFragment() {
+    List<Cliente> listaClientes = new ArrayList<Cliente>();
+    private OnFragmentInteractionListener mListener;
+
+    public ClienteFragment() {
     }
 
-    public static FormaPgtoFragment newInstance() {
-        FormaPgtoFragment fragment = new FormaPgtoFragment();
+    public static ClienteFragment newInstance() {
+        ClienteFragment fragment = new ClienteFragment();
         Bundle args = new Bundle();
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,13 +61,23 @@ public class FormaPgtoFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.lista);
 
         final FirebaseDatabase banco = FirebaseDatabase.getInstance();
-        DatabaseReference tabProdutos = banco.getReference("formaPgto");
+        DatabaseReference tabClientes = banco.getReference("cliente");
 
-        Query resultado = tabProdutos.orderByChild("nome");
+        Query resultado = tabClientes.orderByChild("nome");
 
-        final ListaFormaPgtoAdapter adapter = new ListaFormaPgtoAdapter(getActivity().getApplicationContext(),
-                listaFormaPgto);
+        final ListaClienteAdapter adapter = new ListaClienteAdapter(getActivity().getApplicationContext(),
+                listaClientes);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cliente cliente = (Cliente) parent.getItemAtPosition(position);
+                android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+                CadastroClienteFragment fragment = CadastroClienteFragment.newInstance(cliente);
+                fragment.show(fm, "Alterar cliente");
+            }
+        });
 
         resultado.addValueEventListener(new ValueEventListener() {
             @Override
@@ -74,26 +87,36 @@ public class FormaPgtoFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
         resultado.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-                FormaPgto formaPgto = snapshot.getValue(FormaPgto.class);
-                listaFormaPgto.add(formaPgto);
+                Cliente cliente = snapshot.getValue(Cliente.class);
+                listaClientes.add(cliente);
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                Cliente cliente = dataSnapshot.getValue(Cliente.class);
+                for (Cliente cli: listaClientes) {
+                    if (cli.getId().equals(cliente.getId())){
+                        cli.setNome(cliente.getNome());
+                        cli.setTelefone(cliente.getTelefone());
+                        cli.setEndereco(cli.getEndereco());
+                        break;
+                    }
+                }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                Cliente cliente = dataSnapshot.getValue(Cliente.class);
+                listaClientes.remove(cliente);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -121,5 +144,33 @@ public class FormaPgtoFragment extends Fragment {
 
         return view;
     }
-}
 
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+        Log.i("Detach", "sas");
+    }
+
+    public interface OnFragmentInteractionListener {
+
+        void onFragmentInteraction(Uri uri);
+    }
+}

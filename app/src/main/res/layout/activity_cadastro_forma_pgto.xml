@@ -38,12 +38,4 @@
             android:text="Ativo" />
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btn_salvar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_done_white_24dp"
-        app:backgroundTint="@color/colorPrimaryDark"
-        app:layout_anchor="@id/linear1"
-        app:layout_anchorGravity="bottom|right|end"></android.support.design.widget.FloatingActionButton>
 </android.support.design.widget.CoordinatorLayout>

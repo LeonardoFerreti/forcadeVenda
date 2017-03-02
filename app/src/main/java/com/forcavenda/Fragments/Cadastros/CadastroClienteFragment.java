@@ -1,11 +1,9 @@
-package com.forcavenda.Fragments;
+package com.forcavenda.Fragments.Cadastros;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
@@ -28,9 +26,11 @@ import com.forcavenda.Dao.EnderecoDao;
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.Endereco;
 import com.forcavenda.R;
-import com.forcavenda.Telas.Nav_PrincipalActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -45,6 +45,7 @@ public class CadastroClienteFragment extends DialogFragment {
     private static final String PARAM_CLIENTE = "cliente";
     public Cliente cliente;
     private DatabaseReference ref; //Instancia uma variavel para recuperar a referencia do nó
+    DatabaseReference tabCliente; //Instancia uma variavel para recuperar a referencia do cliente selecionado.
     private OkHttpClient httpClient = new OkHttpClient();
 
     TextInputLayout input_nome;
@@ -64,7 +65,6 @@ public class CadastroClienteFragment extends DialogFragment {
 
     ProgressBar progressBarCadastro;
     ProgressBar progressBarCEP;
-    ProgressDialog progressDialog;
 
     public CadastroClienteFragment() {
         // Construtor padrão
@@ -155,6 +155,10 @@ public class CadastroClienteFragment extends DialogFragment {
         //recupera a raiz do nó do banco de dados
         ref = database.getReference();
 
+        if (cliente != null) {
+            tabCliente = database.getReference("cliente").child(cliente.getId());
+        }
+
         //Dados do cliente
         input_nome = (TextInputLayout) view.findViewById(R.id.input_nome);
         input_email = (TextInputLayout) view.findViewById(R.id.input_email);
@@ -172,41 +176,6 @@ public class CadastroClienteFragment extends DialogFragment {
         txt_referencia = (EditText) view.findViewById(R.id.txt_referencia);
         txt_cep = (EditText) view.findViewById(R.id.txt_cep);
 
-        txt_cep.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String cep = String.valueOf(txt_cep.getText().toString().trim());
-
-                if (cep.length() == 8) {
-                    cep = cep.substring(0, 5) + "-" + cep.substring(5, 8);
-                    txt_cep.setText(cep);
-                }
-
-                if (cep.length() == 9) {
-                    progressBarCEP.setVisibility(View.VISIBLE);
-                    cep = cep.replace("-", "");
-
-                    try {
-                        buscaCEP("https://viacep.com.br/ws/" + cep + "/json/");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            }
-        });
-
         //Dados do telefone
         txt_telefone = (EditText) view.findViewById(R.id.txt_telefone);
 
@@ -215,19 +184,109 @@ public class CadastroClienteFragment extends DialogFragment {
         progressBarCadastro = (ProgressBar) view.findViewById(R.id.progressBar2);
 
         if (cliente != null) {
-            //Dados do cliente
-            txt_nome.setText(cliente.getNome().toString());
-            txt_email.setText(cliente.getEmail().toString());
-            //Dados do endereço do cliente
-            txt_rua.setText(cliente.getEndereco().getLogradouro().toString());
-            txt_numero.setText(cliente.getEndereco().getNumero().toString());
-            txt_complemento.setText(cliente.getEndereco().getComplemento().toString());
-            txt_referencia.setText(cliente.getEndereco().getReferencia().toString());
-            txt_cep.setText(cliente.getEndereco().getCep().toString());
-            //Dados do telefone
-            txt_telefone.setText(cliente.getTelefone().toString());
+            progressBarCadastro.setVisibility(View.VISIBLE);
+            tabCliente.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    cliente = dataSnapshot.getValue(Cliente.class);
+                    if (cliente != null) {
+                        //Dados do cliente
+                        txt_nome.setText(cliente.getNome().toString());
+                        txt_email.setText(cliente.getEmail().toString());
+                        txt_email.setEnabled(false);
 
+                        if (cliente.getEndereco() != null){
+                            //Dados do endereço do cliente
+                            txt_rua.setText(cliente.getEndereco().getLogradouro().toString());
+                            txt_numero.setText(cliente.getEndereco().getNumero().toString());
+                            txt_complemento.setText(cliente.getEndereco().getComplemento().toString());
+                            txt_referencia.setText(cliente.getEndereco().getReferencia().toString());
+                            txt_cep.setText(cliente.getEndereco().getCep().toString());
+                        }
+
+                        //Dados do telefone
+                        txt_telefone.setText(cliente.getTelefone().toString());
+
+                        txt_cep.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                                String cep = String.valueOf(txt_cep.getText().toString().trim());
+
+                                if (cep.length() == 8) {
+                                    cep = cep.substring(0, 5) + "-" + cep.substring(5, 8);
+                                    txt_cep.setText(cep);
+                                }
+
+                                if (cep.length() == 9) {
+                                    progressBarCEP.setVisibility(View.VISIBLE);
+                                    cep = cep.replace("-", "");
+
+                                    try {
+                                        buscaCEP("https://viacep.com.br/ws/" + cep + "/json/");
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(getActivity().getApplicationContext(), "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+                            }
+                        });
+                        progressBarCadastro.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
+        } else {
+            txt_cep.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    String cep = String.valueOf(txt_cep.getText().toString().trim());
+
+                    if (cep.length() == 8) {
+                        cep = cep.substring(0, 5) + "-" + cep.substring(5, 8);
+                        txt_cep.setText(cep);
+                    }
+
+                    if (cep.length() == 9) {
+                        progressBarCEP.setVisibility(View.VISIBLE);
+                        cep = cep.replace("-", "");
+
+                        try {
+                            buscaCEP("https://viacep.com.br/ws/" + cep + "/json/");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getActivity().getApplicationContext(), "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }
+            });
         }
+
         builder.setView(view);
 
         View titulo = i.inflate(R.layout.layout_titulo_fragment, null);
@@ -239,7 +298,6 @@ public class CadastroClienteFragment extends DialogFragment {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
-
                 Button btn_salvar = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
                 btn_salvar.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -247,12 +305,27 @@ public class CadastroClienteFragment extends DialogFragment {
                         progressBarCadastro.setVisibility(View.VISIBLE);
                         if (com.forcavenda.Util.Util.estaConectadoInternet(getActivity().getApplicationContext())) {
                             if (validaCampos()) {
+                                //Recupera a instancia do Banco de dados da aplicação
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                //recupera a raiz do nó do banco de dados
+                                ref = database.getReference();
+                                //captura o identificador do Cliente
+                                String chave = (cliente == null) ? ref.child("cliente").push().getKey() : cliente.getId();
+                                //Mapeia o objeto Endereço
                                 Endereco endereco = new Endereco(txt_rua.getText().toString().trim(), txt_numero.getText().toString().trim(), txt_complemento.getText().toString().trim(),
                                         txt_cep.getText().toString(), txt_referencia.getText().toString().trim());
-                                Cliente cliente = new Cliente("", txt_nome.getText().toString().trim(), txt_email.getText().toString().trim(), "", false, endereco, txt_telefone.getText().toString());
-                                InsereNovoCliente(cliente);
-                                progressBarCadastro.setVisibility(View.GONE);
-                                Toast.makeText(getActivity().getApplicationContext(), R.string.cliente_cadastrado_sucesso, Toast.LENGTH_SHORT).show();
+                                //Mapeia o objeto Cliente
+                                Cliente novoCliente = new Cliente(chave, txt_nome.getText().toString().trim(), txt_email.getText().toString().trim(), "", false, endereco, txt_telefone.getText().toString());
+                                //Chama a classe de CRUD de forma de pagamento, fazendo referencia ao nó raiz do Cliente
+                                ClienteDao clienteDao = new ClienteDao();
+                                DatabaseReference refNovoCliente = clienteDao.IncluirAlterar(ref, chave, novoCliente.MapCliente(novoCliente));
+                                //Chama a classe de CRUD de endereçc, fazendo referencia ao nó do cadastro de cliente
+                                EnderecoDao enderecoDao = new EnderecoDao();
+                                enderecoDao.Incluir(refNovoCliente, Endereco.MapEndereco(novoCliente.getEndereco()));
+                                String texto = (cliente == null) ? "incluído" : "alterado";
+                                Toast.makeText(getActivity().getApplicationContext(), "Cliente " + texto + " com sucesso.", Toast.LENGTH_SHORT).show();
+                                cliente = novoCliente;
+                                getDialog().dismiss();
 
                             } else {
                                 Toast.makeText(getActivity().getApplicationContext(), R.string.verificar_dados_informados, Toast.LENGTH_SHORT).show();
@@ -334,70 +407,6 @@ public class CadastroClienteFragment extends DialogFragment {
         } else {
             input_telefone.setError("");
         }
-
-//        if (validado) {
-//            Endereco endereco = new Endereco(txt_rua.getText().toString().trim(), txt_numero.getText().toString().trim(),
-//                    txt_complemento.getText().toString().trim(), txt_cep.getText().toString().trim(),
-//                    txt_referencia.getText().toString().trim());
-//
-//            String chaveCliente = "";
-//            if (cliente != null) {
-//                chaveCliente = cliente.getId().toString();
-//            } else {
-//                chaveCliente = ref.child("cliente").push().getKey();
-//            }
-//            cliente = new Cliente(chaveCliente, txt_nome.getText().toString().trim(),
-//                    txt_email.getText().toString().trim(), "", false, endereco, txt_numero_telefone.getText().toString());
-//        }
         return validado;
-    }
-
-    private class SalvaCliente extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
-        private Cliente cliente;
-        String msg;
-
-        public SalvaCliente(Nav_PrincipalActivity activity, Cliente cliente) {
-            this.cliente = cliente;
-            progressDialog = new ProgressDialog(activity);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog.setMessage("Salvando cliente...");
-            progressDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            if (progressDialog.isShowing()) {
-                progressDialog.cancel();
-            }
-            Handler handler = new Handler(getActivity().getApplicationContext().getMainLooper());
-            handler.post(new Runnable() {
-                public void run() {
-                    Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                if (com.forcavenda.Util.Util.estaConectadoInternet(getActivity().getApplicationContext())) {
-                    if (validaCampos()) {
-                        InsereNovoCliente(cliente);
-                        msg = String.valueOf(R.string.cliente_cadastrado_sucesso);
-                    } else {
-                        msg = String.valueOf(R.string.verificar_dados_informados);
-                    }
-                } else {
-                    msg = String.valueOf(R.string.verificar_conexao);
-                }
-            } catch (Exception e) {
-                msg = "Erro ao cadastrar cliente: " + e.getMessage();
-            }
-            return null;
-        }
     }
 }

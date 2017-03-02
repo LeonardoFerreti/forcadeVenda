@@ -52,7 +52,7 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.fragment_cadastro_cliente);
 
         //Recupera a instancia do Banco de dados da aplicação
         FirebaseDatabase database = FirebaseDatabase.getInstance();

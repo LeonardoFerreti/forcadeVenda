@@ -11,12 +11,12 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:text="R$ 45,00"
+        android:textColor="@color/Preto"
         android:textSize="15sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/lbl"
-        android:textSize="15sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -25,5 +25,7 @@
         android:layout_toLeftOf="@+id/lbl_valorTotal"
         android:layout_toStartOf="@+id/lbl_valorTotal"
         android:text="Valor total:"
+        android:textColor="@color/Preto"
+        android:textSize="15sp"
         android:textStyle="bold" />
 </RelativeLayout>

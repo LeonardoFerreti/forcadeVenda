@@ -41,6 +41,18 @@ public class Produto implements Serializable {
         return preco;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+    public void setPreco(Double preco) {
+        this.preco = preco;
+    }
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
     //Construtor padrao
     public Produto() {
     }

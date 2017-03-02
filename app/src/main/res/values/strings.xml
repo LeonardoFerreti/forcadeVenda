@@ -23,16 +23,14 @@
     <string name="hint_nome_produto">Nome do produto</string>
     <string name="hint_preco_produto">Preço</string>
     <string name="hint_forma_pgto">Forma de pagamento</string>
-    <string name="hint_nome_cliente">Nome</string>
-    <string name="hint_email_cliente">E-mail</string>
+    <string name="hint_nome_cliente">Nome(*)</string>
+    <string name="hint_email_cliente">E-mail(*)</string>
     <string name="hint_cep_cliente">CEP</string>
-    <string name="hint_rua_cliente">Rua</string>
+    <string name="hint_rua_cliente">Rua(*)</string>
     <string name="hint_numero_rua_cliente">Nº rua</string>
     <string name="hint_complemento_endereco_cliente">Complemento</string>
-    <string name="hint_referencia_endereco_cliente">Ponto de referência</string>
-    <string name="hint_ramal_cliente">Ramal</string>
-    <string name="hint_telefone_cliente">Telefone</string>
-    <string name="hint_ddd_cliente">DDD</string>
+    <string name="hint_referencia_endereco_cliente">Ponto de referência(*)</string>
+    <string name="hint_telefone_cliente">Telefone(*)</string>
     <string name="hint_senha_email">Senha</string>
     <string name="hint__repita_senha_email">Repita a senha</string>
     <string name="tela_reset_senha_usuario">Esqueci a senha</string>
@@ -59,4 +57,13 @@
     <string name="referencia_cliente_vazio">Informe uma referência.</string>
     <string name="telefone_cliente_vazio">Informe o telefone do cliente.</string>
     <string name="cliente_cadastrado_sucesso">Cliente cadastrado com sucesso.</string>
+    <string name="cadastrar_forma_pgto">Cadastrar forma de pagamento</string>
+    <string name="erro_salvar_dados">Erro ao salvar os dados.</string>
+    <string name="nome_formaPgto_vazio">Informe o nome da forma de pagamento.</string>
+    <string name="cadastrar_produto">Cadastrar produto</string>
+    <string name="nome_produto_vazio">Informe o nome do produto.</string>
+    <string name="preco_produto_vazio">Informe o preço do produto</string>
+    <string name="descricao_produto_vazio">Informe a descrição do produto.</string>
+    <string name="hint_descricao_produto">Descrição do produto</string>
+    <string name="perfil_alterado_sucesso">Perfil alterado com sucesso.</string>
 </resources>

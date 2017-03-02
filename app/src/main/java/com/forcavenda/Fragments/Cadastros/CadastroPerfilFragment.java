@@ -1,4 +1,4 @@
-package com.forcavenda.Fragments;
+package com.forcavenda.Fragments.Cadastros;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -47,7 +47,7 @@ import java.io.IOException;
  * Created by Leo on 23/02/2017.
  */
 
-public class PerfilFragment extends Fragment {
+public class CadastroPerfilFragment extends Fragment {
     private DatabaseReference ref; //Instancia uma variavel para recuperar a referencia do nó
     private static final int REQUEST_IMAGE_CAPTURE = 111;
     private static final String ARG_CLIENTE = "cliente";
@@ -56,26 +56,30 @@ public class PerfilFragment extends Fragment {
     private OkHttpClient httpClient = new OkHttpClient();
 
     TextInputLayout input_nome;
+    TextInputLayout input_email;
+    TextInputLayout input_rua;
+    TextInputLayout input_referencia;
+    TextInputLayout input_telefone;
+    EditText txt_telefone;
+
     EditText txt_nome;
     EditText txt_email;
-
     EditText txt_rua;
     EditText txt_numero;
     EditText txt_complemento;
     EditText txt_referencia;
     EditText txt_cep;
 
-    EditText txt_numero_telefone;
     ProgressBar progressBarCEP;
     ProgressBar progressBarCadastro;
 
     Boolean consultaCep = true;
 
-    public PerfilFragment() {
+    public CadastroPerfilFragment() {
     }
 
-    public static PerfilFragment newInstance(Cliente cliente) {
-        PerfilFragment fragment = new PerfilFragment();
+    public static CadastroPerfilFragment newInstance(Cliente cliente) {
+        CadastroPerfilFragment fragment = new CadastroPerfilFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_CLIENTE, cliente);
         fragment.setArguments(args);
@@ -99,6 +103,10 @@ public class PerfilFragment extends Fragment {
 
         //Dados do cliente
         input_nome = (TextInputLayout) view.findViewById(R.id.input_nome);
+        input_email = (TextInputLayout) view.findViewById(R.id.input_email);
+        input_rua = (TextInputLayout) view.findViewById(R.id.input_rua);
+        input_referencia = (TextInputLayout) view.findViewById(R.id.input_referencia);
+        input_telefone = (TextInputLayout) view.findViewById(R.id.input_telefone);
         txt_nome = (EditText) view.findViewById(R.id.txt_nome);
         txt_email = (EditText) view.findViewById(R.id.txt_email);
 
@@ -147,7 +155,7 @@ public class PerfilFragment extends Fragment {
         });
 
         //Dados do telefone
-        txt_numero_telefone = (EditText) view.findViewById(R.id.txt_telefone);
+        txt_telefone = (EditText) view.findViewById(R.id.txt_telefone);
         //Progressbar
         progressBarCEP = (ProgressBar) view.findViewById(R.id.progressBar);
 
@@ -169,7 +177,7 @@ public class PerfilFragment extends Fragment {
             }
 
             //Dados do telefone
-            txt_numero_telefone.setText(cliente.getTelefone().toString());
+            txt_telefone.setText(cliente.getTelefone().toString());
 
         }
 
@@ -179,72 +187,49 @@ public class PerfilFragment extends Fragment {
         btn_salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                progressBarCadastro.setVisibility(View.VISIBLE);
-//                ProgressDialog progressDialog = Util.CriaProgressDialog(getActivity());
-//                progressDialog.show();
-//                if (com.forcavenda.Util.Util.estaConectadoInternet(getActivity().getApplicationContext())) {
-//                    if (validaCampos()) {
-//
-//                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                        UserProfileChangeRequest updatePerfil = new UserProfileChangeRequest.Builder()
-//                                .setDisplayName(txt_nome.getText().toString())
-//                                .build();
-//
-//                        user.updateProfile(updatePerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                if (task.isSuccessful()) {
-//                                    insereNovoCliente(cliente);
-//                                    Toast.makeText(getActivity().getApplicationContext(), "Cliente alterado com sucesso.", Toast.LENGTH_SHORT).show();
-//                                } else {
-//                                    Toast.makeText(getActivity().getApplicationContext(), "Erro ao alterar nome: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        });
-//
-//                    } else {
-//                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Verifique os dados informados.", Snackbar.LENGTH_SHORT).show();
-//                    }
-//
-//                } else {
-//                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Verifique sua conexão com a internet.", Snackbar.LENGTH_SHORT).show();
-//                }
-//                progressDialog.dismiss();
-//                progressBarCadastro.setVisibility(View.GONE);
-
-                SalvaPerfil task = new SalvaPerfil((Nav_PrincipalActivity) getActivity());
-                task.execute();
+                ProgressDialog progressDialog = Util.CriaProgressDialog(getActivity());
+                progressDialog.show();
+                if (com.forcavenda.Util.Util.estaConectadoInternet(getActivity().getApplicationContext())) {
+                    if (validaCampos()) {
+                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        UserProfileChangeRequest updatePerfil = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(txt_nome.getText().toString())
+                                .build();
+                        user.updateProfile(updatePerfil)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            //Recupera a instancia do Banco de dados da aplicação
+                                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                            //recupera a raiz do nó do banco de dados
+                                            ref = database.getReference();
+                                            //captura o identificador do Cliente
+                                            String chave = (cliente == null) ? ref.child("cliente").push().getKey() : cliente.getId();
+                                            //Mapeia o objeto Endereço
+                                            Endereco endereco = new Endereco(txt_rua.getText().toString().trim(), txt_numero.getText().toString().trim(), txt_complemento.getText().toString().trim(),
+                                                    txt_cep.getText().toString(), txt_referencia.getText().toString().trim());
+                                            //Mapeia o objeto Cliente
+                                            Boolean isAdmin = (cliente == null) ? false : cliente.getAdmin();
+                                            Cliente novoCliente = new Cliente(chave, txt_nome.getText().toString().trim(), user.getEmail(), user.getUid(),
+                                                    isAdmin, endereco, txt_telefone.getText().toString());
+                                            //Chama a classe de CRUD de forma de pagamento, fazendo referencia ao nó raiz do Cliente
+                                            ClienteDao clienteDao = new ClienteDao();
+                                            DatabaseReference refNovoCliente = clienteDao.IncluirAlterar(ref, chave, novoCliente.MapCliente(novoCliente));
+                                            //Chama a classe de CRUD de endereçc, fazendo referencia ao nó do cadastro de cliente
+                                            EnderecoDao enderecoDao = new EnderecoDao();
+                                            enderecoDao.Incluir(refNovoCliente, Endereco.MapEndereco(novoCliente.getEndereco()));
+                                            Toast.makeText(getActivity().getApplicationContext(), R.string.perfil_alterado_sucesso, Toast.LENGTH_SHORT).show();
+                                            cliente = novoCliente;
+                                        }
+                                    }
+                                });
+                    }
+                }
+                progressDialog.dismiss();
             }
         });
-
-
         return view;
-    }
-
-    //Rotina responsavel por incluir um cliente
-    private void insereNovoCliente(Cliente cliente_ins) {
-
-        //Recupera a instancia do Banco de dados da aplicação
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-        //recupera a raiz do nó do banco de dados
-        ref = database.getReference();
-
-        //captura o identificador do cliente
-        String chave = cliente_ins.getId(); // ref.child("cliente").push().getKey();
-
-        //Mapeia o objeto cliente com os parametros identificador, nome e email
-        Cliente cliente = new Cliente(chave, cliente_ins.getNome(), cliente_ins.getEmail(),
-                cliente_ins.getId_usuario(), cliente_ins.getAdmin(),
-                txt_numero_telefone.getText().toString());
-
-        //Chama a classe de CRUD de cliente, fazendo referencia ao nó raiz do cadastro de cliente
-        ClienteDao clienteDao = new ClienteDao();
-        DatabaseReference refNovoCliente = clienteDao.IncluirAlterar(ref, chave, Cliente.MapCliente(cliente));
-
-        //Chama a classe de CRUD de endereçc, fazendo referencia ao nó do cadastro de cliente
-        EnderecoDao enderecoDao = new EnderecoDao();
-        enderecoDao.Incluir(refNovoCliente, Endereco.MapEndereco(cliente_ins.getEndereco()));
     }
 
     void buscaCEP(String url) throws IOException {
@@ -298,76 +283,33 @@ public class PerfilFragment extends Fragment {
             input_nome.setError("");
         }
 
-        if (validado) {
-            Endereco endereco = new Endereco(txt_rua.getText().toString().trim(), txt_numero.getText().toString().trim(),
-                    txt_complemento.getText().toString().trim(), txt_cep.getText().toString().trim(),
-                    txt_referencia.getText().toString().trim());
+        if (txt_email.getText().length() == 0) {
+            validado = false;
+            input_email.setError(getString(R.string.email_cliente_vazio));
+        } else {
+            input_email.setError("");
+        }
 
-            String chaveCliente = "";
-            if (cliente != null) {
-                chaveCliente = cliente.getId().toString();
-            }
-            cliente = new Cliente(chaveCliente, txt_nome.getText().toString().trim(),
-                    txt_email.getText().toString().trim(), FirebaseAuth.getInstance().getCurrentUser().getUid(), cliente.getAdmin(), endereco, txt_numero_telefone.getText().toString());
+        if (txt_rua.getText().length() == 0) {
+            validado = false;
+            input_rua.setError(getString(R.string.rua_cliente_vazio));
+        } else {
+            input_rua.setError("");
+        }
+
+        if (txt_referencia.getText().length() == 0) {
+            validado = false;
+            input_referencia.setError(getString(R.string.referencia_cliente_vazio));
+        } else {
+            input_referencia.setError("");
+        }
+
+        if (txt_telefone.getText().length() == 0) {
+            validado = false;
+            input_telefone.setError(getString(R.string.telefone_cliente_vazio));
+        } else {
+            input_telefone.setError("");
         }
         return validado;
     }
-
-
-    private class SalvaPerfil extends AsyncTask<Void, Void, Void> {
-        private ProgressDialog progressDialog;
-
-        public SalvaPerfil(Nav_PrincipalActivity activity) {
-            progressDialog = new ProgressDialog(activity);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog.setMessage("Salvando dados...");
-            progressDialog.show();
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                if (com.forcavenda.Util.Util.estaConectadoInternet(getActivity().getApplicationContext())) {
-                    if (validaCampos()) {
-
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        UserProfileChangeRequest updatePerfil = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(cliente.getNome().toString())
-                                .build();
-
-                        user.updateProfile(updatePerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    insereNovoCliente(cliente);
-                                    Toast.makeText(getActivity().getApplicationContext(), "Cliente alterado com sucesso.", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(getActivity().getApplicationContext(), "Erro ao alterar nome: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-
-                    } else {
-                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Verifique os dados informados.", Snackbar.LENGTH_SHORT).show();
-                    }
-
-                } else {
-                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Verifique sua conexão com a internet.", Snackbar.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-            }
-            return null;
-        }
-    }
-
 }
