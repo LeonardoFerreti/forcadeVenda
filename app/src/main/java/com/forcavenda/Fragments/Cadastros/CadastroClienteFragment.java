@@ -1,7 +1,6 @@
 package com.forcavenda.Fragments.Cadastros;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -178,6 +177,43 @@ public class CadastroClienteFragment extends DialogFragment {
 
         //Dados do telefone
         txt_telefone = (EditText) view.findViewById(R.id.txt_telefone);
+        txt_telefone.addTextChangedListener(new TextWatcher() {
+            boolean isUpdating;
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) {
+                    isUpdating = false;
+                    return;
+                }
+
+                String str = s.toString().replaceAll("[ ]","").replaceAll("[(]", "").replaceAll("[)]", "").replaceAll("[-]", "");
+
+                if (count > before) {
+                    if (str.length() > 10) {
+                        str = "(" + str.substring(0, 2) + ")" + " " + str.substring(2, 7) + "-" + str.substring(7);
+                    } else if (str.length() > 9) {
+                        str = "(" + str.substring(0, 2) + ")" + " " +  str.substring(2, 6) + "-" + str.substring(6);
+                    } else if (str.length() > 2) {
+                        str = "("+ str.substring(0, 2) + ')' + " " + str.substring(2);
+                    }
+                    isUpdating = true;
+                    txt_telefone.setText(str);
+                    txt_telefone.setSelection(txt_telefone.getText().length());
+                } else {
+                    isUpdating = true;
+                    txt_telefone.setText(str);
+                    txt_telefone.setSelection(str.length());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         //Progressbar
         progressBarCEP = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -195,7 +231,7 @@ public class CadastroClienteFragment extends DialogFragment {
                         txt_email.setText(cliente.getEmail().toString());
                         txt_email.setEnabled(false);
 
-                        if (cliente.getEndereco() != null){
+                        if (cliente.getEndereco() != null) {
                             //Dados do endereço do cliente
                             txt_rua.setText(cliente.getEndereco().getLogradouro().toString());
                             txt_numero.setText(cliente.getEndereco().getNumero().toString());
@@ -208,28 +244,44 @@ public class CadastroClienteFragment extends DialogFragment {
                         txt_telefone.setText(cliente.getTelefone().toString());
 
                         txt_cep.addTextChangedListener(new TextWatcher() {
+                            boolean isUpdating;
+
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                             }
 
                             @Override
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                if (isUpdating) {
+                                    isUpdating = false;
+                                    return;
+                                }
 
+                                String str = s.toString().replaceAll("[.]", "").replaceAll("[-]", "");
+
+                                if (count > before) {
+                                    if (str.length() > 5) {
+                                        str = str.substring(0, 2) + "." + str.substring(2, 5) + "-" + str.substring(5);
+                                    } else if (str.length() > 2) {
+                                        str = str.substring(0, 2) + '.' + str.substring(2);
+                                    }
+                                    isUpdating = true;
+                                    txt_cep.setText(str);
+                                    txt_cep.setSelection(txt_cep.getText().length());
+                                } else {
+                                    isUpdating = true;
+                                    txt_cep.setText(str);
+                                    txt_cep.setSelection(str.length());
+                                }
                             }
 
                             @Override
                             public void afterTextChanged(Editable s) {
                                 String cep = String.valueOf(txt_cep.getText().toString().trim());
 
-                                if (cep.length() == 8) {
-                                    cep = cep.substring(0, 5) + "-" + cep.substring(5, 8);
-                                    txt_cep.setText(cep);
-                                }
-
-                                if (cep.length() == 9) {
+                                if (cep.length() == 10) {
                                     progressBarCEP.setVisibility(View.VISIBLE);
-                                    cep = cep.replace("-", "");
+                                    cep = cep.replace("-", "").replace(".", "");
 
                                     try {
                                         buscaCEP("https://viacep.com.br/ws/" + cep + "/json/");
@@ -237,7 +289,6 @@ public class CadastroClienteFragment extends DialogFragment {
                                         e.printStackTrace();
                                         Toast.makeText(getActivity().getApplicationContext(), "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
-
                                 }
                             }
                         });
@@ -252,28 +303,44 @@ public class CadastroClienteFragment extends DialogFragment {
 
         } else {
             txt_cep.addTextChangedListener(new TextWatcher() {
+                boolean isUpdating;
+
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                 }
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (isUpdating) {
+                        isUpdating = false;
+                        return;
+                    }
 
+                    String str = s.toString().replaceAll("[.]", "").replaceAll("[-]", "");
+
+                    if (count > before) {
+                        if (str.length() > 5) {
+                            str = str.substring(0, 2) + "." + str.substring(2, 5) + "-" + str.substring(5);
+                        } else if (str.length() > 2) {
+                            str = str.substring(0, 2) + '.' + str.substring(2);
+                        }
+                        isUpdating = true;
+                        txt_cep.setText(str);
+                        txt_cep.setSelection(txt_cep.getText().length());
+                    } else {
+                        isUpdating = true;
+                        txt_cep.setText(str);
+                        txt_cep.setSelection(str.length());
+                    }
                 }
 
                 @Override
                 public void afterTextChanged(Editable s) {
                     String cep = String.valueOf(txt_cep.getText().toString().trim());
 
-                    if (cep.length() == 8) {
-                        cep = cep.substring(0, 5) + "-" + cep.substring(5, 8);
-                        txt_cep.setText(cep);
-                    }
-
-                    if (cep.length() == 9) {
+                    if (cep.length() == 10) {
                         progressBarCEP.setVisibility(View.VISIBLE);
-                        cep = cep.replace("-", "");
+                        cep = cep.replace("-", "").replace(".", "");
 
                         try {
                             buscaCEP("https://viacep.com.br/ws/" + cep + "/json/");
@@ -281,7 +348,6 @@ public class CadastroClienteFragment extends DialogFragment {
                             e.printStackTrace();
                             Toast.makeText(getActivity().getApplicationContext(), "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 }
             });
@@ -335,7 +401,6 @@ public class CadastroClienteFragment extends DialogFragment {
                         }
                         progressBarCadastro.setVisibility(View.GONE);
 
-
                     }
                 });
             }
@@ -346,6 +411,7 @@ public class CadastroClienteFragment extends DialogFragment {
     }
 
     //Rotina responsavel por incluir um cliente
+
     public void InsereNovoCliente(Cliente cliente_ins) {
 
         String chave = null;

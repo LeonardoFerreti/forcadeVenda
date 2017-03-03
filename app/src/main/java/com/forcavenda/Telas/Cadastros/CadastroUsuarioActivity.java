@@ -88,7 +88,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                                                 Snackbar.make(findViewById(android.R.id.content),R.string.email_ja_sendo_usado,  Snackbar.LENGTH_SHORT).show();
                                             } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                                 Snackbar.make(findViewById(android.R.id.content), R.string.email_invalido , Snackbar.LENGTH_SHORT).show();
-                                            } else if (task.getException() instanceof FirebaseAuthWeakPasswordException) {
+                                            } else if (task.getException().getMessage().toString().contains("WEAK_PASSWORD")) {
                                                 Snackbar.make(findViewById(android.R.id.content), R.string.senha_insegura, Snackbar.LENGTH_SHORT).show();
                                             } else {
                                                 Toast.makeText(CadastroUsuarioActivity.this, R.string.cadastro_usuario_falha + task.getException().getMessage(),

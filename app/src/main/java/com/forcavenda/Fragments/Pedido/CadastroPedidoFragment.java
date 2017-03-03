@@ -1,4 +1,4 @@
-package com.forcavenda.Fragments;
+package com.forcavenda.Fragments.Pedido;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,12 +21,12 @@ import java.util.List;
 /**
  * Created by Leo on 25/02/2017.
  */
-public class PedidoFragment extends Fragment {
+public class CadastroPedidoFragment extends Fragment {
     private static final String ARG_CLIENTE = "cliente";
     Cliente cliente;
     List<ItemPedido> itensSelecionados = new ArrayList<ItemPedido>();
 
-    public PedidoFragment() {
+    public CadastroPedidoFragment() {
     }
 
     public static ProdutoFragment newInstance(Cliente cliente) {
@@ -76,8 +76,8 @@ public class PedidoFragment extends Fragment {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
-                if (fragment instanceof ListaItensFragment) {
-                    itensSelecionados = ((ListaItensFragment) fragment).getItensVenda();
+                if (fragment instanceof SelecionaItensPedidoFragment) {
+                    itensSelecionados = ((SelecionaItensPedidoFragment) fragment).getItensVenda();
                 }
             }
 

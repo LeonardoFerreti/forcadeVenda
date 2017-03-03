@@ -33,7 +33,7 @@ import com.forcavenda.Fragments.Cadastros.CadastroFormaPgtoFragment;
 import com.forcavenda.Fragments.Cadastros.CadastroProdutoFragment;
 import com.forcavenda.Fragments.Listas.ClienteFragment;
 import com.forcavenda.Fragments.Listas.FormaPgtoFragment;
-import com.forcavenda.Fragments.PedidoFragment;
+import com.forcavenda.Fragments.Pedido.CadastroPedidoFragment;
 import com.forcavenda.Fragments.Cadastros.CadastroPerfilFragment;
 import com.forcavenda.Fragments.Listas.ProdutoFragment;
 import com.forcavenda.Fragments.TrocaSenhaFragment;
@@ -278,7 +278,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                 floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_criar_pedido:
-                fragment = new PedidoFragment();
+                fragment = new CadastroPedidoFragment();
                 titulo = "Pedidos";
                 viewHome = false;
                 floatButton.setVisibility(View.GONE);

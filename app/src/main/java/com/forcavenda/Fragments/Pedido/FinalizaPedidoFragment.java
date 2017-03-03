@@ -1,4 +1,4 @@
-package com.forcavenda.Fragments;
+package com.forcavenda.Fragments.Pedido;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

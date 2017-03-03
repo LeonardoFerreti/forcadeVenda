@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -24,7 +23,6 @@ import com.forcavenda.Dao.EnderecoDao;
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.Endereco;
 import com.forcavenda.R;
-import com.forcavenda.Telas.Nav_PrincipalActivity;
 import com.forcavenda.Util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -117,45 +115,46 @@ public class CadastroPerfilFragment extends Fragment {
         txt_referencia = (EditText) view.findViewById(R.id.txt_referencia);
         txt_cep = (EditText) view.findViewById(R.id.txt_cep);
 
-        txt_cep.addTextChangedListener(new TextWatcher() {
+        //Dados do telefone
+        txt_telefone = (EditText) view.findViewById(R.id.txt_telefone);
+        txt_telefone.addTextChangedListener(new TextWatcher() {
+            boolean isUpdating;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) {
+                    isUpdating = false;
+                    return;
+                }
 
+                String str = s.toString().replaceAll("[ ]", "").replaceAll("[(]", "").replaceAll("[)]", "").replaceAll("[-]", "");
+
+                if (count > before) {
+                    if (str.length() > 10) {
+                        str = "(" + str.substring(0, 2) + ")" + " " + str.substring(2, 7) + "-" + str.substring(7);
+                    } else if (str.length() > 9) {
+                        str = "(" + str.substring(0, 2) + ")" + " " + str.substring(2, 6) + "-" + str.substring(6);
+                    } else if (str.length() > 2) {
+                        str = "(" + str.substring(0, 2) + ')' + " " + str.substring(2);
+                    }
+                    isUpdating = true;
+                    txt_telefone.setText(str);
+                    txt_telefone.setSelection(txt_telefone.getText().length());
+                } else {
+                    isUpdating = true;
+                    txt_telefone.setText(str);
+                    txt_telefone.setSelection(str.length());
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                String cep = String.valueOf(txt_cep.getText().toString().trim());
-
-                if (cep.length() == 8) {
-                    cep = cep.substring(0, 5) + "-" + cep.substring(5, 8);
-                    txt_cep.setText(cep);
-                }
-
-                if (consultaCep) {
-                    if (cep.length() == 9) {
-                        progressBarCEP.setVisibility(View.VISIBLE);
-                        cep = cep.replace("-", "");
-
-                        try {
-                            buscaCEP("https://viacep.com.br/ws/" + cep + "/json/");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getActivity().getApplicationContext(), "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-
             }
         });
-
-        //Dados do telefone
-        txt_telefone = (EditText) view.findViewById(R.id.txt_telefone);
         //Progressbar
         progressBarCEP = (ProgressBar) view.findViewById(R.id.progressBar);
 
@@ -168,7 +167,7 @@ public class CadastroPerfilFragment extends Fragment {
             if (cliente.getEndereco() != null) {
                 //Dados do endereço do cliente
                 consultaCep = false;
-                txt_cep.setText(cliente.getEndereco().getCep().toString().replace("-", ""));
+                txt_cep.setText(cliente.getEndereco().getCep().toString());
                 txt_rua.setText(cliente.getEndereco().getLogradouro().toString());
                 txt_numero.setText(cliente.getEndereco().getNumero().toString());
                 txt_complemento.setText(cliente.getEndereco().getComplemento().toString());
@@ -179,6 +178,107 @@ public class CadastroPerfilFragment extends Fragment {
             //Dados do telefone
             txt_telefone.setText(cliente.getTelefone().toString());
 
+            txt_cep.addTextChangedListener(new TextWatcher() {
+                boolean isUpdating;
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (isUpdating) {
+                        isUpdating = false;
+                        return;
+                    }
+
+                    String str = s.toString().replaceAll("[.]", "").replaceAll("[-]", "");
+
+                    if (count > before) {
+                        if (str.length() > 5) {
+                            str = str.substring(0, 2) + "." + str.substring(2, 5) + "-" + str.substring(5);
+                        } else if (str.length() > 2) {
+                            str = str.substring(0, 2) + '.' + str.substring(2);
+                        }
+                        isUpdating = true;
+                        txt_cep.setText(str);
+                        txt_cep.setSelection(txt_cep.getText().length());
+                    } else {
+                        isUpdating = true;
+                        txt_cep.setText(str);
+                        txt_cep.setSelection(str.length());
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    String cep = String.valueOf(txt_cep.getText().toString().trim());
+
+                    if (cep.length() == 10) {
+                        progressBarCEP.setVisibility(View.VISIBLE);
+                        cep = cep.replace("-", "").replace(".", "");
+
+                        try {
+                            buscaCEP("https://viacep.com.br/ws/" + cep + "/json/");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getActivity().getApplicationContext(), "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
+
+
+        } else {
+            txt_cep.addTextChangedListener(new TextWatcher() {
+                boolean isUpdating;
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (isUpdating) {
+                        isUpdating = false;
+                        return;
+                    }
+
+                    String str = s.toString().replaceAll("[.]", "").replaceAll("[-]", "");
+
+                    if (count > before) {
+                        if (str.length() > 5) {
+                            str = str.substring(0, 2) + "." + str.substring(2, 5) + "-" + str.substring(5);
+                        } else if (str.length() > 2) {
+                            str = str.substring(0, 2) + '.' + str.substring(2);
+                        }
+                        isUpdating = true;
+                        txt_cep.setText(str);
+                        txt_cep.setSelection(txt_cep.getText().length());
+                    } else {
+                        isUpdating = true;
+                        txt_cep.setText(str);
+                        txt_cep.setSelection(str.length());
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    String cep = String.valueOf(txt_cep.getText().toString().trim());
+
+                    if (cep.length() == 10) {
+                        progressBarCEP.setVisibility(View.VISIBLE);
+                        cep = cep.replace("-", "").replace(".", "");
+
+                        try {
+                            buscaCEP("https://viacep.com.br/ws/" + cep + "/json/");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getActivity().getApplicationContext(), "Erro: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            });
         }
 
         Button btn_salvar = (Button) view.findViewById(R.id.btn_salvar);
@@ -187,46 +287,69 @@ public class CadastroPerfilFragment extends Fragment {
         btn_salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProgressDialog progressDialog = Util.CriaProgressDialog(getActivity());
-                progressDialog.show();
                 if (com.forcavenda.Util.Util.estaConectadoInternet(getActivity().getApplicationContext())) {
                     if (validaCampos()) {
-                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        UserProfileChangeRequest updatePerfil = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(txt_nome.getText().toString())
-                                .build();
-                        user.updateProfile(updatePerfil)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            //Recupera a instancia do Banco de dados da aplicação//
-                                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                            //recupera a raiz do nó do banco de dados
-                                            ref = database.getReference();
-                                            //captura o identificador do Cliente
-                                            String chave = (cliente == null) ? ref.child("cliente").push().getKey() : cliente.getId();
-                                            //Mapeia o objeto Endereço
-                                            Endereco endereco = new Endereco(txt_rua.getText().toString().trim(), txt_numero.getText().toString().trim(), txt_complemento.getText().toString().trim(),
-                                                    txt_cep.getText().toString(), txt_referencia.getText().toString().trim());
-                                            //Mapeia o objeto Cliente
-                                            Boolean isAdmin = (cliente == null) ? false : cliente.getAdmin();
-                                            Cliente novoCliente = new Cliente(chave, txt_nome.getText().toString().trim(), user.getEmail(), user.getUid(),
-                                                    isAdmin, endereco, txt_telefone.getText().toString());
-                                            //Chama a classe de CRUD de forma de pagamento, fazendo referencia ao nó raiz do Cliente
-                                            ClienteDao clienteDao = new ClienteDao();
-                                            DatabaseReference refNovoCliente = clienteDao.IncluirAlterar(ref, chave, novoCliente.MapCliente(novoCliente));
-                                            //Chama a classe de CRUD de endereçc, fazendo referencia ao nó do cadastro de cliente
-                                            EnderecoDao enderecoDao = new EnderecoDao();
-                                            enderecoDao.Incluir(refNovoCliente, Endereco.MapEndereco(novoCliente.getEndereco()));
-                                            Toast.makeText(getActivity().getApplicationContext(), R.string.perfil_alterado_sucesso, Toast.LENGTH_SHORT).show();
-                                            cliente = novoCliente;
-                                        }
-                                    }
-                                });
+                        final String nomeCliente = txt_nome.getText().toString();
+                        new AsyncTask<Void, Void, Void>() {
+                            ProgressDialog progressDialog;
+
+                            @Override
+                            protected void onPreExecute() {
+                                super.onPreExecute();
+                                progressDialog = Util.CriaProgressDialog(getActivity());
+                                progressDialog.show();
+                            }
+
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                UserProfileChangeRequest updatePerfil = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(nomeCliente)
+                                        .build();
+                                user.updateProfile(updatePerfil)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    //Recupera a instancia do Banco de dados da aplicação//
+                                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                                    //recupera a raiz do nó do banco de dados
+                                                    ref = database.getReference();
+                                                    //captura o identificador do Cliente
+                                                    String chave = (cliente == null) ? ref.child("cliente").push().getKey() : cliente.getId();
+                                                    //Mapeia o objeto Endereço
+                                                    Endereco endereco = new Endereco(txt_rua.getText().toString().trim(), txt_numero.getText().toString().trim(), txt_complemento.getText().toString().trim(),
+                                                            txt_cep.getText().toString(), txt_referencia.getText().toString().trim());
+                                                    //Mapeia o objeto Cliente
+                                                    Boolean isAdmin = (cliente == null) ? false : cliente.getAdmin();
+                                                    Cliente novoCliente = new Cliente(chave, txt_nome.getText().toString().trim(), user.getEmail(), user.getUid(),
+                                                            isAdmin, endereco, txt_telefone.getText().toString());
+                                                    //Chama a classe de CRUD de forma de pagamento, fazendo referencia ao nó raiz do Cliente
+                                                    ClienteDao clienteDao = new ClienteDao();
+                                                    DatabaseReference refNovoCliente = clienteDao.IncluirAlterar(ref, chave, novoCliente.MapCliente(novoCliente));
+                                                    //Chama a classe de CRUD de endereçc, fazendo referencia ao nó do cadastro de cliente
+                                                    EnderecoDao enderecoDao = new EnderecoDao();
+                                                    enderecoDao.Incluir(refNovoCliente, Endereco.MapEndereco(novoCliente.getEndereco()));
+                                                    cliente = novoCliente;
+                                                }
+                                            }
+                                        });
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                progressDialog.dismiss();
+                                Toast.makeText(getActivity().getApplicationContext(), R.string.perfil_alterado_sucesso, Toast.LENGTH_SHORT).show();
+                            }
+                        }.execute();
+
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.verificar_dados_informados, Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.verificar_conexao, Toast.LENGTH_SHORT).show();
                 }
-                progressDialog.dismiss();
             }
         });
         return view;

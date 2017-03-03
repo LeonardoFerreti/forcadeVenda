@@ -1,4 +1,4 @@
-package com.forcavenda.Fragments;
+package com.forcavenda.Fragments.Pedido;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,7 +28,7 @@ import java.util.List;
  * Created by Leo on 26/02/2017.
  */
 
-public class ListaItensFragment extends Fragment {
+public class SelecionaItensPedidoFragment extends Fragment {
     ListItensVendaAdapter adapter;
     List<ItemPedido> listaItens = new ArrayList<ItemPedido>();
 

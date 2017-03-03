@@ -5,9 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.forcavenda.Entidades.ItemPedido;
-import com.forcavenda.Fragments.FinalizaPedidoFragment;
-import com.forcavenda.Fragments.ListaItensFragment;
-import com.forcavenda.Fragments.PedidoFragment;
+import com.forcavenda.Fragments.Pedido.FinalizaPedidoFragment;
+import com.forcavenda.Fragments.Pedido.SelecionaItensPedidoFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +24,8 @@ public class PedidoAdapter extends FragmentStatePagerAdapter {
     public List<ItemPedido> getItensSelecionados() {
         List<ItemPedido> lista = null;
         if (tabList != null && tabList[0] != null) {
-            ListaItensFragment listaItensFragment = (ListaItensFragment) tabList[0];
-            lista = listaItensFragment.getItensVenda();
+            SelecionaItensPedidoFragment selecionaItensPedidoFragment = (SelecionaItensPedidoFragment) tabList[0];
+            lista = selecionaItensPedidoFragment.getItensVenda();
         }
         return lista;
     }
@@ -50,7 +49,7 @@ public class PedidoAdapter extends FragmentStatePagerAdapter {
         } else {
             switch (position) {
                 case 0:
-                    tabList[0] = new ListaItensFragment();
+                    tabList[0] = new SelecionaItensPedidoFragment();
                     return tabList[0];
                 case 1:
                     tabList[1] = new FinalizaPedidoFragment();

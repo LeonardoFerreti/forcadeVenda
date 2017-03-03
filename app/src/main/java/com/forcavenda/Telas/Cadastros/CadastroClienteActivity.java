@@ -24,7 +24,6 @@ import com.forcavenda.Entidades.Endereco;
 
 import com.forcavenda.R;
 import com.forcavenda.Telas.Listas.ListaClienteActivity;
-import com.forcavenda.Util.Mask;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -77,8 +76,6 @@ public class CadastroClienteActivity extends AppCompatActivity implements TextWa
         //Dados do telefone do cliente
         final EditText txt_numero_telefone = (EditText) findViewById(R.id.txt_telefone);
       //  final EditText txt_ramal = (EditText) findViewById(R.id.txt_ramal);
-
-        txt_numero_telefone.addTextChangedListener(Mask.insert("(##)#####-####", txt_numero_telefone));
 
 
         //recupera o botão salvar

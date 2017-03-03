@@ -110,6 +110,8 @@ public class LoginActivity extends AppCompatActivity {
                                                     case "ERROR_WRONG_PASSWORD":
                                                         input_senha.setError("Senha inválida.");
                                                         break;
+                                                    case "WEAK_PASSWORD":
+                                                        input_senha.setError("Sua senha deve conter no mínimo 6 dígitos.");
                                                     default:
                                                         Toast.makeText(LoginActivity.this, getString(R.string.erro_login) + e.getErrorCode(), Toast.LENGTH_LONG).show();
                                                 }
