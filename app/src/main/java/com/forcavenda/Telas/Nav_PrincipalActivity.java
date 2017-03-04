@@ -256,12 +256,12 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         switch (viewId) {
             case R.id.nav_perfil:
                 fragment = CadastroPerfilFragment.newInstance(clienteLogado);
-                titulo = "Perfil";
+                titulo = "Meu perfil";
                 floatButton.setVisibility(View.GONE);
                 break;
             case R.id.nav_clientes:
                 fragment = new ClienteFragment();
-                titulo = "Clientes";
+                titulo = "Clientes cadastrados";
                 viewHome = true;
                 floatButton.setVisibility(View.VISIBLE);
                 break;
@@ -278,7 +278,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                 floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_criar_pedido:
-                fragment = new CadastroPedidoFragment();
+                fragment = CadastroPedidoFragment.newInstance(clienteLogado);
                 titulo = "Pedidos";
                 viewHome = false;
                 floatButton.setVisibility(View.GONE);
@@ -311,7 +311,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         } else if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.nav_container, fragment);
-            if (blnCommitFragment){
+            if (blnCommitFragment) {
                 ft.commit();
             }
         }

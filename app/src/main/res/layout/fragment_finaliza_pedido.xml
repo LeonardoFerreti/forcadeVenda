@@ -24,11 +24,43 @@
                 android:layout_height="wrap_content"
                 android:text="Resumo do pedido:" />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/lbl_cliente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Cliente:" />
+
+                <TextView
+                    android:id="@+id/txt_nomeCliente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginStart="11dp"
+                    android:layout_toEndOf="@+id/lbl_cliente"
+                    android:layout_toRightOf="@+id/lbl_cliente"
+                    android:text="Leonardo"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
             <ListView
                 android:id="@+id/lista_resumo_pedido"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:id="@android:id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Nenhum item selecionado." />
 
             <TextView
                 android:id="@+id/lbl_formaPgto"
@@ -42,7 +74,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:background="@drawable/custom_spinner_background"
+                android:spinnerMode="dropdown" />
 
             <RelativeLayout
                 android:id="@+id/linearValorPago"

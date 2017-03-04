@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.ItemPedido;
 import com.forcavenda.Fragments.Pedido.FinalizaPedidoFragment;
 import com.forcavenda.Fragments.Pedido.SelecionaItensPedidoFragment;
@@ -16,8 +17,7 @@ import java.util.List;
  */
 
 public class PedidoAdapter extends FragmentStatePagerAdapter {
-
-    private List<ItemPedido> itensSelecionados = new ArrayList<ItemPedido>();
+    private Cliente clienteLogado;
     private static final int QTDE_DE_TAB = 2;
     private Fragment[] tabList = new Fragment[QTDE_DE_TAB];
 
@@ -30,6 +30,20 @@ public class PedidoAdapter extends FragmentStatePagerAdapter {
         return lista;
     }
 
+    public Cliente getClienteSelecionado(){
+        Cliente cliente =null;
+        if (tabList!=null && tabList[0] !=null){
+            SelecionaItensPedidoFragment selecionaItensPedidoFragment = (SelecionaItensPedidoFragment) tabList[0];
+            cliente = selecionaItensPedidoFragment.getClienteSelecionado();
+        }
+        return  cliente;
+    }
+
+    public void setClienteSelecionado(){
+        FinalizaPedidoFragment finalizaPedidoFragment = (FinalizaPedidoFragment) tabList[1];
+        finalizaPedidoFragment.setCliente(getClienteSelecionado());
+    }
+
     public void setItensSelecionados() {
         if (tabList != null && tabList[1] != null) {
             FinalizaPedidoFragment finalizaPedidoFragment = (FinalizaPedidoFragment) tabList[1];
@@ -37,8 +51,9 @@ public class PedidoAdapter extends FragmentStatePagerAdapter {
         }
     }
 
-    public PedidoAdapter(FragmentManager fm) {
+    public PedidoAdapter(FragmentManager fm,Cliente clienteLogado) {
         super(fm);
+        this.clienteLogado = clienteLogado;
     }
 
     @Override
@@ -49,7 +64,9 @@ public class PedidoAdapter extends FragmentStatePagerAdapter {
         } else {
             switch (position) {
                 case 0:
-                    tabList[0] = new SelecionaItensPedidoFragment();
+                    SelecionaItensPedidoFragment selecionaItensPedidoFragment = new SelecionaItensPedidoFragment();
+                    selecionaItensPedidoFragment.setCliente(this.clienteLogado);
+                    tabList[0] = selecionaItensPedidoFragment;
                     return tabList[0];
                 case 1:
                     tabList[1] = new FinalizaPedidoFragment();

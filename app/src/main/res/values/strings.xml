@@ -66,4 +66,5 @@
     <string name="descricao_produto_vazio">Informe a descrição do produto.</string>
     <string name="hint_descricao_produto">Descrição do produto</string>
     <string name="perfil_alterado_sucesso">Perfil alterado com sucesso.</string>
+    <string name="alterar_cliente">Alterar cliente</string>
 </resources>

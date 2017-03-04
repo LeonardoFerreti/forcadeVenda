@@ -357,7 +357,7 @@ public class CadastroClienteFragment extends DialogFragment {
 
         View titulo = i.inflate(R.layout.layout_titulo_fragment, null);
         TextView txt_titulo = (TextView) titulo.findViewById(R.id.txt_1);
-        txt_titulo.setText(R.string.cadastrar_cliente);
+        txt_titulo.setText((cliente == null) ?  R.string.cadastrar_cliente : R.string.alterar_cliente);
         builder.setCustomTitle(titulo);
 
         final AlertDialog alertDialog = builder.create();
@@ -408,32 +408,6 @@ public class CadastroClienteFragment extends DialogFragment {
 
 
         return alertDialog;
-    }
-
-    //Rotina responsavel por incluir um cliente
-
-    public void InsereNovoCliente(Cliente cliente_ins) {
-
-        String chave = null;
-
-        //captura o identificador do cliente
-        if (cliente == null) {
-            chave = ref.child("cliente").push().getKey();
-        } else {
-            chave = cliente.getId();
-        }
-
-        //Mapeia o objeto cliente com os parametros identificador, nome e email
-        Cliente cliente = new Cliente(chave, cliente_ins.getNome(), cliente_ins.getEmail(), "", false, "");
-
-        //Chama a classe de CRUD de cliente, fazendo referencia ao nó raiz do cadastro de cliente
-        ClienteDao clienteDao = new ClienteDao();
-        DatabaseReference refNovoCliente = clienteDao.IncluirAlterar(ref, chave, Cliente.MapCliente(cliente));
-
-        //Chama a classe de CRUD de endereçc, fazendo referencia ao nó do cadastro de cliente
-        EnderecoDao enderecoDao = new EnderecoDao();
-        enderecoDao.Incluir(refNovoCliente, Endereco.MapEndereco(cliente_ins.getEndereco()));
-
     }
 
     public Boolean validaCampos() {

@@ -7,28 +7,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.CheckedTextView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-
-import com.forcavenda.Entidades.FormaPgto;
+import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Leo on 11/02/2017.
+ * Created by Leo on 03/03/2017.
  */
-
-public class SpinnerFormaPgtoAdapter extends BaseAdapter implements SpinnerAdapter {
+public class SpinnerClienteAdapter extends BaseAdapter implements SpinnerAdapter {
 
     private final Context context;
-    private List<FormaPgto> lista;
+    private List<Cliente> lista;
 
-    public SpinnerFormaPgtoAdapter(Context context, List<FormaPgto> formaPgtos) {
+    public SpinnerClienteAdapter(Context context, List<Cliente> clientes) {
         this.context = context;
-        this.lista = formaPgtos;
+        this.lista = clientes;
     }
 
     @Override
@@ -55,7 +53,7 @@ public class SpinnerFormaPgtoAdapter extends BaseAdapter implements SpinnerAdapt
         txt.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.drop, 0);
         txt.setText(lista.get(position).getNome());
         txt.setTextColor(Color.parseColor("#000000"));
-        return  txt;
+        return txt;
     }
 
     @Override
@@ -66,6 +64,6 @@ public class SpinnerFormaPgtoAdapter extends BaseAdapter implements SpinnerAdapt
         txt.setGravity(Gravity.CENTER_VERTICAL);
         txt.setText(lista.get(position).getNome());
         txt.setTextColor(Color.parseColor("#000000"));
-        return  txt;
+        return txt;
     }
 }

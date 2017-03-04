@@ -35,6 +35,7 @@ public class Util {
 
     public static ProgressDialog CriaProgressDialog(Context context) {
         ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setMessage("Carregando dados...");
         try {
             dialog.show();
         } catch (WindowManager.BadTokenException e) {

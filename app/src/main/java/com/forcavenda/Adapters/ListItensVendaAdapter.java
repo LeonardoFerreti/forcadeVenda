@@ -63,6 +63,7 @@ public class ListItensVendaAdapter extends ArrayAdapter<ItemPedido> {
 
         if (itemPedido != null) {
             TextView txt_nome = (TextView) v.findViewById(R.id.txt_nome);
+            final TextView txt_descricao = (TextView) v.findViewById(R.id.txt_descricao);
             final TextView txt_preco = (TextView) v.findViewById(R.id.txt_preco);
             final EditText txt_qtde = (EditText) v.findViewById(R.id.txt_qtde);
             final ImageView btn_adiciona = (ImageView) v.findViewById(R.id.btn_adicionaQtde);
@@ -119,7 +120,11 @@ public class ListItensVendaAdapter extends ArrayAdapter<ItemPedido> {
             });
 
             if (txt_nome != null) {
-                txt_nome.setText(itemPedido.getProduto().getNome());
+                txt_nome.setText(itemPedido.getProduto().getNome().toUpperCase());
+            }
+
+            if (txt_descricao != null){
+                txt_descricao.setText(itemPedido.getProduto().getDescricao());
             }
 
             if (txt_preco != null) {

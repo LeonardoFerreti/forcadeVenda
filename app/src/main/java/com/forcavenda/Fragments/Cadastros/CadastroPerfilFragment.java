@@ -47,7 +47,6 @@ import java.io.IOException;
 
 public class CadastroPerfilFragment extends Fragment {
     private DatabaseReference ref; //Instancia uma variavel para recuperar a referencia do nó
-    private static final int REQUEST_IMAGE_CAPTURE = 111;
     private static final String ARG_CLIENTE = "cliente";
 
     Cliente cliente;

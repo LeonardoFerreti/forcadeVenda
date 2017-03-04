@@ -26,11 +26,10 @@ public class CadastroPedidoFragment extends Fragment {
     Cliente cliente;
     List<ItemPedido> itensSelecionados = new ArrayList<ItemPedido>();
 
-    public CadastroPedidoFragment() {
-    }
+    public CadastroPedidoFragment() {}
 
-    public static ProdutoFragment newInstance(Cliente cliente) {
-        ProdutoFragment fragment = new ProdutoFragment();
+    public static CadastroPedidoFragment newInstance(Cliente cliente) {
+        CadastroPedidoFragment fragment = new CadastroPedidoFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_CLIENTE, cliente);
         fragment.setArguments(args);
@@ -57,8 +56,7 @@ public class CadastroPedidoFragment extends Fragment {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
-        final PedidoAdapter adapter = new PedidoAdapter(getFragmentManager());
-
+        final PedidoAdapter adapter = new PedidoAdapter(getFragmentManager(),cliente);
 
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -67,6 +65,8 @@ public class CadastroPedidoFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
                 Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
+
+                adapter.setClienteSelecionado();
 
                 if (fragment instanceof FinalizaPedidoFragment) {
                     ((FinalizaPedidoFragment) fragment).setListaItensPedido(itensSelecionados);
@@ -78,6 +78,9 @@ public class CadastroPedidoFragment extends Fragment {
                 Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
                 if (fragment instanceof SelecionaItensPedidoFragment) {
                     itensSelecionados = ((SelecionaItensPedidoFragment) fragment).getItensVenda();
+                    if (((SelecionaItensPedidoFragment) fragment).getClienteSelecionado() != null){
+                        cliente = ((SelecionaItensPedidoFragment) fragment).getClienteSelecionado();
+                    }
                 }
             }
 
