@@ -15,6 +15,14 @@ public class FormaPgto implements Serializable {
     private String nome;
     private Boolean ativo;
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
     //retorna o identificador da forma de pagamento
     public String getId() {
         return id;
@@ -49,4 +57,5 @@ public class FormaPgto implements Serializable {
         resultado.put("ativo" , formaPgto.getAtivo());
         return resultado;
     }
+
 }

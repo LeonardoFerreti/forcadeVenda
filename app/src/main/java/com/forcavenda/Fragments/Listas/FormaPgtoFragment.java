@@ -3,6 +3,8 @@ package com.forcavenda.Fragments.Listas;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.forcavenda.Adapters.ListaFormaPgtoAdapter;
+import com.forcavenda.Adapters.ListaFormaPgtoRecyclerAdapter;
 import com.forcavenda.Entidades.FormaPgto;
 import com.forcavenda.Fragments.Cadastros.CadastroFormaPgtoFragment;
 import com.forcavenda.R;
@@ -51,30 +54,29 @@ public class FormaPgtoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.activity_lista, container, false);
+        View view = inflater.inflate(R.layout.layout_recycler_lista, container, false);
 
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-        ListView listView = (ListView) view.findViewById(R.id.lista);
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        final ListaFormaPgtoRecyclerAdapter adapter = new ListaFormaPgtoRecyclerAdapter(getActivity().getApplicationContext(), listaFormaPgto, new ListaFormaPgtoRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(FormaPgto formaPgto) {
+                android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+                CadastroFormaPgtoFragment fragment = CadastroFormaPgtoFragment.newInstance(formaPgto);
+                fragment.show(fm, "Alterar forma de pagamento");
+            }
+        });
+
+        recyclerView.setAdapter(adapter);
+        RecyclerView.LayoutManager layout = new LinearLayoutManager(getActivity().getApplicationContext(),
+                LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layout);
 
         final FirebaseDatabase banco = FirebaseDatabase.getInstance();
         DatabaseReference tabProdutos = banco.getReference("formaPgto");
 
         Query resultado = tabProdutos.orderByChild("nome");
-
-        final ListaFormaPgtoAdapter adapter = new ListaFormaPgtoAdapter(getActivity().getApplicationContext(),
-                listaFormaPgto);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FormaPgto formaPgto = (FormaPgto) parent.getItemAtPosition(position);
-                android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-                CadastroFormaPgtoFragment fragmentFormaPgto = CadastroFormaPgtoFragment.newInstance(formaPgto);
-                fragmentFormaPgto.show(fm, "Cadastrar forma de pagamento");
-            }
-        });
 
         resultado.addValueEventListener(new ValueEventListener() {
             @Override
@@ -98,7 +100,15 @@ public class FormaPgtoFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                FormaPgto formaPgto = dataSnapshot.getValue(FormaPgto.class);
+                for (FormaPgto formaPgto1 : listaFormaPgto) {
+                    if (formaPgto1.getId().equals(formaPgto.getId())) {
+                        formaPgto1.setNome(formaPgto.getNome());
+                        formaPgto1.setAtivo(formaPgto.getAtivo());
+                        break;
+                    }
+                }
+                adapter.notifyDataSetChanged();
             }
 
             @Override

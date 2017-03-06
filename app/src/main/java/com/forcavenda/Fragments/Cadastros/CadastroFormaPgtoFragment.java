@@ -79,7 +79,7 @@ public class CadastroFormaPgtoFragment extends DialogFragment {
 
         View titulo = i.inflate(R.layout.layout_titulo_fragment, null);
         TextView txt_titulo = (TextView) titulo.findViewById(R.id.txt_1);
-        txt_titulo.setText(R.string.cadastrar_forma_pgto);
+        txt_titulo.setText((formaPgto == null) ?  R.string.cadastrar_forma_pgto : R.string.alterar_forma_pgto);
         builder.setCustomTitle(titulo);
 
         final AlertDialog alertDialog = builder.create();

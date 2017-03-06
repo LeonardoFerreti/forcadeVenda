@@ -9,7 +9,7 @@
         android:text="Produto"
         android:layout_margin="5dp"
         android:textColor="@color/Preto"
-        android:textSize="21sp" />
+        android:textSize="20sp" />
     <TextView
         android:id="@+id/txt_2"
         android:text="Preço"

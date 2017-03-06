@@ -117,7 +117,7 @@ public class CadastroProdutoFragment extends DialogFragment {
 
         View titulo = i.inflate(R.layout.layout_titulo_fragment, null);
         TextView txt_titulo = (TextView) titulo.findViewById(R.id.txt_1);
-        txt_titulo.setText(R.string.cadastrar_produto);
+        txt_titulo.setText((produto == null) ?  R.string.cadastrar_produto : R.string.alterar_produto);
         builder.setCustomTitle(titulo);
 
         final AlertDialog alertDialog = builder.create();

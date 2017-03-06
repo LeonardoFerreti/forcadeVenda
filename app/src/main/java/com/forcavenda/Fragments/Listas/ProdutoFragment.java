@@ -3,6 +3,8 @@ package com.forcavenda.Fragments.Listas;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.forcavenda.Adapters.ListaProdutoAdapter;
+import com.forcavenda.Adapters.ListaProdutoRecyclerAdapter;
 import com.forcavenda.Entidades.Produto;
 import com.forcavenda.Fragments.Cadastros.CadastroProdutoFragment;
 import com.forcavenda.R;
@@ -51,30 +54,29 @@ public class ProdutoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.activity_lista, container, false);
+        View view = inflater.inflate(R.layout.layout_recycler_lista, container, false);
 
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-        ListView listView = (ListView) view.findViewById(R.id.lista);
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        final ListaProdutoRecyclerAdapter adapter = new ListaProdutoRecyclerAdapter(getActivity().getApplicationContext(), listaProdutos, new ListaProdutoRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Produto produto) {
+                android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+                CadastroProdutoFragment fragmentFormaPgto = CadastroProdutoFragment.newInstance(produto);
+                fragmentFormaPgto.show(fm, "Alterar produto");
+            }
+        });
+
+        recyclerView.setAdapter(adapter);
+        RecyclerView.LayoutManager layout = new LinearLayoutManager(getActivity().getApplicationContext(),
+                LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layout);
 
         final FirebaseDatabase banco = FirebaseDatabase.getInstance();
         DatabaseReference tabClientes = banco.getReference("produto");
 
         Query resultado = tabClientes.orderByChild("nome");
-
-        final ListaProdutoAdapter adapter = new ListaProdutoAdapter(getActivity().getApplicationContext(),
-                listaProdutos);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Produto produto = (Produto) parent.getItemAtPosition(position);
-                android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-                CadastroProdutoFragment fragmentFormaPgto = CadastroProdutoFragment.newInstance(produto);
-                fragmentFormaPgto.show(fm, "Cadastrar produto");
-            }
-        });
 
         resultado.addValueEventListener(new ValueEventListener() {
             @Override

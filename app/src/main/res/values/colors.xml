@@ -3,6 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#3F51B5</color>
+    <color name="AzulTitulo">#4863ff</color>
+    <color name="AzulCard">#f8f8fa</color>
     <color name="Branco">#ffffff</color>
     <color name="Preto">#030303</color>
     <color name="FundoTxt">#030303</color>

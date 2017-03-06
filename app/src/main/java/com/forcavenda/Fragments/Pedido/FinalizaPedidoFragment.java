@@ -47,11 +47,27 @@ public class FinalizaPedidoFragment extends Fragment {
     ProgressBar progressBar;
     ResumoItensVendaAdapter resumoItensVendaAdapter;
     ListView listaResumoItens;
+
+    public TextView getLblValorTotal() {
+        return lblValorTotal;
+    }
+
     TextView lblValorTotal;
-    Button btn_salvar;
     NumberFormat formatter = NumberFormat.getCurrencyInstance();
     Cliente cliente;
     TextView txt_nomecliente;
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public FormaPgto getFormaPgto() {
+        return (FormaPgto) cboFormaPgto.getItemAtPosition(cboFormaPgto.getSelectedItemPosition());
+    }
+
+    public List<ItemPedido> getListaItensPedido() {
+        return listaItensPedido;
+    }
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
@@ -59,6 +75,7 @@ public class FinalizaPedidoFragment extends Fragment {
             txt_nomecliente.setText(cliente.getNome());
         }
     }
+
 
     public void setListaItensPedido(List<ItemPedido> listaItensPedido) {
         this.listaItensPedido = listaItensPedido;
@@ -68,7 +85,6 @@ public class FinalizaPedidoFragment extends Fragment {
             listaResumoItens.setAdapter(resumoItensVendaAdapter);
             resumoItensVendaAdapter.notifyDataSetChanged();
             lblValorTotal.setText(formatter.format(resumoItensVendaAdapter.getValorTotal()));
-            btn_salvar.setEnabled(resumoItensVendaAdapter.getCount() > 0);
         }
     }
 
@@ -80,31 +96,30 @@ public class FinalizaPedidoFragment extends Fragment {
         cboFormaPgto = (Spinner) view.findViewById(R.id.cboFormapgto);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         listaResumoItens = (ListView) view.findViewById(R.id.lista_resumo_pedido);
-        btn_salvar = (Button) view.findViewById(R.id.btn_salvar);
         txt_nomecliente = (TextView) view.findViewById(R.id.txt_nomeCliente);
-        btn_salvar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseReference tabPedido = FirebaseDatabase.getInstance().getReference().child("pedido");
-                Cliente cliente_pedido;
-                FormaPgto formaPgto;
-                List<ItemPedido> itensPedido;
-
-                cliente_pedido = cliente;
-                formaPgto = (FormaPgto) cboFormaPgto.getItemAtPosition(cboFormaPgto.getSelectedItemPosition());
-                itensPedido = listaItensPedido;
-
-                boolean online = (cliente_pedido.getAdmin() == false) ? true : false;
-                final Pedido pedido = new Pedido(Long.valueOf(String.valueOf(0)), "", cliente, formaPgto, listaItensPedido,
-                        Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), Double.valueOf(String.valueOf(0)), Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), online);
-
-                final Pedido novo_pedido = InsereNovoPedido(pedido, cliente, formaPgto, itensPedido);
-
-                PedidoDao pedidoDao = new PedidoDao(getActivity().getApplicationContext(), novo_pedido);
-                pedidoDao.IncluirIdPedido(getActivity());
-
-            }
-        });
+//        btn_salvar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DatabaseReference tabPedido = FirebaseDatabase.getInstance().getReference().child("pedido");
+//                Cliente cliente_pedido;
+//                FormaPgto formaPgto;
+//                List<ItemPedido> itensPedido;
+//
+//                cliente_pedido = cliente;
+//                formaPgto = (FormaPgto) cboFormaPgto.getItemAtPosition(cboFormaPgto.getSelectedItemPosition());
+//                itensPedido = listaItensPedido;
+//
+//                boolean online = (cliente_pedido.getAdmin() == false) ? true : false;
+//                final Pedido pedido = new Pedido(Long.valueOf(String.valueOf(0)), "", cliente, formaPgto, listaItensPedido,
+//                        Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), Double.valueOf(String.valueOf(0)), Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), online);
+//
+//                final Pedido novo_pedido = InsereNovoPedido(pedido, cliente, formaPgto, itensPedido);
+//
+//                PedidoDao pedidoDao = new PedidoDao(getActivity().getApplicationContext(), novo_pedido);
+//                pedidoDao.IncluirIdPedido(getActivity());
+//
+//            }
+//        });
 
         View header = (View) getLayoutInflater(savedInstanceState).inflate(R.layout.lista_resumo_pedido_header, null);
         View footer = (View) getLayoutInflater(savedInstanceState).inflate(R.layout.lista_resumo_pedido_footer, null);

@@ -33,6 +33,7 @@ import com.forcavenda.Fragments.Cadastros.CadastroFormaPgtoFragment;
 import com.forcavenda.Fragments.Cadastros.CadastroProdutoFragment;
 import com.forcavenda.Fragments.Listas.ClienteFragment;
 import com.forcavenda.Fragments.Listas.FormaPgtoFragment;
+import com.forcavenda.Fragments.Listas.PedidoFragment;
 import com.forcavenda.Fragments.Pedido.CadastroPedidoFragment;
 import com.forcavenda.Fragments.Cadastros.CadastroPerfilFragment;
 import com.forcavenda.Fragments.Listas.ProdutoFragment;
@@ -91,7 +92,11 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                         break;
                     case R.id.nav_produtos:
                         CadastroProdutoFragment fragmentProduto = CadastroProdutoFragment.newInstance(null);
-                        fragmentProduto.show(fm, "Cadastrar Produto");
+                        fragmentProduto.show(fm, "Cadastrar produto");
+                        break;
+                    case R.id.nav_criar_pedido:
+                        CadastroPedidoFragment fragmentPedido   = CadastroPedidoFragment.newInstance(null,clienteLogado);
+                        fragmentPedido.show(fm, "Cadastrar pedido");
                         break;
                 }
             }
@@ -99,7 +104,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar,  R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -278,10 +283,10 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                 floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_criar_pedido:
-                fragment = CadastroPedidoFragment.newInstance(clienteLogado);
+                fragment = new PedidoFragment();
                 titulo = "Pedidos";
                 viewHome = false;
-                floatButton.setVisibility(View.GONE);
+                floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_trocar_senha:
                 fragment = new TrocaSenhaFragment();

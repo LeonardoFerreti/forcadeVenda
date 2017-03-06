@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,148 +10,85 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="1">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/lbl_resumo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Resumo do pedido:" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/lbl_cliente"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Cliente:" />
-
-                <TextView
-                    android:id="@+id/txt_nomeCliente"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="11dp"
-                    android:layout_marginStart="11dp"
-                    android:layout_toEndOf="@+id/lbl_cliente"
-                    android:layout_toRightOf="@+id/lbl_cliente"
-                    android:text="Leonardo"
-                    android:textStyle="bold" />
-
-            </RelativeLayout>
-
-            <ListView
-                android:id="@+id/lista_resumo_pedido"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="8dp" />
-
-            <TextView
-                android:layout_marginTop="8dp"
-                android:id="@android:id/empty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Nenhum item selecionado." />
-
-            <TextView
-                android:id="@+id/lbl_formaPgto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="Forma de pagamento:" />
-
-            <Spinner
-                android:id="@+id/cboFormapgto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/custom_spinner_background"
-                android:spinnerMode="dropdown" />
-
-            <RelativeLayout
-                android:id="@+id/linearValorPago"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <EditText
-                    android:id="@+id/lbl_ValorPago"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:text="R$ 50,00"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/lbl_TextoValorPago"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:gravity="center_vertical"
-                    android:text="Valor pago:" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/linearTroco"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/lbl_Troco"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:text="R$ 5,00" />
-
-                <TextView
-                    android:id="@+id/lbl_TextoTroco"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_toLeftOf="@+id/lbl_Troco"
-                    android:layout_toStartOf="@+id/lbl_Troco"
-                    android:text="Troco:" />
-            </RelativeLayout>
-
-
-            <Button
-                android:id="@+id/btn_salvar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:backgroundTint="@color/colorAccent"
-                android:text="Salvar pedido"
-                android:textColor="@color/Branco" />
-
-        </LinearLayout>
-    </ScrollView>
-
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:indeterminate="false"
         android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/relativelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/lbl_resumo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Resumo do pedido:" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutCliente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lbl_resumo">
+
+            <TextView
+                android:id="@+id/lbl_cliente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Cliente:" />
+
+            <TextView
+                android:id="@+id/txt_nomeCliente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/lbl_cliente"
+                android:layout_alignBottom="@+id/lbl_cliente"
+                android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp"
+                android:layout_toEndOf="@+id/lbl_cliente"
+                android:layout_toRightOf="@+id/lbl_cliente"
+                android:text="Leonardo"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/lista_resumo_pedido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/relativeLayoutCliente"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@id/android:empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lista_resumo_pedido"
+            android:layout_marginTop="4dp"
+            android:text="Nenhum item selecionado." />
+
+        <TextView
+            android:id="@+id/lbl_formaPgto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/cboFormapgto"
+            android:layout_marginBottom="2dp"
+            android:text="Forma de pagamento:" />
+
+        <Spinner
+            android:id="@+id/cboFormapgto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/custom_spinner_background"
+            android:spinnerMode="dropdown" />
+    </RelativeLayout>
+
+
 </android.support.design.widget.CoordinatorLayout>

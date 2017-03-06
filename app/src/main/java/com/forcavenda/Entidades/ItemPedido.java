@@ -1,6 +1,8 @@
 package com.forcavenda.Entidades;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Leo on 12/02/2017.
@@ -30,4 +32,6 @@ public class ItemPedido implements Serializable {
         this.produto = produto;
         Quantidade = quantidade;
     }
+
+
 }

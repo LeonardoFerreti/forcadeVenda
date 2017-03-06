@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.forcavenda.Adapters.ListaClienteAdapter;
+import com.forcavenda.Adapters.ListaClienteRecyclerAdapter;
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Fragments.Cadastros.CadastroClienteFragment;
 import com.forcavenda.R;
@@ -54,30 +57,29 @@ public class ClienteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.activity_lista, container, false);
+        View view = inflater.inflate(R.layout.layout_recycler_lista, container, false);
 
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
-        ListView listView = (ListView) view.findViewById(R.id.lista);
-
-        final FirebaseDatabase banco = FirebaseDatabase.getInstance();
-        DatabaseReference tabClientes = banco.getReference("cliente");
-
-        Query resultado = tabClientes.orderByChild("nome");
-
-        final ListaClienteAdapter adapter = new ListaClienteAdapter(getActivity().getApplicationContext(),
-                listaClientes);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        final ListaClienteRecyclerAdapter adapter = new ListaClienteRecyclerAdapter(getActivity().getApplicationContext(), listaClientes, new ListaClienteRecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cliente cliente = (Cliente) parent.getItemAtPosition(position);
+            public void onItemClick(Cliente cliente) {
                 android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
                 CadastroClienteFragment fragment = CadastroClienteFragment.newInstance(cliente);
                 fragment.show(fm, "Alterar cliente");
             }
         });
+
+        recyclerView.setAdapter(adapter);
+        RecyclerView.LayoutManager layout = new LinearLayoutManager(getActivity().getApplicationContext(),
+                LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layout);
+
+        final FirebaseDatabase banco = FirebaseDatabase.getInstance();
+        DatabaseReference tabClientes = banco.getReference("cliente");
+
+        Query resultado = tabClientes.orderByChild("nome");
 
         resultado.addValueEventListener(new ValueEventListener() {
             @Override
@@ -101,8 +103,8 @@ public class ClienteFragment extends Fragment {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Cliente cliente = dataSnapshot.getValue(Cliente.class);
-                for (Cliente cli: listaClientes) {
-                    if (cli.getId().equals(cliente.getId())){
+                for (Cliente cli : listaClientes) {
+                    if (cli.getId().equals(cliente.getId())) {
                         cli.setNome(cliente.getNome());
                         cli.setTelefone(cliente.getTelefone());
                         cli.setEndereco(cli.getEndereco());

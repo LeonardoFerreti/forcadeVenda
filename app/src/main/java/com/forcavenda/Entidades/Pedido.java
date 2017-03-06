@@ -21,15 +21,23 @@ public class Pedido implements Serializable {
     private Double valorTotal;
     private Double desconto;
     private Double valorPago;
-
+    private Boolean online;
     private Status status;
 
     public void setChave(String chave) {
         this.chave = chave;
     }
 
+    public Cliente getCliente() {
+        return cliente;
+    }
+
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public void setFormaPgto(FormaPgto formaPgto) {
@@ -61,8 +69,6 @@ public class Pedido implements Serializable {
         return online;
     }
 
-    private Boolean online;
-
     //retorna a chave gerada automaticamente(GUID)
     public String getChave() {
         return chave;
@@ -75,11 +81,6 @@ public class Pedido implements Serializable {
 
     public void setIdPedido(Long idPedido) {
         this.idPedido = idPedido;
-    }
-
-    //retorna o cliente da venda
-    public Cliente getCliente() {
-        return cliente;
     }
 
     //retorna a forma de pagamento da venda
@@ -130,7 +131,7 @@ public class Pedido implements Serializable {
     }
 
     //Construtor com os parametros
-    public Pedido(String chave, Long idPedido, Double valorTotal, Double desconto, Double valorPago, Boolean online,Status status) {
+    public Pedido(String chave,  Long idPedido, Double valorTotal, Double desconto, Double valorPago, Boolean online,Status status) {
         this.chave = chave;
         this.idPedido = idPedido;
         this.valorTotal = valorTotal;
