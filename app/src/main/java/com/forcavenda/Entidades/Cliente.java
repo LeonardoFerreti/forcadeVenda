@@ -20,6 +20,28 @@ public class Cliente implements Serializable {
     String telefone;
     Endereco endereco;
 
+    public void setId(String id) {
+        this.id = id;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public void setId_usuario(String id_usuario) {
+        this.id_usuario = id_usuario;
+    }
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
+    }
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     //Construtor padrão
     public Cliente() {
     }
@@ -72,17 +94,6 @@ public class Cliente implements Serializable {
     //retorna a lista de telefones de um cliente
     public String getTelefone() {
         return telefone;
-    }
-
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     //retorna um HasMap com as propriedades e valores de um objeto Cliente

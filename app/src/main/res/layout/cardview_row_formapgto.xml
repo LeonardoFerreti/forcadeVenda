@@ -14,6 +14,7 @@
         android:layout_margin="5dp">
 
         <TextView
+            android:textColor="@android:color/black"
             android:id="@+id/txt_1"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -25,6 +26,7 @@
             android:textSize="20dp" />
 
         <TextView
+            android:textColor="@android:color/black"
             android:id="@+id/txt_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

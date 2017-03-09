@@ -35,7 +35,7 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:10.0.1'
     //Biblioteca de banco de dados do firebase
     compile 'com.google.firebase:firebase-database:10.0.1'
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
+   // compile 'com.google.firebase:firebase-messaging:10.0.1'
     //Biblioteca de consumo de JSON do Google
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     //Implementação do RecyclerView

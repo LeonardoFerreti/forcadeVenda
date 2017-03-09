@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.forcavenda.Dao.ClienteDao;
 import com.forcavenda.Entidades.Cliente;
+import com.forcavenda.Entidades.Endereco;
 import com.forcavenda.Fragments.Cadastros.CadastroClienteFragment;
 import com.forcavenda.Fragments.Cadastros.CadastroFormaPgtoFragment;
 import com.forcavenda.Fragments.Cadastros.CadastroProdutoFragment;
@@ -49,6 +50,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Map;
 
 public class Nav_PrincipalActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -95,7 +98,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                         fragmentProduto.show(fm, "Cadastrar produto");
                         break;
                     case R.id.nav_criar_pedido:
-                        CadastroPedidoFragment fragmentPedido   = CadastroPedidoFragment.newInstance(null,clienteLogado);
+                        CadastroPedidoFragment fragmentPedido = CadastroPedidoFragment.newInstance(null, clienteLogado);
                         fragmentPedido.show(fm, "Cadastrar pedido");
                         break;
                 }
@@ -104,7 +107,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar,  R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -175,7 +178,19 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                 } else {
                     Cliente cliente = null;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        cliente = snapshot.getValue(Cliente.class);
+                        Map<String, Object> cli = (Map<String, Object>) snapshot.getValue();
+                        cliente = new Cliente();
+                        cliente.setId((String) cli.get("id"));
+                        cliente.setNome((String) cli.get("nome"));
+                        cliente.setEmail((String) cli.get("email"));
+                        cliente.setAdmin((Boolean) cli.get("isAdmin"));
+                        cliente.setId_usuario((String) cli.get("id_usuario"));
+                        Map<String, Object> MapEndereco = (Map<String, Object>) cli.get("endereco");
+                        Endereco endereco = new Endereco((String) MapEndereco.get("logradouro"),
+                                (String) MapEndereco.get("numero"), (String) MapEndereco.get("complemento"),
+                                (String) MapEndereco.get("cep"), (String) MapEndereco.get("referencia"));
+                        cliente.setEndereco(endereco);
+                        cliente.setTelefone((String) cli.get("telefone"));
                     }
                     //verifico se o identificador desse cliente está vazio. Se estiver, tenho que vincular.(Esse caso foi o usuario
                     // admin que cadastrou, entao usuario completa seu cadastro.)
@@ -186,7 +201,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                         Log.i("cliente-usuario:", "Email já vinculado ao usuário.");
                     }
                     if (cliente.getAdmin()) {
-                        mostraItensUsuarioSimples();
+                        mostraItensUsuarioAdmin();
                     }
                     Log.i("cliente admin:", cliente.getAdmin().toString());
 
@@ -197,9 +212,14 @@ public class Nav_PrincipalActivity extends AppCompatActivity
 
                 progressDialog.dismiss();
 
-                //Seleciona o primeiro item de Menu
-                navView.getMenu().getItem(0).setChecked(true);
-                onNavigationItemSelected(navView.getMenu().getItem(0));
+                //Seleciona o item de Menu de pedidos
+
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                Menu nav_Menu = navigationView.getMenu();
+                MenuItem menuPedidos = nav_Menu.findItem(R.id.nav_criar_pedido);
+
+                nav_Menu.findItem(menuPedidos.getItemId()).setChecked(true);
+                onNavigationItemSelected(menuPedidos);
             }
 
             @Override
@@ -209,7 +229,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
         });
     }
 
-    private void mostraItensUsuarioSimples() {
+    private void mostraItensUsuarioAdmin() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
         nav_Menu.findItem(R.id.nav_clientes).setVisible(true);
@@ -229,8 +249,6 @@ public class Nav_PrincipalActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // getMenuInflater().inflate(R.menu.nav__principal, menu);
         return true;
     }
 
@@ -283,7 +301,7 @@ public class Nav_PrincipalActivity extends AppCompatActivity
                 floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_criar_pedido:
-                fragment = new PedidoFragment();
+                fragment =  PedidoFragment.newInstance(clienteLogado);
                 titulo = "Pedidos";
                 viewHome = false;
                 floatButton.setVisibility(View.VISIBLE);

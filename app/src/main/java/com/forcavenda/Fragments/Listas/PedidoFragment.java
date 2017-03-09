@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.forcavenda.Adapters.ListaPedidoAdapter;
 import com.forcavenda.Adapters.ListaPedidoRecyclerAdapter;
+import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.Pedido;
 import com.forcavenda.R;
 import com.google.firebase.database.ChildEventListener;
@@ -31,22 +32,34 @@ import java.util.List;
  * Created by Leo on 03/03/2017.
  */
 public class PedidoFragment extends Fragment {
+    private static final String PARAM_CLIENTE = "cliente";
     List<Pedido> listaPedidos = new ArrayList<Pedido>();
+    private Cliente clienteLogado;
 
     public PedidoFragment() {
     }
 
-    public static PedidoFragment newInstance() {
+    public static PedidoFragment newInstance(Cliente clienteLogado) {
         PedidoFragment fragment = new PedidoFragment();
         Bundle args = new Bundle();
+        args.putSerializable(PARAM_CLIENTE, clienteLogado);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            clienteLogado = (Cliente) getArguments().getSerializable(PARAM_CLIENTE);
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_recycler_lista, container, false);
+        final boolean Admin = clienteLogado.getAdmin();
 
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
@@ -65,12 +78,13 @@ public class PedidoFragment extends Fragment {
         recyclerView.setLayoutManager(layout);
 
         final FirebaseDatabase banco = FirebaseDatabase.getInstance();
-        DatabaseReference tabClientes = banco.getReference("pedido");
-        Query resultado = tabClientes.orderByChild("status");
+        Query resultado = banco.getReference("pedido").orderByChild("idPedido");
 
         resultado.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                java.util.Collections.reverse(listaPedidos);
+                adapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -84,7 +98,8 @@ public class PedidoFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
                 Pedido pedido = snapshot.getValue(Pedido.class);
-                listaPedidos.add(pedido);
+                if ((Admin == true) || (Admin == false && pedido.getCliente().getId().equals(clienteLogado.getId())))
+                    listaPedidos.add(pedido);
                 adapter.notifyDataSetChanged();
             }
 

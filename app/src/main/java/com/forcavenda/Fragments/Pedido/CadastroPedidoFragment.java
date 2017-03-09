@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,19 +68,19 @@ public class CadastroPedidoFragment extends DialogFragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        // Obter parâmetros de layout existentes para a janela
-        ViewGroup.LayoutParams parametros = getDialog().getWindow().getAttributes();
-        // Atribuir propriedades da janela para preencher a Dialog
-        parametros.width = WindowManager.LayoutParams.MATCH_PARENT;
-        parametros.height = WindowManager.LayoutParams.MATCH_PARENT;
-        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) parametros);
-
-        // Chamar o onResume da classe pai após o redimensionamento
-        super.onResume();
-
-    }
+//    @Override
+//    public void onResume() {
+//        // Obter parâmetros de layout existentes para a janela
+//        ViewGroup.LayoutParams parametros = getDialog().getWindow().getAttributes();
+//        // Atribuir propriedades da janela para preencher a Dialog
+//        parametros.width = WindowManager.LayoutParams.MATCH_PARENT;
+//        parametros.height = WindowManager.LayoutParams.MATCH_PARENT;
+//        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) parametros);
+//
+//        // Chamar o onResume da classe pai após o redimensionamento
+//        super.onResume();
+//
+//    }
 
     @Nullable
     @Override
@@ -105,11 +106,12 @@ public class CadastroPedidoFragment extends DialogFragment {
                 Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
                 adapter.setClienteSelecionado();
                 if (fragment instanceof FinalizaPedidoFragment) {
-                    btn_salvar.setText("Salvar");
+                    btn_salvar.setText("SALVAR");
                     ((FinalizaPedidoFragment) fragment).setListaItensPedido(itensSelecionados);
                     btn_salvar.setEnabled(itensSelecionados.size() > 0);
                 } else if (fragment instanceof SelecionaItensPedidoFragment) {
-                    btn_salvar.setText("Avançar");
+                    btn_salvar.setText("AVANÇAR");
+                    btn_salvar.setEnabled(true);
                 }
             }
 
@@ -155,7 +157,7 @@ public class CadastroPedidoFragment extends DialogFragment {
                     itensPedido = ((FinalizaPedidoFragment) fragment).getListaItensPedido();
                     lblValorTotal = ((FinalizaPedidoFragment) fragment).getLblValorTotal();
 
-                    boolean online = (cliente_pedido.getAdmin() == false) ? true : false;
+                    boolean online = (!cliente_pedido.getAdmin()) ? true : false;
                     final Pedido pedido = new Pedido(Long.valueOf(String.valueOf(0)), "", cliente, formaPgto, itensPedido,
                             Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), Double.valueOf(String.valueOf(0)), Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), online);
 
@@ -176,6 +178,7 @@ public class CadastroPedidoFragment extends DialogFragment {
             }
         });
 
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return view;
     }
 
