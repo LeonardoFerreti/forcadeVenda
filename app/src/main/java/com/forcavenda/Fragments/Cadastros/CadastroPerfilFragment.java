@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.forcavenda.Dao.ClienteDao;
-import com.forcavenda.Dao.EnderecoDao;
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.Endereco;
 import com.forcavenda.R;
@@ -280,7 +279,7 @@ public class CadastroPerfilFragment extends Fragment {
             });
         }
 
-        Button btn_salvar = (Button) view.findViewById(R.id.btn_salvar);
+        final Button btn_salvar = (Button) view.findViewById(R.id.btn_salvar);
         btn_salvar.setVisibility(View.VISIBLE);
 
         btn_salvar.setOnClickListener(new View.OnClickListener() {
@@ -288,6 +287,7 @@ public class CadastroPerfilFragment extends Fragment {
             public void onClick(View v) {
                 if (com.forcavenda.Util.Util.estaConectadoInternet(getActivity().getApplicationContext())) {
                     if (validaCampos()) {
+                        btn_salvar.setEnabled(false);
                         final String nomeCliente = txt_nome.getText().toString();
                         new AsyncTask<Void, Void, Void>() {
                             ProgressDialog progressDialog;
@@ -310,6 +310,8 @@ public class CadastroPerfilFragment extends Fragment {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
+                                                   ProgressDialog progressDialog = Util.CriaProgressDialog(getActivity());
+                                                    progressDialog.show();
                                                     //Recupera a instancia do Banco de dados da aplicação//
                                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                                     //recupera a raiz do nó do banco de dados
@@ -325,11 +327,10 @@ public class CadastroPerfilFragment extends Fragment {
                                                             isAdmin, endereco, txt_telefone.getText().toString());
                                                     //Chama a classe de CRUD de forma de pagamento, fazendo referencia ao nó raiz do Cliente
                                                     ClienteDao clienteDao = new ClienteDao();
-                                                    DatabaseReference refNovoCliente = clienteDao.IncluirAlterar(ref, chave, novoCliente.MapCliente(novoCliente));
-                                                    //Chama a classe de CRUD de endereçc, fazendo referencia ao nó do cadastro de cliente
-                                                    EnderecoDao enderecoDao = new EnderecoDao();
-                                                    enderecoDao.Incluir(refNovoCliente, Endereco.MapEndereco(novoCliente.getEndereco()));
+                                                    clienteDao.IncluirAlterar(getActivity().getApplicationContext(), chave, novoCliente.MapCliente(novoCliente),"Perfil alterado com sucesso.");
                                                     cliente = novoCliente;
+                                                    progressDialog.dismiss();
+                                                    btn_salvar.setEnabled(true);
                                                 }
                                             }
                                         });

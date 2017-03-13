@@ -30,11 +30,9 @@
     </style>
 
     <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
-
     </style>
 
     <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
-
     </style>
 
 </resources>

@@ -50,7 +50,7 @@
         android:layout_marginTop="18dp"
         android:background="@color/colorPrimary"
         android:text="Entrar"
-        android:textColor="@color/Branco" />
+        android:textColor="@android:color/white" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
@@ -70,7 +70,7 @@
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
             android:text="Esqueci a senha"
-            android:textColor="@color/Branco" />
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btn_cadastrar"
@@ -82,7 +82,7 @@
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
             android:text="Cadastrar conta"
-            android:textColor="@color/Branco" />
+            android:textColor="@android:color/white" />
     </RelativeLayout>
 
     <ProgressBar

@@ -23,21 +23,27 @@ public class Cliente implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
+
     public void setId_usuario(String id_usuario) {
         this.id_usuario = id_usuario;
     }
+
     public void setAdmin(Boolean admin) {
         isAdmin = admin;
     }
+
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
+
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -47,7 +53,7 @@ public class Cliente implements Serializable {
     }
 
     //Construtor com os parametros: identificador, nome e email
-    public Cliente(String id, String nome, String email, String id_usuario,Boolean isAdmin,String telefone) {
+    public Cliente(String id, String nome, String email, String id_usuario, Boolean isAdmin, String telefone) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -71,26 +77,32 @@ public class Cliente implements Serializable {
     public String getId_usuario() {
         return id_usuario;
     }
+
     //retorna se o usuario vinculado é admin ou não
     public Boolean getAdmin() {
         return isAdmin;
     }
+
     //retorna o identificador do cliente
     public String getId() {
         return id;
     }
+
     //retorna o nome do cliente
     public String getNome() {
         return nome;
     }
+
     //retorna o email do cliente
     public String getEmail() {
         return email;
     }
+
     //retorna o endereco de um cliente
     public Endereco getEndereco() {
         return endereco;
     }
+
     //retorna a lista de telefones de um cliente
     public String getTelefone() {
         return telefone;
@@ -103,8 +115,9 @@ public class Cliente implements Serializable {
         resultado.put("nome", cliente.getNome());
         resultado.put("email", cliente.getEmail());
         resultado.put("id_usuario", cliente.getId_usuario());
-        resultado.put("isAdmin",cliente.getAdmin());
-        resultado.put("telefone",cliente.getTelefone());
+        resultado.put("isAdmin", cliente.getAdmin());
+        resultado.put("telefone", cliente.getTelefone());
+        resultado.put("endereco", Endereco.MapEndereco(cliente.getEndereco()));
         return resultado;
     }
 

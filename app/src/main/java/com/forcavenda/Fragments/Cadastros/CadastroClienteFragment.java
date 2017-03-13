@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.forcavenda.Dao.ClienteDao;
-import com.forcavenda.Dao.EnderecoDao;
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.Endereco;
 import com.forcavenda.R;
@@ -179,6 +178,7 @@ public class CadastroClienteFragment extends DialogFragment {
         txt_telefone = (EditText) view.findViewById(R.id.txt_telefone);
         txt_telefone.addTextChangedListener(new TextWatcher() {
             boolean isUpdating;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -190,15 +190,15 @@ public class CadastroClienteFragment extends DialogFragment {
                     return;
                 }
 
-                String str = s.toString().replaceAll("[ ]","").replaceAll("[(]", "").replaceAll("[)]", "").replaceAll("[-]", "");
+                String str = s.toString().replaceAll("[ ]", "").replaceAll("[(]", "").replaceAll("[)]", "").replaceAll("[-]", "");
 
                 if (count > before) {
                     if (str.length() > 10) {
                         str = "(" + str.substring(0, 2) + ")" + " " + str.substring(2, 7) + "-" + str.substring(7);
                     } else if (str.length() > 9) {
-                        str = "(" + str.substring(0, 2) + ")" + " " +  str.substring(2, 6) + "-" + str.substring(6);
+                        str = "(" + str.substring(0, 2) + ")" + " " + str.substring(2, 6) + "-" + str.substring(6);
                     } else if (str.length() > 2) {
-                        str = "("+ str.substring(0, 2) + ')' + " " + str.substring(2);
+                        str = "(" + str.substring(0, 2) + ')' + " " + str.substring(2);
                     }
                     isUpdating = true;
                     txt_telefone.setText(str);
@@ -355,9 +355,10 @@ public class CadastroClienteFragment extends DialogFragment {
 
         builder.setView(view);
 
+        //Define o titulo do DialogFragment
         View titulo = i.inflate(R.layout.layout_titulo_fragment, null);
         TextView txt_titulo = (TextView) titulo.findViewById(R.id.txt_1);
-        txt_titulo.setText((cliente == null) ?  R.string.cadastrar_cliente : R.string.alterar_cliente);
+        txt_titulo.setText((cliente == null) ? R.string.cadastrar_cliente : R.string.alterar_cliente);
         builder.setCustomTitle(titulo);
 
         final AlertDialog alertDialog = builder.create();
@@ -377,6 +378,7 @@ public class CadastroClienteFragment extends DialogFragment {
                                 ref = database.getReference();
                                 //captura o identificador do Cliente
                                 String chave = (cliente == null) ? ref.child("cliente").push().getKey() : cliente.getId();
+
                                 //Mapeia o objeto Endereço
                                 Endereco endereco = new Endereco(txt_rua.getText().toString().trim(), txt_numero.getText().toString().trim(), txt_complemento.getText().toString().trim(),
                                         txt_cep.getText().toString(), txt_referencia.getText().toString().trim());
@@ -384,15 +386,13 @@ public class CadastroClienteFragment extends DialogFragment {
                                 Cliente novoCliente = new Cliente(chave, txt_nome.getText().toString().trim(), txt_email.getText().toString().trim(), "", false, endereco, txt_telefone.getText().toString());
                                 //Chama a classe de CRUD de forma de pagamento, fazendo referencia ao nó raiz do Cliente
                                 ClienteDao clienteDao = new ClienteDao();
-                                DatabaseReference refNovoCliente = clienteDao.IncluirAlterar(ref, chave, novoCliente.MapCliente(novoCliente));
-                                //Chama a classe de CRUD de endereçc, fazendo referencia ao nó do cadastro de cliente
-                                EnderecoDao enderecoDao = new EnderecoDao();
-                                enderecoDao.Incluir(refNovoCliente, Endereco.MapEndereco(novoCliente.getEndereco()));
+                                //Define o texto que aparecerá para o usuário
                                 String texto = (cliente == null) ? "incluído" : "alterado";
-                                Toast.makeText(getActivity().getApplicationContext(), "Cliente " + texto + " com sucesso.", Toast.LENGTH_SHORT).show();
+                                texto = "Cliente " + texto + " com sucesso.";
+                                //Chama a classe CRUD de cliente
+                                clienteDao.IncluirAlterar(getActivity().getApplicationContext(), chave, novoCliente.MapCliente(novoCliente), texto);
                                 cliente = novoCliente;
                                 getDialog().dismiss();
-
                             } else {
                                 Toast.makeText(getActivity().getApplicationContext(), R.string.verificar_dados_informados, Toast.LENGTH_SHORT).show();
                             }

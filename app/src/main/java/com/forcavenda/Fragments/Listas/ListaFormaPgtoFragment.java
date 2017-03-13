@@ -1,18 +1,14 @@
 package com.forcavenda.Fragments.Listas;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.forcavenda.Adapters.ListaFormaPgtoAdapter;
 import com.forcavenda.Adapters.ListaFormaPgtoRecyclerAdapter;
 import com.forcavenda.Entidades.FormaPgto;
 import com.forcavenda.Fragments.Cadastros.CadastroFormaPgtoFragment;
@@ -32,14 +28,14 @@ import java.util.List;
  * Created by Leo on 23/02/2017.
  */
 
-public class FormaPgtoFragment extends Fragment {
+public class ListaFormaPgtoFragment extends Fragment {
     List<FormaPgto> listaFormaPgto = new ArrayList<FormaPgto>();
 
-    public FormaPgtoFragment() {
+    public ListaFormaPgtoFragment() {
     }
 
-    public static FormaPgtoFragment newInstance() {
-        FormaPgtoFragment fragment = new FormaPgtoFragment();
+    public static ListaFormaPgtoFragment newInstance() {
+        ListaFormaPgtoFragment fragment = new ListaFormaPgtoFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -127,17 +123,6 @@ public class FormaPgtoFragment extends Fragment {
             }
             // ....
         });
-
-        FloatingActionButton btn_adicionar = (FloatingActionButton) view.findViewById(R.id.btn_adicionar);
-
-//        btn_adicionar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(ListaClienteActivity.this, CadastroClienteActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        });
 
         return view;
     }

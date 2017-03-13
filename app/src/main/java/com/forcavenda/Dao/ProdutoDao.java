@@ -1,9 +1,20 @@
 package com.forcavenda.Dao;
 
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.forcavenda.R.string.cliente;
 
 /**
  * Created by Leo on 09/02/2017.
@@ -11,9 +22,73 @@ import java.util.Map;
 
 public class ProdutoDao {
 
-    public void IncluirAlterar(DatabaseReference ref, String chave, Map<String, Object> produto){
-        Map<String, Object> objDao = new HashMap<>();
+    public void IncluirAlterar(final Context context, final String chave, final Map<String, Object> produto, final String texto){
+        //recupera a raiz do nó do banco de dados
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        //Declara uma variavel HasMap, que vai ser utilizada para atualizar o banco do firebase.
+        final Map<String, Object> objDao = new HashMap<>();
+        //Adiciona ao objDao o caminho do produto a ser incluido/alterado, juntamente com seu objeto mapeado
         objDao.put("produto/" + chave, produto);
-        ref.updateChildren(objDao);
+
+        //Adiciona uma referencia ao nó de relacionamento produto/pedido, adicionando ao objDao
+        // todos os caminhos dos pedidos que possuem o produto que está sendo alterado.
+        final DatabaseReference refClientePedido = ref.child("produtoPedido").child(chave);
+        //Adiciona um evento de escuta para cada item encontrado do relacionamento
+        refClientePedido.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                //adiciona o caminho do pedido que utiliza o produto informado
+                objDao.put("pedido/" + dataSnapshot.getKey().toString() + "/itens/" + chave + "/item/produto/" , produto);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        //Acionado quando todas as referencias do produto foram adicionadas ao ObjDao, fazer o update ...
+        refClientePedido.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //ao final das consultas, atualiza todos os caminhos informados com o objeto produto alterado.
+                ref.updateChildren(objDao, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError == null) {
+                            Toast.makeText(context, texto, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Erro ao atualizar o produto: " + databaseError.getMessage().toString(), Toast.LENGTH_LONG).show();
+                            Log.i("Erro", databaseError.getMessage());
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
+
     }
+
+
+
+
 }

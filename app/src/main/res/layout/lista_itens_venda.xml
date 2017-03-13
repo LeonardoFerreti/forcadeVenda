@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/btn_adicionaQtde"
-        android:backgroundTint="@color/Branco"
+        android:backgroundTint="@android:color/white"
         android:gravity="center_horizontal"
         android:text="1"
         android:textSize="14sp"

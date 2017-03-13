@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.forcavenda.Entidades.Pedido;
+import com.forcavenda.Enums.Status;
 import com.forcavenda.Util.Util;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,12 +38,12 @@ public class PedidoDao {
         return refNovoPedido;
     }
 
-    public DatabaseReference Incluir(DatabaseReference ref, Long id, Map<String, Object> pedido) {
-        Map<String, Object> objDao = new HashMap<>();
-        objDao.put("pedido/" + id, pedido);
-        ref.updateChildren(objDao);
-        DatabaseReference refNovoPedido = ref.child("pedido").child(String.valueOf(id));
-        return refNovoPedido;
+    public void alteraStatus(Status status) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.child("pedido").child(pedido_insupd.getChave()).child("status").setValue(status.toString());
+
+        Toast.makeText(context, "Pedido " + String.valueOf(pedido_insupd.getIdPedido()) + " alterado com sucesso.", Toast.LENGTH_SHORT).show();
+
     }
 
     public Long novoIdentificador = Long.valueOf(0);

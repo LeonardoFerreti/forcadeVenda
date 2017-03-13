@@ -22,5 +22,15 @@ public enum Status {
         this.descricao = descricao;
     }
 
- 
+    public Status retornaStatusPelaDescricao(String descricao) {
+        Status[] values = Status.values();
+        Status selecionado = null;
+        for (Status status : values) {
+            if (descricao.equals(status.getDescricao())) {
+                selecionado = status;
+            }
+        }
+        return selecionado;
+    }
+
 }

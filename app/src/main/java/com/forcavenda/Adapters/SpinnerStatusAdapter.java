@@ -9,24 +9,22 @@ import android.widget.BaseAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-
-import com.forcavenda.Entidades.FormaPgto;
+import com.forcavenda.Enums.Status;
 import com.forcavenda.R;
 
 import java.util.List;
 
 /**
- * Created by Leo on 11/02/2017.
+ * Created by Leo on 12/03/2017.
  */
 
-public class SpinnerFormaPgtoAdapter extends BaseAdapter implements SpinnerAdapter {
-
+public class SpinnerStatusAdapter extends BaseAdapter implements SpinnerAdapter {
     private final Context context;
-    private List<FormaPgto> lista;
+    private List<Status> lista;
 
-    public SpinnerFormaPgtoAdapter(Context context, List<FormaPgto> formaPgtos) {
+    public SpinnerStatusAdapter(Context context, List<Status> status) {
         this.context = context;
-        this.lista = formaPgtos;
+        this.lista = status;
     }
 
     @Override
@@ -51,7 +49,7 @@ public class SpinnerFormaPgtoAdapter extends BaseAdapter implements SpinnerAdapt
         txt.setPadding(16, 16, 16, 16);
         txt.setTextSize(16);
         txt.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.drop_down_button, 0);
-        txt.setText(lista.get(position).getNome());
+        txt.setText(lista.get(position).getDescricao());
         txt.setTextColor(Color.parseColor("#000000"));
         return  txt;
     }
@@ -62,8 +60,9 @@ public class SpinnerFormaPgtoAdapter extends BaseAdapter implements SpinnerAdapt
         txt.setPadding(16, 16, 16, 16);
         txt.setTextSize(18);
         txt.setGravity(Gravity.CENTER_VERTICAL);
-        txt.setText(lista.get(position).getNome());
+        txt.setText(lista.get(position).getDescricao());
         txt.setTextColor(Color.parseColor("#000000"));
         return  txt;
     }
+
 }

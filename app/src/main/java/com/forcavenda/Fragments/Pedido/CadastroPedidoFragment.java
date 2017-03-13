@@ -1,23 +1,20 @@
 package com.forcavenda.Fragments.Pedido;
 
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.forcavenda.Adapters.PedidoAdapter;
 import com.forcavenda.Dao.PedidoDao;
@@ -26,7 +23,6 @@ import com.forcavenda.Entidades.FormaPgto;
 import com.forcavenda.Entidades.ItemPedido;
 import com.forcavenda.Entidades.Pedido;
 import com.forcavenda.Enums.Status;
-import com.forcavenda.Fragments.Listas.ProdutoFragment;
 import com.forcavenda.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -47,9 +43,11 @@ public class CadastroPedidoFragment extends DialogFragment {
     AlertDialog viewPedido;
     List<ItemPedido> itensSelecionados = new ArrayList<ItemPedido>();
 
+    //construtor padrão
     public CadastroPedidoFragment() {
     }
 
+    //construtor do fragment sendo enviado um objeto do tipo pedido e um do tipo cliente
     public static CadastroPedidoFragment newInstance(Pedido pedido, Cliente cliente) {
         CadastroPedidoFragment fragment = new CadastroPedidoFragment();
         Bundle args = new Bundle();
@@ -68,19 +66,19 @@ public class CadastroPedidoFragment extends DialogFragment {
         }
     }
 
-//    @Override
-//    public void onResume() {
-//        // Obter parâmetros de layout existentes para a janela
-//        ViewGroup.LayoutParams parametros = getDialog().getWindow().getAttributes();
-//        // Atribuir propriedades da janela para preencher a Dialog
-//        parametros.width = WindowManager.LayoutParams.MATCH_PARENT;
-//        parametros.height = WindowManager.LayoutParams.MATCH_PARENT;
-//        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) parametros);
-//
-//        // Chamar o onResume da classe pai após o redimensionamento
-//        super.onResume();
-//
-//    }
+    @Override
+    public void onResume() {
+        // Obter parâmetros de layout existentes para a janela
+        ViewGroup.LayoutParams parametros = getDialog().getWindow().getAttributes();
+        // Atribuir propriedades da janela para preencher a Dialog
+        parametros.width = WindowManager.LayoutParams.MATCH_PARENT;
+        parametros.height = WindowManager.LayoutParams.MATCH_PARENT;
+        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) parametros);
+
+        // Chamar o onResume da classe pai após o redimensionamento
+        super.onResume();
+
+    }
 
     @Nullable
     @Override
@@ -89,14 +87,18 @@ public class CadastroPedidoFragment extends DialogFragment {
         final Button btn_cancelar = (Button) view.findViewById(R.id.btn_cancelar);
         final Button btn_salvar = (Button) view.findViewById(R.id.btn_salvar);
         final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+
+        //adiciona as tabs do cadastro de pedido
         tabLayout.addTab(tabLayout.newTab().setText("Selecionar itens"));
         tabLayout.addTab(tabLayout.newTab().setText("Concluir pedido"));
 
+        //Define o preenchimento do tablayout no fragment
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         final PedidoAdapter adapter = new PedidoAdapter(getChildFragmentManager(), cliente);
 
+        //Define o adapter do do ViewPager
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -132,7 +134,6 @@ public class CadastroPedidoFragment extends DialogFragment {
             }
         });
 
-
         btn_cancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +144,14 @@ public class CadastroPedidoFragment extends DialogFragment {
         btn_salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Fragment fragmentItens = adapter.getItem(0);
+                if (fragmentItens instanceof SelecionaItensPedidoFragment) {
+                    itensSelecionados = ((SelecionaItensPedidoFragment) fragmentItens).getItensVenda();
+                    if (((SelecionaItensPedidoFragment) fragmentItens).getClienteSelecionado() != null) {
+                        cliente = ((SelecionaItensPedidoFragment) fragmentItens).getClienteSelecionado();
+                    }
+                }
+
                 Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
 
                 if (fragment instanceof FinalizaPedidoFragment) {
@@ -153,19 +162,38 @@ public class CadastroPedidoFragment extends DialogFragment {
                     TextView lblValorTotal;
 
                     cliente_pedido = ((FinalizaPedidoFragment) fragment).getCliente();
-                    formaPgto = ((FinalizaPedidoFragment) fragment).getFormaPgto();
-                    itensPedido = ((FinalizaPedidoFragment) fragment).getListaItensPedido();
-                    lblValorTotal = ((FinalizaPedidoFragment) fragment).getLblValorTotal();
 
-                    boolean online = (!cliente_pedido.getAdmin()) ? true : false;
-                    final Pedido pedido = new Pedido(Long.valueOf(String.valueOf(0)), "", cliente, formaPgto, itensPedido,
-                            Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), Double.valueOf(String.valueOf(0)), Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), online);
+                    if (cliente_pedido.getEndereco() != null) {
+                        formaPgto = ((FinalizaPedidoFragment) fragment).getFormaPgto();
+                        itensPedido = ((FinalizaPedidoFragment) fragment).getListaItensPedido();
+                        lblValorTotal = ((FinalizaPedidoFragment) fragment).getLblValorTotal();
 
-                    final Pedido novo_pedido = InsereNovoPedido(pedido, cliente, formaPgto, itensPedido);
+                        if (formaPgto != null) {
+                            boolean online = (!cliente_pedido.getAdmin()) ? true : false;
+                            final Pedido pedido = new Pedido(Long.valueOf(String.valueOf(0)), "", cliente, formaPgto, itensPedido,
+                                    Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), Double.valueOf(String.valueOf(0)), Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), online);
 
-                    PedidoDao pedidoDao = new PedidoDao(getActivity().getApplicationContext(), novo_pedido);
-                    pedidoDao.IncluirIdPedido(getActivity());
-                    getDialog().dismiss();
+                            final Pedido novo_pedido = InsereNovoPedido(pedido, cliente, formaPgto, itensPedido);
+
+                            PedidoDao pedidoDao = new PedidoDao(getActivity().getApplicationContext(), novo_pedido);
+                            pedidoDao.IncluirIdPedido(getActivity());
+                            getDialog().dismiss();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    R.string.selecione_forma_pgto, Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    } else {
+                        if (cliente_pedido.getAdmin()) {
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    "Finalize o seu cadastro do cliente antes de concluir o pedido.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    "Finalize o seu cadastro antes de fazer o pedido.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
 
                 } else if (fragment instanceof SelecionaItensPedidoFragment) {
                     //Avança para a proxima tela
@@ -189,30 +217,42 @@ public class CadastroPedidoFragment extends DialogFragment {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         //Recupera a raiz do nó do banco de dados
         DatabaseReference ref = database.getReference();
-        //captura o identificador do pedido
+        //Gera e captura o identificador do pedido
         String chave = ref.child("pedido").push().getKey();
         //Mapeia o objeto pedido
         Pedido pedido = new Pedido(chave, pedido_ins.getIdPedido(), pedido_ins.getValorTotal(), pedido_ins.getDesconto(),
-                pedido_ins.getValorPago(), pedido_ins.getOnline(), Status.Pendente);
+                pedido_ins.getValorPago(), pedido_ins.getOnline(), Status.Pendente,cliente,formaPgto);
 
+        //Insere o pedido
         PedidoDao pedidoDao = new PedidoDao(getActivity().getApplicationContext(), pedido);
         DatabaseReference refNovoPedido = pedidoDao.IncluirNoRegistro(ref, chave, Pedido.MapPedido(pedido));
 
-        Map<String, Object> objDao = new HashMap<>();
-        objDao.put("cliente", cliente);
-        refNovoPedido.updateChildren(objDao);
+        //Insere o registro de relacionamento cliente/pedido
+        DatabaseReference refClientePedido = ref.child("clientePedido").child(cliente.getId());
+        Map<String, Object> objcliPedido = new HashMap<>();
+        objcliPedido.put(chave, true);
+        refClientePedido.updateChildren(objcliPedido);
 
-        objDao = new HashMap<>();
-        objDao.put("formaPgto", formaPgto);
-        refNovoPedido.updateChildren(objDao);
+        //Insere o registro de relacionamento forma de pagamento/pedido
+        DatabaseReference refFormaPgtoPedido = ref.child("formaPgtoPedido").child(formaPgto.getId());
+        Map<String, Object> objPgtoPedido = new HashMap<>();
+        objPgtoPedido.put(chave, true);
+        refFormaPgtoPedido.updateChildren(objPgtoPedido);
 
+        //Percorre os itens do pedido
         for (ItemPedido item : itensPedido) {
-            //captura o identificador do item do pedido
-            String chave_item = refNovoPedido.child("itens").push().getKey();
-
-            objDao = new HashMap<>();
+            //captura o identificador do pedido
+            String chave_item = item.getProduto().getId();
+            //Mapeia o item atual do loop, inserindo na referencia do pedido
+            Map<String, Object> objDao  = new HashMap<>();
             objDao.put("item", item);
             refNovoPedido.child("itens").child(chave_item).updateChildren(objDao);
+
+            //Insere o registro de relacionamento Produto/pedido
+            DatabaseReference refProdutoPedido = ref.child("produtoPedido").child(item.getProduto().getId());
+            Map<String, Object> objProdutoPedido = new HashMap<>();
+            objProdutoPedido.put(chave, true);
+            refProdutoPedido.updateChildren(objProdutoPedido);
         }
 
         return pedido;

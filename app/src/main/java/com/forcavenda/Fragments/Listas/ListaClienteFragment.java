@@ -1,21 +1,17 @@
 package com.forcavenda.Fragments.Listas;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.forcavenda.Adapters.ListaProdutoAdapter;
-import com.forcavenda.Adapters.ListaProdutoRecyclerAdapter;
-import com.forcavenda.Entidades.Produto;
-import com.forcavenda.Fragments.Cadastros.CadastroProdutoFragment;
+import com.forcavenda.Adapters.ListaClienteRecyclerAdapter;
+import com.forcavenda.Entidades.Cliente;
+import com.forcavenda.Fragments.Cadastros.CadastroClienteFragment;
 import com.forcavenda.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -28,19 +24,18 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Leo on 23/02/2017.
- */
 
-public class ProdutoFragment extends Fragment {
-    List<Produto> listaProdutos = new ArrayList<Produto>();
+public class ListaClienteFragment extends Fragment {
 
-    public ProdutoFragment() {
+    List<Cliente> listaClientes = new ArrayList<Cliente>();
+
+    public ListaClienteFragment() {
     }
 
-    public static ProdutoFragment newInstance() {
-        ProdutoFragment fragment = new ProdutoFragment();
+    public static ListaClienteFragment newInstance() {
+        ListaClienteFragment fragment = new ListaClienteFragment();
         Bundle args = new Bundle();
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,12 +54,12 @@ public class ProdutoFragment extends Fragment {
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
-        final ListaProdutoRecyclerAdapter adapter = new ListaProdutoRecyclerAdapter(getActivity().getApplicationContext(), listaProdutos, new ListaProdutoRecyclerAdapter.OnItemClickListener() {
+        final ListaClienteRecyclerAdapter adapter = new ListaClienteRecyclerAdapter(getActivity().getApplicationContext(), listaClientes, new ListaClienteRecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Produto produto) {
+            public void onItemClick(Cliente cliente) {
                 android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-                CadastroProdutoFragment fragmentFormaPgto = CadastroProdutoFragment.newInstance(produto);
-                fragmentFormaPgto.show(fm, "Alterar produto");
+                CadastroClienteFragment fragment = CadastroClienteFragment.newInstance(cliente);
+                fragment.show(fm, "Alterar cliente");
             }
         });
 
@@ -74,9 +69,9 @@ public class ProdutoFragment extends Fragment {
         recyclerView.setLayoutManager(layout);
 
         final FirebaseDatabase banco = FirebaseDatabase.getInstance();
-        DatabaseReference tabClientes = banco.getReference("produto");
+        DatabaseReference tabClientes = banco.getReference("cliente");
 
-        Query resultado = tabClientes.orderByChild("nome");
+        Query resultado = tabClientes.orderByChild("isAdmin").equalTo(false);
 
         resultado.addValueEventListener(new ValueEventListener() {
             @Override
@@ -86,27 +81,25 @@ public class ProdutoFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
         resultado.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-                Produto produto = snapshot.getValue(Produto.class);
-                listaProdutos.add(produto);
+                Cliente cliente = snapshot.getValue(Cliente.class);
+                listaClientes.add(cliente);
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Produto produto = dataSnapshot.getValue(Produto.class);
-                for (Produto produtolista: listaProdutos) {
-                    if (produtolista.getId().equals(produto.getId())){
-                        produtolista.setNome(produto.getNome());
-                        produtolista.setPreco(produto.getPreco());
-                        produtolista.setDescricao(produto.getDescricao());
-                        produtolista.setAtivo(produto.getAtivo());
+                Cliente cliente = dataSnapshot.getValue(Cliente.class);
+                for (Cliente cli : listaClientes) {
+                    if (cli.getId().equals(cliente.getId())) {
+                        cli.setNome(cliente.getNome());
+                        cli.setTelefone(cliente.getTelefone());
+                        cli.setEndereco(cli.getEndereco());
                         break;
                     }
                 }
@@ -115,7 +108,9 @@ public class ProdutoFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                Cliente cliente = dataSnapshot.getValue(Cliente.class);
+                listaClientes.remove(cliente);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -127,7 +122,6 @@ public class ProdutoFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-            // ....
         });
 
         return view;

@@ -1,24 +1,17 @@
 package com.forcavenda.Fragments.Listas;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.forcavenda.Adapters.ListaClienteAdapter;
-import com.forcavenda.Adapters.ListaClienteRecyclerAdapter;
-import com.forcavenda.Entidades.Cliente;
-import com.forcavenda.Fragments.Cadastros.CadastroClienteFragment;
+import com.forcavenda.Adapters.ListaProdutoRecyclerAdapter;
+import com.forcavenda.Entidades.Produto;
+import com.forcavenda.Fragments.Cadastros.CadastroProdutoFragment;
 import com.forcavenda.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -31,19 +24,19 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by Leo on 23/02/2017.
+ */
 
-public class ClienteFragment extends Fragment {
+public class ListaProdutoFragment extends Fragment {
+    List<Produto> listaProdutos = new ArrayList<Produto>();
 
-    List<Cliente> listaClientes = new ArrayList<Cliente>();
-    private OnFragmentInteractionListener mListener;
-
-    public ClienteFragment() {
+    public ListaProdutoFragment() {
     }
 
-    public static ClienteFragment newInstance() {
-        ClienteFragment fragment = new ClienteFragment();
+    public static ListaProdutoFragment newInstance() {
+        ListaProdutoFragment fragment = new ListaProdutoFragment();
         Bundle args = new Bundle();
-
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,12 +55,12 @@ public class ClienteFragment extends Fragment {
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
-        final ListaClienteRecyclerAdapter adapter = new ListaClienteRecyclerAdapter(getActivity().getApplicationContext(), listaClientes, new ListaClienteRecyclerAdapter.OnItemClickListener() {
+        final ListaProdutoRecyclerAdapter adapter = new ListaProdutoRecyclerAdapter(getActivity().getApplicationContext(), listaProdutos, new ListaProdutoRecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Cliente cliente) {
+            public void onItemClick(Produto produto) {
                 android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-                CadastroClienteFragment fragment = CadastroClienteFragment.newInstance(cliente);
-                fragment.show(fm, "Alterar cliente");
+                CadastroProdutoFragment fragmentFormaPgto = CadastroProdutoFragment.newInstance(produto);
+                fragmentFormaPgto.show(fm, "Alterar produto");
             }
         });
 
@@ -77,7 +70,7 @@ public class ClienteFragment extends Fragment {
         recyclerView.setLayoutManager(layout);
 
         final FirebaseDatabase banco = FirebaseDatabase.getInstance();
-        DatabaseReference tabClientes = banco.getReference("cliente");
+        DatabaseReference tabClientes = banco.getReference("produto");
 
         Query resultado = tabClientes.orderByChild("nome");
 
@@ -89,25 +82,27 @@ public class ClienteFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
             }
         });
 
         resultado.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
-                Cliente cliente = snapshot.getValue(Cliente.class);
-                listaClientes.add(cliente);
+                Produto produto = snapshot.getValue(Produto.class);
+                listaProdutos.add(produto);
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Cliente cliente = dataSnapshot.getValue(Cliente.class);
-                for (Cliente cli : listaClientes) {
-                    if (cli.getId().equals(cliente.getId())) {
-                        cli.setNome(cliente.getNome());
-                        cli.setTelefone(cliente.getTelefone());
-                        cli.setEndereco(cli.getEndereco());
+                Produto produto = dataSnapshot.getValue(Produto.class);
+                for (Produto produtolista: listaProdutos) {
+                    if (produtolista.getId().equals(produto.getId())){
+                        produtolista.setNome(produto.getNome());
+                        produtolista.setPreco(produto.getPreco());
+                        produtolista.setDescricao(produto.getDescricao());
+                        produtolista.setAtivo(produto.getAtivo());
                         break;
                     }
                 }
@@ -116,9 +111,7 @@ public class ClienteFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Cliente cliente = dataSnapshot.getValue(Cliente.class);
-                listaClientes.remove(cliente);
-                adapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -133,46 +126,6 @@ public class ClienteFragment extends Fragment {
             // ....
         });
 
-        FloatingActionButton btn_adicionar = (FloatingActionButton) view.findViewById(R.id.btn_adicionar);
-
-//        btn_adicionar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(ListaClienteActivity.this, CadastroClienteActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        });
-
         return view;
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-        Log.i("Detach", "sas");
-    }
-
-    public interface OnFragmentInteractionListener {
-
-        void onFragmentInteraction(Uri uri);
     }
 }

@@ -71,7 +71,7 @@ public class CadastroProdutoFragment extends DialogFragment {
                 .setPositiveButton(R.string.salvar, null);
 
         LayoutInflater i = getActivity().getLayoutInflater();
-        final View view = i.inflate(R.layout.activity_cadastro_produto, null);
+        final View view = i.inflate(R.layout.fragment_cadastro_produto, null);
 
         //Recupera a instancia do Banco de dados da aplicação
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -98,7 +98,6 @@ public class CadastroProdutoFragment extends DialogFragment {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     produto = dataSnapshot.getValue(Produto.class);
-
                     txt_nome.setText(produto.getNome().toString());
                     txt_preco.setText(produto.getPreco().toString());
                     txt_descricao.setText(produto.getDescricao().toString());
@@ -142,9 +141,11 @@ public class CadastroProdutoFragment extends DialogFragment {
                                             checkBox.isChecked(), txt_descricao.getText().toString().trim());
                                     //Chama a classe de CRUD de forma de pagamento, fazendo referencia ao nó raiz do cadastro de Produto
                                     ProdutoDao produtoDao = new ProdutoDao();
-                                    produtoDao.IncluirAlterar(ref, chave, novoProduto.MapFormaPgto(novoProduto));
+                                    //Define o texto a ser apresentado ao usuário na atualização
                                     String texto = (produto == null) ? "incluído" : "alterado";
-                                    Toast.makeText(getActivity().getApplicationContext(), "Produto " + texto + " com sucesso.", Toast.LENGTH_SHORT).show();
+                                    texto = "Produto " + texto + " com sucesso.";
+                                    //Chama o evento de alterar o produto
+                                    produtoDao.IncluirAlterar(getActivity().getApplicationContext(), chave, novoProduto.MapFormaPgto(novoProduto),texto);
                                     produto = novoProduto;
                                     getDialog().dismiss();
 

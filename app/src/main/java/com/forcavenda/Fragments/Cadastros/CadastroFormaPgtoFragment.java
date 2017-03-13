@@ -59,7 +59,7 @@ public class CadastroFormaPgtoFragment extends DialogFragment {
                 .setPositiveButton(R.string.salvar, null);
 
         LayoutInflater i = getActivity().getLayoutInflater();
-        final View view = i.inflate(R.layout.activity_cadastro_forma_pgto, null);
+        final View view = i.inflate(R.layout.fragment_cadastro_forma_pgto, null);
 
         //Recupera a instancia do Banco de dados da aplicação
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -79,7 +79,7 @@ public class CadastroFormaPgtoFragment extends DialogFragment {
 
         View titulo = i.inflate(R.layout.layout_titulo_fragment, null);
         TextView txt_titulo = (TextView) titulo.findViewById(R.id.txt_1);
-        txt_titulo.setText((formaPgto == null) ?  R.string.cadastrar_forma_pgto : R.string.alterar_forma_pgto);
+        txt_titulo.setText((formaPgto == null) ? R.string.cadastrar_forma_pgto : R.string.alterar_forma_pgto);
         builder.setCustomTitle(titulo);
 
         final AlertDialog alertDialog = builder.create();
@@ -104,9 +104,11 @@ public class CadastroFormaPgtoFragment extends DialogFragment {
                                     FormaPgto novaformaPgto = new FormaPgto(chave, txt_nome.getText().toString().trim(), checkBox.isChecked());
                                     //Chama a classe de CRUD de forma de pagamento, fazendo referencia ao nó raiz do cadastro de forma de pagamento
                                     FormaPgtoDao formaPgtoDao = new FormaPgtoDao();
-                                    formaPgtoDao.IncluirAlterar(ref, chave, novaformaPgto.MapFormaPgto(novaformaPgto));
+                                    //Monta o texto a ser apresentado ao usuário
                                     String texto = (formaPgto == null) ? "incluída" : "alterada";
-                                    Toast.makeText(getActivity().getApplicationContext(), "Forma de pagamento " + texto + " com sucesso.", Toast.LENGTH_SHORT).show();
+                                    texto = "Forma de pagamento " + texto + " com sucesso.";
+                                    //Atualiza a forma de pagamento
+                                    formaPgtoDao.IncluirAlterar(getActivity().getApplicationContext(), chave, novaformaPgto.MapFormaPgto(novaformaPgto),texto);
                                     formaPgto = novaformaPgto;
                                     getDialog().dismiss();
 

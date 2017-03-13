@@ -66,4 +66,6 @@
     <string name="alterar_cliente">Alterar cliente</string>
     <string name="alterar_forma_pgto">Alterar forma de pagamento</string>
     <string name="alterar_produto">Alterar produto</string>
+    <string name="resumo_pedido">Resumo do pedido</string>
+    <string name="selecione_forma_pgto">Selecione uma forma de pagamento.</string>
 </resources>

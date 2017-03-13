@@ -11,7 +11,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:text="R$ 45,00"
-        android:textColor="@color/Preto"
+        android:textColor="@android:color/black"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -25,7 +25,7 @@
         android:layout_toLeftOf="@+id/lbl_valorTotal"
         android:layout_toStartOf="@+id/lbl_valorTotal"
         android:text="Valor total:"
-        android:textColor="@color/Preto"
+        android:textColor="@android:color/black"
         android:textSize="15sp"
         android:textStyle="bold" />
 </RelativeLayout>

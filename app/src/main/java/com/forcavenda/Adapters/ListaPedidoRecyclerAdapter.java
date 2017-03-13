@@ -46,7 +46,7 @@ public class ListaPedidoRecyclerAdapter extends RecyclerView.Adapter {
         Pedido pedido = pedidos.get(position);
         holder.txtIdPedido.setText("PEDIDO: "+ pedido.getIdPedido().toString());
         holder.txtNomeCiente.setText(pedido.getCliente().getNome().toUpperCase());
-        holder.txtStatus.setText("STATUS: "+ pedido.getStatus().toString().toUpperCase());
+        holder.txtStatus.setText("STATUS: "+ pedido.getStatus().getDescricao().toUpperCase());
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         holder.txtValor.setText(formatter.format(pedido.getValorTotal()));
     }

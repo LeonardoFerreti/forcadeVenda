@@ -13,28 +13,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.forcavenda.Dao.UsuarioDao;
-import com.forcavenda.Entidades.Usuario;
 import com.forcavenda.R;
 import com.forcavenda.Telas.Cadastros.CadastroUsuarioActivity;
 import com.forcavenda.Util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
@@ -120,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                                         } else {
                                             progressBar.setVisibility(View.GONE); //Mostra a progressBar
 
-                                            Intent intent = new Intent(LoginActivity.this, Nav_PrincipalActivity.class);
+                                            Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
                                             startActivity(intent);
                                             finish();
                                         }
@@ -137,14 +124,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // responds to changes in the user's sign-in state
+        //Responde a alterações no estado de início de sessão do usuário
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
 
-                    Intent intent = new Intent(LoginActivity.this, Nav_PrincipalActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
                     startActivity(intent);
                     finish();
 

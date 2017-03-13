@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Leo on 26/02/2017.
@@ -55,7 +56,7 @@ public class SelecionaItensPedidoFragment extends Fragment {
 
         if (cliente != null && cliente.getAdmin()) {
             DatabaseReference tabCliente = banco.getReference("cliente");
-            Query resultadoCliente = tabCliente.orderByChild("nome");
+            Query resultadoCliente = tabCliente.orderByChild("isAdmin").equalTo(false);
             resultadoCliente.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -70,7 +71,9 @@ public class SelecionaItensPedidoFragment extends Fragment {
             resultadoCliente.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot snapshot, String previousChild) {
+                    Map<String, Object> cli = (Map<String, Object>) snapshot.getValue();
                     Cliente cliente = snapshot.getValue(Cliente.class);
+                    cliente.setAdmin((Boolean) cli.get("isAdmin"));
                     listaclientes.add(cliente);
                     adapterCliente.notifyDataSetChanged();
                 }
@@ -121,7 +124,7 @@ public class SelecionaItensPedidoFragment extends Fragment {
         });
 
         DatabaseReference tabProdutos = banco.getReference("produto");
-        Query resultado = tabProdutos.orderByChild("nome");
+        Query resultado = tabProdutos.orderByChild("ativo").equalTo(true);
 
         adapterItens = new ListItensVendaAdapter(getActivity(),
                 R.layout.lista_itens_venda, listaItens);
@@ -143,7 +146,7 @@ public class SelecionaItensPedidoFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChild) {
                 Produto produto = snapshot.getValue(Produto.class);
-                listaItens.add(new ItemPedido(produto, 1));
+                listaItens.add(new ItemPedido(produto, (long) 1));
                 adapterItens.notifyDataSetChanged();
             }
 

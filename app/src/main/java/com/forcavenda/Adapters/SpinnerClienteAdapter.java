@@ -5,9 +5,7 @@ import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.CheckedTextView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
@@ -50,7 +48,7 @@ public class SpinnerClienteAdapter extends BaseAdapter implements SpinnerAdapter
         txt.setGravity(Gravity.CENTER);
         txt.setPadding(16, 16, 16, 16);
         txt.setTextSize(16);
-        txt.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.drop, 0);
+        txt.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.drop_down_button, 0);
         txt.setText(lista.get(position).getNome());
         txt.setTextColor(Color.parseColor("#000000"));
         return txt;

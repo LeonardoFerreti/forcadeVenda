@@ -131,7 +131,7 @@ public class Pedido implements Serializable {
     }
 
     //Construtor com os parametros
-    public Pedido(String chave,  Long idPedido, Double valorTotal, Double desconto, Double valorPago, Boolean online,Status status) {
+    public Pedido(String chave,  Long idPedido, Double valorTotal, Double desconto, Double valorPago, Boolean online,Status status,Cliente cliente, FormaPgto formaPgto) {
         this.chave = chave;
         this.idPedido = idPedido;
         this.valorTotal = valorTotal;
@@ -139,6 +139,8 @@ public class Pedido implements Serializable {
         this.valorPago = valorPago;
         this.online = online;
         this.status = status;
+        this.cliente =cliente;
+        this.formaPgto = formaPgto;
     }
 
     //retorna um HasMap com as propriedades e valores de um objeto Cliente
@@ -151,6 +153,9 @@ public class Pedido implements Serializable {
         resultado.put("valorPago", pedido.getValorPago());
         resultado.put("online", pedido.getOnline());
         resultado.put("status", pedido.getStatus());
+        resultado.put("cliente", Cliente.MapCliente(pedido.getCliente()));
+        resultado.put("formaPgto",FormaPgto.MapFormaPgto(pedido.getFormaPgto()));
+
         return resultado;
     }
 }
