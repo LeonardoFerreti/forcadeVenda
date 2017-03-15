@@ -150,19 +150,6 @@
                     android:inputType="phone" />
             </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/btn_salvar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/container"
-                android:layout_marginTop="18dp"
-                android:background="@color/colorPrimary"
-                android:text="Salvar"
-                android:textColor="@android:color/white"
-                android:visibility="gone" />
-
             <ProgressBar
                 android:id="@+id/progressBarCadastro"
                 android:layout_width="30dp"
@@ -170,7 +157,21 @@
                 android:layout_above="@+id/btn_esqueci"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center|bottom"
-                android:visibility="invisible" />
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_salvar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/container"
+                android:layout_marginTop="2dp"
+                android:background="@color/colorPrimary"
+                android:text="Salvar"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+
         </LinearLayout>
     </ScrollView>
 
