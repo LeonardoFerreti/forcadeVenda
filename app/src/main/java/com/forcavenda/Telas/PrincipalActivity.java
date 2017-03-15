@@ -251,15 +251,15 @@ public class PrincipalActivity extends AppCompatActivity
         nav_Menu.findItem(R.id.nav_forma_pgto).setVisible(true);
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
+//    @Override
+//    public void onBackPressed() {
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -380,5 +380,37 @@ public class PrincipalActivity extends AppCompatActivity
     protected void onPostResume() {
         super.onPostResume();
         blnCommitFragment = true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (itemSelecionado.getItemId() == R.id.nav_criar_pedido) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Deseja realmente sair do sistema?")
+                    .setCancelable(false)
+                    .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            FirebaseAuth.getInstance().signOut();
+                            startActivity(new Intent(PrincipalActivity.this, LoginActivity.class));
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        } else {
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            Menu nav_Menu = navigationView.getMenu();
+            MenuItem menuPedidos = nav_Menu.findItem(R.id.nav_criar_pedido);
+
+            nav_Menu.findItem(menuPedidos.getItemId()).setChecked(true);
+            onNavigationItemSelected(menuPedidos);
+        }
     }
 }

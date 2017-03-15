@@ -145,15 +145,15 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean validaDados() {
         boolean validado = true;
-        if (txt_Email.getText().length() ==0){
-            validado=false;
+        if (txt_Email.getText().length() == 0) {
+            validado = false;
             input_email.setError("Informe o e-mail.");
         } else {
             input_email.setError("");
         }
 
-        if (txt_Senha.getText().length() ==0){
-            validado=false;
+        if (txt_Senha.getText().length() == 0) {
+            validado = false;
             input_senha.setError("Informe a senha.");
         } else {
             input_senha.setError("");
@@ -178,6 +178,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        finish();
     }
 }
