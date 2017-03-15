@@ -41,9 +41,9 @@
     <string name="conta_inexistente">Nenhuma conta vinculada ao e-mail informado.</string>
     <string name="informe_email">Informe o email</string>
     <string name="informe_senha">Informe a sua senha</string>
-    <string name="hint_senha_antiga_email">Digite a senha antiga</string>
+    <string name="hint_senha_antiga_email">Digite a senha atual</string>
     <string name="hint_repita_nova_senha_email">Repita a nova senha</string>
-    <string name="hint_nova_senha_email">Informe a senha</string>
+    <string name="hint_nova_senha_email">Informe a nova senha</string>
     <string name="cancelar">Cancelar</string>
     <string name="salvar">Salvar</string>
     <string name="cadastrar_cliente">Cadastrar cliente</string>
@@ -68,4 +68,6 @@
     <string name="alterar_produto">Alterar produto</string>
     <string name="resumo_pedido">Resumo do pedido</string>
     <string name="selecione_forma_pgto">Selecione uma forma de pagamento.</string>
+    <string name="cancelar_pedido">Cancelar pedido</string>
+    <string name="fechar">Fechar</string>
 </resources>

@@ -10,6 +10,20 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_senha_antiga"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/txt_senha_antiga"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_senha_antiga_email"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/input_nova_senha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,12 +66,11 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
+        android:layout_marginTop="16dp"
         android:layout_width="30dp"
         android:layout_height="30dp"
-
-        android:layout_below="@+id/btn_login"
+        android:layout_above="@+id/btn_esqueci"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center|bottom"
-        android:layout_marginTop="14dp"
         android:visibility="gone" />
 </LinearLayout>

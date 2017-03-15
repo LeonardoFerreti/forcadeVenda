@@ -56,10 +56,7 @@ import java.util.Map;
 public class PrincipalActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Cliente clienteLogado;
-    private boolean viewHome;
     ProgressDialog progressDialog;
-    SharedPreferences sharedpreferences;
     FloatingActionButton floatButton;
     MenuItem itemSelecionado;
     NavigationView navView;
@@ -71,7 +68,6 @@ public class PrincipalActivity extends AppCompatActivity
         setContentView(R.layout.activity_principal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        sharedpreferences = getSharedPreferences(Util.PREFERENCIA, Context.MODE_PRIVATE);
         progressDialog = Util.CriaProgressDialog(this);
         progressDialog.show();
 
@@ -98,7 +94,7 @@ public class PrincipalActivity extends AppCompatActivity
                         fragmentProduto.show(fm, "Cadastrar produto");
                         break;
                     case R.id.nav_criar_pedido:
-                        CadastroPedidoFragment fragmentPedido = CadastroPedidoFragment.newInstance(null, clienteLogado);
+                        CadastroPedidoFragment fragmentPedido = CadastroPedidoFragment.newInstance(null, Util.clienteLogado);
                         fragmentPedido.show(fm, "Cadastrar pedido");
                         break;
                 }
@@ -128,7 +124,7 @@ public class PrincipalActivity extends AppCompatActivity
     }
 
     private void verificaUsuarioSimples() {
-        final SharedPreferences.Editor editor = sharedpreferences.edit();
+
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         final Query refUsuarioCliente = ref.child("cliente").orderByChild("email").equalTo(user.getEmail());
@@ -141,20 +137,22 @@ public class PrincipalActivity extends AppCompatActivity
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Map<String, Object> cli = (Map<String, Object>) dataSnapshot.getValue();
-                clienteLogado.setId((String) cli.get("id"));
-                clienteLogado.setNome((String) cli.get("nome"));
-                clienteLogado.setEmail((String) cli.get("email"));
-                clienteLogado.setAdmin((Boolean) cli.get("isAdmin"));
-                clienteLogado.setId_usuario((String) cli.get("id_usuario"));
+                Cliente cliente = new Cliente();
+                cliente.setId((String) cli.get("id"));
+                cliente.setNome((String) cli.get("nome"));
+                cliente.setEmail((String) cli.get("email"));
+                cliente.setAdmin((Boolean) cli.get("isAdmin"));
+                cliente.setId_usuario((String) cli.get("id_usuario"));
                 if (cli.get("endereco") != null) {
                     Map<String, Object> MapEndereco = (Map<String, Object>) cli.get("endereco");
                     Endereco endereco = new Endereco((String) MapEndereco.get("logradouro"),
                             (String) MapEndereco.get("numero"), (String) MapEndereco.get("complemento"),
                             (String) MapEndereco.get("cep"), (String) MapEndereco.get("referencia"));
-                    clienteLogado.setEndereco(endereco);
+                    cliente.setEndereco(endereco);
                 }
-                clienteLogado.setTelefone((String) cli.get("telefone"));
+                cliente.setTelefone((String) cli.get("telefone"));
 
+                Util.setClienteLogado(cliente);
 
             }
 
@@ -170,6 +168,7 @@ public class PrincipalActivity extends AppCompatActivity
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
         refUsuarioCliente.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -187,9 +186,8 @@ public class PrincipalActivity extends AppCompatActivity
                     ClienteDao clienteDao = new ClienteDao();
                     clienteDao.associaClienteUsuario(chave, Cliente.MapCliente(cliente_usuario_ins));
 
-                    clienteLogado = cliente_usuario_ins;
-                    editor.putString(Util.chaveCliente, chave);
-                    editor.putBoolean(Util.isAdmin, false);
+                    Util.setClienteLogado(cliente_usuario_ins);
+
 
                 } else {
                     Cliente cliente = null;
@@ -223,9 +221,7 @@ public class PrincipalActivity extends AppCompatActivity
                     }
                     Log.i("cliente admin:", cliente.getAdmin().toString());
 
-                    clienteLogado = cliente;
-                    editor.putString(Util.chaveCliente, cliente.getId());
-                    editor.putBoolean(Util.isAdmin, cliente.getAdmin());
+                    Util.setClienteLogado(cliente);
                 }
 
                 progressDialog.dismiss();
@@ -285,38 +281,34 @@ public class PrincipalActivity extends AppCompatActivity
 
         switch (viewId) {
             case R.id.nav_perfil:
-                fragment = CadastroPerfilFragment.newInstance(clienteLogado);
+                fragment = CadastroPerfilFragment.newInstance(Util.clienteLogado);
                 titulo = "Meu perfil";
                 floatButton.setVisibility(View.GONE);
                 break;
             case R.id.nav_clientes:
                 fragment = new ListaClienteFragment();
                 titulo = "Clientes cadastrados";
-                viewHome = true;
                 floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_produtos:
                 fragment = new ListaProdutoFragment();
                 titulo = "Produtos";
-                viewHome = false;
                 floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_forma_pgto:
                 fragment = new ListaFormaPgtoFragment();
                 titulo = "Formas de pagamento";
-                viewHome = false;
                 floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_criar_pedido:
-                fragment = ListaPedidoFragment.newInstance(clienteLogado);
+                fragment = ListaPedidoFragment.newInstance(Util.clienteLogado);
                 titulo = "Pedidos";
-                viewHome = false;
                 floatButton.setVisibility(View.VISIBLE);
                 break;
             case R.id.nav_trocar_senha:
                 fragment = new TrocaSenhaFragment();
+                floatButton.setVisibility(View.GONE);
                 titulo = "Trocar senha";
-                viewHome = false;
                 break;
         }
 
@@ -349,6 +341,7 @@ public class PrincipalActivity extends AppCompatActivity
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(titulo);
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }

@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.R;
 
 /**
@@ -17,12 +18,14 @@ import com.forcavenda.R;
 
 public class Util {
 
-    public static final String PREFERENCIA = "PREFERENCIA";
-    public static final String chaveCliente = "chaveCliente";
-    public static final String isAdmin = "isAdmin";
+    public static Cliente clienteLogado;
+
+    public static void setClienteLogado(Cliente cliente){
+        clienteLogado = cliente;
+    }
 
     public static boolean estaConectadoInternet(Context context) {
-        Boolean conectado = false;
+        boolean conectado;
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         if (info != null && info.isConnected()) {

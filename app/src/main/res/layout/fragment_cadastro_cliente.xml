@@ -151,7 +151,6 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:visibility="gone"
                 android:id="@+id/btn_salvar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -161,8 +160,17 @@
                 android:layout_marginTop="18dp"
                 android:background="@color/colorPrimary"
                 android:text="Salvar"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
 
+            <ProgressBar
+                android:id="@+id/progressBarCadastro"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/btn_esqueci"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center|bottom"
+                android:visibility="invisible" />
         </LinearLayout>
     </ScrollView>
 

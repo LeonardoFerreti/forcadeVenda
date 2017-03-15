@@ -95,7 +95,7 @@ public class CadastroPerfilFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cadastro_cliente, container, false);
 
-        progressBarCadastro = (ProgressBar) view.findViewById(R.id.progressBar2);
+        progressBarCadastro = (ProgressBar) view.findViewById(R.id.progressBarCadastro);
 
         //Dados do cliente
         input_nome = (TextInputLayout) view.findViewById(R.id.input_nome);
@@ -290,17 +290,17 @@ public class CadastroPerfilFragment extends Fragment {
                         btn_salvar.setEnabled(false);
                         final String nomeCliente = txt_nome.getText().toString();
                         new AsyncTask<Void, Void, Void>() {
-                            ProgressDialog progressDialog;
+
 
                             @Override
                             protected void onPreExecute() {
                                 super.onPreExecute();
-                                progressDialog = Util.CriaProgressDialog(getActivity());
-                                progressDialog.show();
+                                progressBarCadastro.setVisibility(View.VISIBLE);
                             }
 
                             @Override
                             protected Void doInBackground(Void... params) {
+
                                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 UserProfileChangeRequest updatePerfil = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(nomeCliente)
@@ -310,8 +310,7 @@ public class CadastroPerfilFragment extends Fragment {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                   ProgressDialog progressDialog = Util.CriaProgressDialog(getActivity());
-                                                    progressDialog.show();
+                                                    progressBarCadastro.setVisibility(View.VISIBLE);
                                                     //Recupera a instancia do Banco de dados da aplicação//
                                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                                     //recupera a raiz do nó do banco de dados
@@ -327,10 +326,11 @@ public class CadastroPerfilFragment extends Fragment {
                                                             isAdmin, endereco, txt_telefone.getText().toString());
                                                     //Chama a classe de CRUD de forma de pagamento, fazendo referencia ao nó raiz do Cliente
                                                     ClienteDao clienteDao = new ClienteDao();
-                                                    clienteDao.IncluirAlterar(getActivity().getApplicationContext(), chave, novoCliente.MapCliente(novoCliente),"Perfil alterado com sucesso.");
+                                                    clienteDao.IncluirAlterar(getActivity().getApplicationContext(), chave, novoCliente.MapCliente(novoCliente), "Perfil alterado com sucesso.");
+                                                    Util.setClienteLogado(novoCliente);
                                                     cliente = novoCliente;
-                                                    progressDialog.dismiss();
                                                     btn_salvar.setEnabled(true);
+                                                    progressBarCadastro.setVisibility(View.GONE);
                                                 }
                                             }
                                         });
@@ -339,8 +339,8 @@ public class CadastroPerfilFragment extends Fragment {
 
                             @Override
                             protected void onPostExecute(Void aVoid) {
-                                progressDialog.dismiss();
-                                Toast.makeText(getActivity().getApplicationContext(), R.string.perfil_alterado_sucesso, Toast.LENGTH_SHORT).show();
+                               // progressDialog.dismiss();
+                                //Toast.makeText(getActivity().getApplicationContext(), R.string.perfil_alterado_sucesso, Toast.LENGTH_SHORT).show();
                             }
                         }.execute();
 

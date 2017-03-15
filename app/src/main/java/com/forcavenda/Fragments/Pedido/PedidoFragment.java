@@ -27,6 +27,7 @@ import com.forcavenda.Entidades.ItemPedido;
 import com.forcavenda.Entidades.Pedido;
 import com.forcavenda.Enums.Status;
 import com.forcavenda.R;
+import com.forcavenda.Util.Util;
 
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -71,8 +72,9 @@ public class PedidoFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                .setNegativeButton(R.string.cancelar, null)
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setNeutralButton(R.string.cancelar_pedido, null)
+                .setNegativeButton(R.string.fechar, null)
                 .setPositiveButton(R.string.salvar, null);
 
         LayoutInflater i = getActivity().getLayoutInflater();
@@ -143,7 +145,31 @@ public class PedidoFragment extends DialogFragment {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
+                Button btn_cancelar_pedido = alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+                if (!pedido.getStatus().equals(Status.Pendente)) {
+                    btn_cancelar_pedido.setVisibility(View.GONE);
+                }
+                btn_cancelar_pedido.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+                        builder1.setMessage("Deseja realmente cancelar o pedido?");
+                        builder1.setNegativeButton("Não", null);
+                        builder1.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                PedidoDao pedidoDao = new PedidoDao(getActivity().getApplicationContext(), pedido);
+                                pedidoDao.alteraStatus(Status.Cancelado);
+                                getDialog().dismiss();
+                            }
+                        });
+                        builder1.show();
+                    }
+                });
                 Button btn_salvar = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                if (!clienteLogado.getAdmin()) {
+                    btn_salvar.setVisibility(View.GONE);
+                }
                 btn_salvar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

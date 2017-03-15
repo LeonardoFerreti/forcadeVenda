@@ -133,19 +133,30 @@ public class ListaPedidoFragment extends Fragment {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 progressBar.setVisibility(View.VISIBLE);
                 Pedido pedido = dataSnapshot.getValue(Pedido.class);
-                for (Pedido pedidoLista : listaPedidos) {
-                    if (pedidoLista.getChave().equals(pedido.getChave())) {
-                        pedidoLista.setIdPedido(pedido.getIdPedido());
-                        pedidoLista.setCliente(pedido.getCliente());
-                        pedidoLista.setFormaPgto(pedido.getFormaPgto());
-                        pedidoLista.setListaItens(pedido.getListaItens());
-                        pedidoLista.setStatus(pedido.getStatus());
-                        pedido.setValorPago(pedido.getValorPago());
-                        pedido.setDesconto(pedido.getDesconto());
-                        pedido.setValorPago(pedido.getValorPago());
-                        break;
+                Map<String, Object> mapPedido = (Map<String, Object>) dataSnapshot.getValue();
+
+                List<ItemPedido> itens = new ArrayList<ItemPedido>();
+                if (mapPedido.get("itens") != null) {
+                    Map<String, Object> mapListItens = (Map<String, Object>) mapPedido.get("itens");
+                    for (Object item : mapListItens.values()) {
+                        Map<String, Object> mapItemList = (Map<String, Object>) item;
+                        for (Object pedidoItem : mapItemList.values()) {
+                            Map<String, Object> mapItem = (Map<String, Object>) pedidoItem;
+                            ItemPedido itemPedido = new ItemPedido();
+                            itemPedido.setQuantidade((Long) mapItem.get("quantidade"));
+                            Map<String, Object> mapProduto = (Map<String, Object>) mapItem.get("produto");
+                            Produto produto = new Produto(mapProduto.get("id").toString(), mapProduto.get("nome").toString(),
+                                    Double.valueOf(mapProduto.get("preco").toString()), (Boolean) mapProduto.get("ativo"),
+                                    mapProduto.get("descricao").toString());
+                            itemPedido.setProduto(produto);
+                            itens.add(itemPedido);
+                        }
                     }
+                    pedido.setListaItens(itens);
                 }
+
+                if ((Admin == true) || (Admin == false && pedido.getCliente().getId().equals(clienteLogado.getId())))
+                    listaPedidos.add(pedido);
                 adapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
             }
