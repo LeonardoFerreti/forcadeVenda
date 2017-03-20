@@ -19,8 +19,6 @@ public class Pedido implements Serializable {
     private FormaPgto formaPgto;
     private List<ItemPedido> listaItens;
     private Double valorTotal;
-    private Double desconto;
-    private Double valorPago;
     private Boolean online;
     private Status status;
 
@@ -50,14 +48,6 @@ public class Pedido implements Serializable {
 
     public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
-    }
-
-    public void setDesconto(Double desconto) {
-        this.desconto = desconto;
-    }
-
-    public void setValorPago(Double valorPago) {
-        this.valorPago = valorPago;
     }
 
     public void setOnline(Boolean online) {
@@ -98,16 +88,6 @@ public class Pedido implements Serializable {
         return valorTotal;
     }
 
-    //retorna o desconto concedido na venda
-    public Double getDesconto() {
-        return desconto;
-    }
-
-    //retorna o valor pago pelo cliente
-    public Double getValorPago() {
-        return valorPago;
-    }
-
     //retorna o status do pedido
     public Status getStatus() {
         return status;
@@ -118,25 +98,21 @@ public class Pedido implements Serializable {
     }
 
     //Construtor com os parametros
-    public Pedido(Long idPedido, String chave, Cliente cliente, FormaPgto formaPgto, List<ItemPedido> listaItens, Double valorTotal, Double desconto, Double valorPago, Boolean online) {
+    public Pedido(Long idPedido, String chave, Cliente cliente, FormaPgto formaPgto, List<ItemPedido> listaItens, Double valorTotal,  Boolean online) {
         this.idPedido = idPedido;
         this.chave = chave;
         this.cliente = cliente;
         this.formaPgto = formaPgto;
         this.listaItens = listaItens;
         this.valorTotal = valorTotal;
-        this.desconto = desconto;
-        this.valorPago = valorPago;
         this.online = online;
     }
 
     //Construtor com os parametros
-    public Pedido(String chave,  Long idPedido, Double valorTotal, Double desconto, Double valorPago, Boolean online,Status status,Cliente cliente, FormaPgto formaPgto) {
+    public Pedido(String chave,  Long idPedido, Double valorTotal,   Boolean online,Status status,Cliente cliente, FormaPgto formaPgto) {
         this.chave = chave;
         this.idPedido = idPedido;
         this.valorTotal = valorTotal;
-        this.desconto = desconto;
-        this.valorPago = valorPago;
         this.online = online;
         this.status = status;
         this.cliente =cliente;
@@ -149,8 +125,6 @@ public class Pedido implements Serializable {
         resultado.put("chave", pedido.getChave());
         resultado.put("idPedido", pedido.getIdPedido());
         resultado.put("valorTotal", pedido.getValorTotal());
-        resultado.put("desconto", pedido.getDesconto());
-        resultado.put("valorPago", pedido.getValorPago());
         resultado.put("online", pedido.getOnline());
         resultado.put("status", pedido.getStatus());
         resultado.put("cliente", Cliente.MapCliente(pedido.getCliente()));

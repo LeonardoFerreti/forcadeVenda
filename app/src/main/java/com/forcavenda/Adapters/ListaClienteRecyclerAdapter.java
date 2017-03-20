@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * Created by Leo on 05/03/2017.
  */
-
 public class ListaClienteRecyclerAdapter extends RecyclerView.Adapter {
     private Context context;
     private List<Cliente> clientes;
@@ -36,8 +35,7 @@ public class ListaClienteRecyclerAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.cardview_row_cliente, parent, false);
-        ClienteViewHolder holder = new ClienteViewHolder(view);
-        return holder;
+        return new ClienteViewHolder(view);
     }
 
     @Override
@@ -45,7 +43,7 @@ public class ListaClienteRecyclerAdapter extends RecyclerView.Adapter {
         ClienteViewHolder holder = (ClienteViewHolder) viewHolder;
         holder.bind(clientes.get(position), listener);
         Cliente cliente = clientes.get(position);
-        holder.txtNome.setText(cliente.getNome().toString());
+        holder.txtNome.setText(cliente.getNome());
         holder.txtEmail.setText(cliente.getEmail());
         holder.txtTelefone.setText(  cliente.getTelefone());
     }

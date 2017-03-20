@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class FormaPgtoDao {
 
+    //Inclui ou alter uma forma de pagamento
     public void IncluirAlterar(final Context context,  String chave, final Map<String, Object> formaPgto, final String texto) {
         //recupera a raiz do nó do banco de dados
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -36,7 +37,7 @@ public class FormaPgtoDao {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //adiciona o caminho do pedido que utiliza o cliente informado
-                objDao.put("pedido/" + dataSnapshot.getKey().toString() + "/formaPgto/", formaPgto);
+                objDao.put("pedido/" + dataSnapshot.getKey() + "/formaPgto/", formaPgto);
             }
 
             @Override
@@ -58,6 +59,7 @@ public class FormaPgtoDao {
 
             }
         });
+
         //Acionado quando todas as referencias da forma de pagamento foram adicionadas ao ObjDao, fazer o update ...
         refClientePedido.addValueEventListener(new ValueEventListener() {
             @Override
@@ -70,7 +72,7 @@ public class FormaPgtoDao {
                             Toast.makeText(context, texto, Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(context, "Erro ao atualizar a forma de pagamento: "
-                                    + databaseError.getMessage().toString(), Toast.LENGTH_LONG).show();
+                                    + databaseError.getMessage(), Toast.LENGTH_LONG).show();
                             Log.i("Erro", databaseError.getMessage());
                         }
                     }

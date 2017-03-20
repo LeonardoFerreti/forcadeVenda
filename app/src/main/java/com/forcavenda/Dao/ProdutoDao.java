@@ -22,6 +22,7 @@ import static com.forcavenda.R.string.cliente;
 
 public class ProdutoDao {
 
+    //Inclui ou altera um produto
     public void IncluirAlterar(final Context context, final String chave, final Map<String, Object> produto, final String texto){
         //recupera a raiz do nó do banco de dados
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -38,7 +39,7 @@ public class ProdutoDao {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //adiciona o caminho do pedido que utiliza o produto informado
-                objDao.put("pedido/" + dataSnapshot.getKey().toString() + "/itens/" + chave + "/item/produto/" , produto);
+                objDao.put("pedido/" + dataSnapshot.getKey() + "/itens/" + chave + "/item/produto/" , produto);
             }
 
             @Override
@@ -72,7 +73,7 @@ public class ProdutoDao {
                         if (databaseError == null) {
                             Toast.makeText(context, texto, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(context, "Erro ao atualizar o produto: " + databaseError.getMessage().toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Erro ao atualizar o produto: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
                             Log.i("Erro", databaseError.getMessage());
                         }
                     }

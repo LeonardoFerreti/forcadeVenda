@@ -29,6 +29,7 @@ public class ResetSenhaUsuarioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_senha_usuario);
 
+       //Captura a instancia do usuario atual
         final FirebaseAuth auth = FirebaseAuth.getInstance();
         final EditText txt_email = (EditText) findViewById(R.id.txt_email);
         Button btn_recuperar = (Button) findViewById(R.id.btn_recuperar);
@@ -45,15 +46,14 @@ public class ResetSenhaUsuarioActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Snackbar.make(findViewById(android.R.id.content),
+                                        Toast.makeText(getApplicationContext(),
                                                 "E-mail enviado com sucesso.",
-                                                Snackbar.LENGTH_SHORT).show();
+                                                Toast.LENGTH_SHORT).show();
                                     } else {
-
                                         if (task.getException().getMessage().contains("INVALID_EMAIL")) {
-                                            Snackbar.make(findViewById(android.R.id.content), R.string.email_invalido, Snackbar.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), R.string.email_invalido, Toast.LENGTH_SHORT).show();
                                         } else if (task.getException().getMessage().contains("no user record corresponding to this identifier")) {
-                                            Snackbar.make(findViewById(android.R.id.content), R.string.conta_inexistente, Snackbar.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), R.string.conta_inexistente, Toast.LENGTH_SHORT).show();
                                         } else {
                                             Toast.makeText(getApplicationContext(), R.string.erro_envio_email + task.getException().getMessage(),
                                                     Toast.LENGTH_SHORT).show();
@@ -63,9 +63,9 @@ public class ResetSenhaUsuarioActivity extends AppCompatActivity {
                                 }
                             });
                 } else {
-                    Snackbar.make(findViewById(android.R.id.content),
+                    Toast.makeText(getApplicationContext(),
                             "Digite um e-mail.",
-                            Snackbar.LENGTH_SHORT).show();
+                            Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -76,12 +76,14 @@ public class ResetSenhaUsuarioActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        //Volta a tela de login
         Intent intent = new Intent(ResetSenhaUsuarioActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
+        //Volta a tela de login
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivityForResult(intent, 0);
         return true;

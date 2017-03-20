@@ -30,6 +30,18 @@
         android:layout_marginBottom="4dp">
 
         <Button
+            android:visibility="invisible"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:id="@+id/btn_voltar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/transparent"
+            android:text="@string/voltar"
+            android:textColor="@color/colorAccent" />
+
+        <Button
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:id="@+id/btn_cancelar"
@@ -37,8 +49,10 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/btn_salvar"
             android:background="@android:color/transparent"
-            android:text="CANCELAR"
+            android:text="@string/cancelarPedido"
             android:textColor="@color/colorAccent" />
+
+
 
         <Button
             android:paddingRight="@dimen/activity_horizontal_margin"

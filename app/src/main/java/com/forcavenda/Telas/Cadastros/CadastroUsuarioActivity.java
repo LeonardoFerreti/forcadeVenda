@@ -26,15 +26,18 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 
 public class CadastroUsuarioActivity extends AppCompatActivity {
-    private Button btnCadastrar;
+
+    //Componentes da tela
     TextInputLayout input_email;
     TextInputLayout input_senha;
     TextInputLayout input_repita_senha;
     EditText txt_email;
     EditText txt_senha;
     EditText txt_repita_senha;
-    private ProgressBar progressBar;
-    private FirebaseAuth auth;
+    Button btnCadastrar;
+    ProgressBar progressBar;
+    //Autenticação do firebase
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +72,9 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                                         if (!task.isSuccessful()) {
 
                                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                                Snackbar.make(findViewById(android.R.id.content),R.string.email_ja_sendo_usado,  Snackbar.LENGTH_SHORT).show();
+                                                Snackbar.make(findViewById(android.R.id.content), R.string.email_ja_sendo_usado, Snackbar.LENGTH_SHORT).show();
                                             } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                                Snackbar.make(findViewById(android.R.id.content), R.string.email_invalido , Snackbar.LENGTH_SHORT).show();
+                                                Snackbar.make(findViewById(android.R.id.content), R.string.email_invalido, Snackbar.LENGTH_SHORT).show();
                                             } else if (task.getException().getMessage().toString().contains("WEAK_PASSWORD")) {
                                                 Snackbar.make(findViewById(android.R.id.content), R.string.senha_insegura, Snackbar.LENGTH_SHORT).show();
                                             } else {
@@ -96,13 +99,11 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
                 } else {
                     Snackbar.make(findViewById(android.R.id.content), "Verifique sua conexão com a internet.", Snackbar.LENGTH_SHORT).show();
                 }
-
             }
         });
-
-
     }
 
+    //Validação dos campos
     private boolean validaCampos() {
         Boolean validado = true;
         if (txt_email.getText().length() == 0) {
@@ -135,7 +136,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         return validado;
     }
 
-
+    //ação do botão voltar do sistema
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(CadastroUsuarioActivity.this, LoginActivity.class);
@@ -143,6 +144,7 @@ public class CadastroUsuarioActivity extends AppCompatActivity {
         finish();
     }
 
+   //ação do botão voltar da tela
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivityForResult(intent, 0);

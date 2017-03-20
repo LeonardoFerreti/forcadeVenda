@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -22,6 +24,7 @@ import com.forcavenda.Dao.ClienteDao;
 import com.forcavenda.Entidades.Cliente;
 import com.forcavenda.Entidades.Endereco;
 import com.forcavenda.R;
+import com.forcavenda.Telas.PrincipalActivity;
 import com.forcavenda.Util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -39,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Created by Leo on 23/02/2017.
@@ -50,6 +54,10 @@ public class CadastroPerfilFragment extends Fragment {
 
     Cliente cliente;
     private OkHttpClient httpClient = new OkHttpClient();
+
+    //Navegação da tela
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle drawerToggle;
 
     TextInputLayout input_nome;
     TextInputLayout input_email;
@@ -287,14 +295,14 @@ public class CadastroPerfilFragment extends Fragment {
             public void onClick(View v) {
                 if (com.forcavenda.Util.Util.estaConectadoInternet(getActivity().getApplicationContext())) {
                     if (validaCampos()) {
+
                         btn_salvar.setEnabled(false);
                         final String nomeCliente = txt_nome.getText().toString();
                         new AsyncTask<Void, Void, Void>() {
-
-
                             @Override
                             protected void onPreExecute() {
                                 super.onPreExecute();
+                                setDrawerState(false);
                                 progressBarCadastro.setVisibility(View.VISIBLE);
                             }
 
@@ -331,6 +339,7 @@ public class CadastroPerfilFragment extends Fragment {
                                                     cliente = novoCliente;
                                                     btn_salvar.setEnabled(true);
                                                     progressBarCadastro.setVisibility(View.GONE);
+                                                    setDrawerState(true);
                                                 }
                                             }
                                         });
@@ -339,7 +348,7 @@ public class CadastroPerfilFragment extends Fragment {
 
                             @Override
                             protected void onPostExecute(Void aVoid) {
-                               // progressDialog.dismiss();
+                                // progressDialog.dismiss();
                                 //Toast.makeText(getActivity().getApplicationContext(), R.string.perfil_alterado_sucesso, Toast.LENGTH_SHORT).show();
                             }
                         }.execute();
@@ -434,5 +443,20 @@ public class CadastroPerfilFragment extends Fragment {
             input_telefone.setError("");
         }
         return validado;
+    }
+
+    public void setDrawerState(boolean habilita) {
+        if (habilita) {
+            PrincipalActivity.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            PrincipalActivity.toggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
+            PrincipalActivity.toggle.setDrawerIndicatorEnabled(true);
+            PrincipalActivity.toggle.syncState();
+
+        } else {
+            PrincipalActivity.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            PrincipalActivity.toggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            PrincipalActivity.toggle.setDrawerIndicatorEnabled(false);
+            PrincipalActivity.toggle.syncState();
+        }
     }
 }

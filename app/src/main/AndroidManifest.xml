@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.forcavenda">
 
+    <!--Permissões necessárias do aplicativo-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -12,6 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!--Telas do sistema-->
         <activity
             android:name=".Telas.LoginActivity"
             android:label="@string/app_name">
@@ -26,14 +28,6 @@
             android:parentActivityName=".Telas.LoginActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Telas.Listas.ListaClienteActivity"
-            android:label="@string/tela_lista_cliente"
-            android:parentActivityName=".Telas.PrincipalActivity" />
-        <activity
-            android:name=".Telas.Listas.ListaFormaPgtoActivity"
-            android:label="@string/tela_lista_formapgto"
-            android:parentActivityName=".Telas.PrincipalActivity" />
-        <activity
             android:name=".Telas.ResetSenhaUsuarioActivity"
             android:label="@string/tela_reset_senha_usuario"
             android:parentActivityName=".Telas.LoginActivity"
@@ -42,8 +36,6 @@
             android:name=".Telas.PrincipalActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
     </application>
-
 </manifest>

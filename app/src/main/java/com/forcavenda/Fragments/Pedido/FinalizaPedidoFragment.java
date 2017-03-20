@@ -33,8 +33,8 @@ import java.util.List;
  * Created by Leo on 26/02/2017.
  */
 public class FinalizaPedidoFragment extends Fragment {
-    List<FormaPgto> listaFormaPgto = new ArrayList<FormaPgto>();
-    List<ItemPedido> listaItensPedido = new ArrayList<ItemPedido>();
+    List<FormaPgto> listaFormaPgto = new ArrayList<>();
+    List<ItemPedido> listaItensPedido = new ArrayList<>();
     Spinner cboFormaPgto;
     ProgressBar progressBar;
     ResumoItensVendaAdapter resumoItensVendaAdapter;
@@ -64,7 +64,8 @@ public class FinalizaPedidoFragment extends Fragment {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
         if (cliente != null && txt_nomecliente != null) {
-            txt_nomecliente.setText((cliente.getNome() != null) ? cliente.getNome() : "Nome não cadastrado");
+            String nomeEmail = (cliente.getNome() == null || cliente.getNome().equals("")) ? cliente.getEmail() : cliente.getNome();
+            txt_nomecliente.setText(nomeEmail);
         }
     }
 
@@ -90,8 +91,8 @@ public class FinalizaPedidoFragment extends Fragment {
         listaResumoItens = (ListView) view.findViewById(R.id.lista_resumo_pedido);
         txt_nomecliente = (TextView) view.findViewById(R.id.txt_nomeCliente);
 
-        View header = (View) getLayoutInflater(savedInstanceState).inflate(R.layout.lista_resumo_pedido_header, null);
-        View footer = (View) getLayoutInflater(savedInstanceState).inflate(R.layout.lista_resumo_pedido_footer, null);
+        View header = getLayoutInflater(savedInstanceState).inflate(R.layout.lista_resumo_pedido_header, null);
+        View footer = getLayoutInflater(savedInstanceState).inflate(R.layout.lista_resumo_pedido_footer, null);
 
         lblValorTotal = (TextView) footer.findViewById(R.id.lbl_valorTotal);
         lblValorTotal.setText(formatter.format(0));

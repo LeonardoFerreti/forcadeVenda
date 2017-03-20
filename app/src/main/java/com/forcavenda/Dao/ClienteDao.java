@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class ClienteDao {
 
+    //Rotina que associa um cliente a um usuário do sistema
     public void associaClienteUsuario(String chave,final Map<String, Object> cliente ){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Map<String, Object> objDao = new HashMap<>();
@@ -27,7 +28,7 @@ public class ClienteDao {
         ref.updateChildren(objDao);
     }
 
-
+   //Inclui ou altera um cliente
     public void IncluirAlterar(final Context context, String chave, final Map<String, Object> cliente, final String texto) {
         //recupera a raiz do nó do banco de dados
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
@@ -44,7 +45,7 @@ public class ClienteDao {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //adiciona o caminho do pedido que utiliza o cliente informado
-                objDao.put("pedido/" + dataSnapshot.getKey().toString() + "/cliente/", cliente);
+                objDao.put("pedido/" + dataSnapshot.getKey() + "/cliente/", cliente);
             }
 
             @Override
@@ -78,7 +79,7 @@ public class ClienteDao {
                         if (databaseError == null) {
                             Toast.makeText(context, texto, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(context, "Erro ao atualizar o cliente: " + databaseError.getMessage().toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Erro ao atualizar o cliente: " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
                             Log.i("Erro", databaseError.getMessage());
                         }
                     }

@@ -1,12 +1,10 @@
 package com.forcavenda.Telas;
 
-
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 
 
@@ -56,11 +54,14 @@ import java.util.Map;
 public class PrincipalActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static DrawerLayout drawer;
+    public static ActionBarDrawerToggle toggle;
+
     ProgressDialog progressDialog;
     FloatingActionButton floatButton;
     MenuItem itemSelecionado;
     NavigationView navView;
-    boolean blnCommitFragment = false;
+    boolean booleanCommitFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class PrincipalActivity extends AppCompatActivity
         setContentView(R.layout.activity_principal);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         progressDialog = Util.CriaProgressDialog(this);
         progressDialog.show();
 
@@ -101,8 +103,8 @@ public class PrincipalActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -112,23 +114,31 @@ public class PrincipalActivity extends AppCompatActivity
         verificaUsuarioSimples();
     }
 
+    //Coloca as informações no cabecalho do menu navegável
     private void informacoesCabecalho() {
+        //Captura a view do Header
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
-
+        //Retorna os textviews para definir os textos
         TextView txt_nome_usuario = (TextView) header.findViewById(R.id.txt_nome);
         TextView txt_email_usuario = (TextView) header.findViewById(R.id.txt_email);
-
+        //Define os textos dos textviews
         txt_nome_usuario.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         txt_email_usuario.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
+    //Verifica se o usuário é simples ou com funções administrativas
     private void verificaUsuarioSimples() {
 
+        //Retorna a referencia do usuário atual
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        //Retorna a referencia da raiz do banco de dados
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+
+        //Pega a referencia do cliente, pelo atributo Email do mesmo.
         final Query refUsuarioCliente = ref.child("cliente").orderByChild("email").equalTo(user.getEmail());
 
+        //Adiciona um evento de escuta da referencia do cliente informada, capturando as modificacoes no cliente.
         refUsuarioCliente.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -136,13 +146,17 @@ public class PrincipalActivity extends AppCompatActivity
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //Quando o cliente sofrer alguma alteração no BD, o evento ChildChanged é invocado
                 Map<String, Object> cli = (Map<String, Object>) dataSnapshot.getValue();
+                //Instancia um novo objeto Cliente
                 Cliente cliente = new Cliente();
+                //Capturo seus atributos
                 cliente.setId((String) cli.get("id"));
                 cliente.setNome((String) cli.get("nome"));
                 cliente.setEmail((String) cli.get("email"));
                 cliente.setAdmin((Boolean) cli.get("isAdmin"));
                 cliente.setId_usuario((String) cli.get("id_usuario"));
+                //Capturo o objeto Endereço
                 if (cli.get("endereco") != null) {
                     Map<String, Object> MapEndereco = (Map<String, Object>) cli.get("endereco");
                     Endereco endereco = new Endereco((String) MapEndereco.get("logradouro"),
@@ -152,6 +166,7 @@ public class PrincipalActivity extends AppCompatActivity
                 }
                 cliente.setTelefone((String) cli.get("telefone"));
 
+                //Define a variavel global do cliente logado como sendo o cliente que foi retornado
                 Util.setClienteLogado(cliente);
 
             }
@@ -169,29 +184,33 @@ public class PrincipalActivity extends AppCompatActivity
             }
         });
 
+        //Adiciona um evento de escuta da referencia do cliente informada, trazendo o cliente atualmente logado no sistema.
         refUsuarioCliente.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //se nao foi encontrado um valor valido para o email, entao insere o cliente com os dados do usuario atual
                 if (dataSnapshot.getValue() == null) {
+                    //Informacao no log, apenas para o programador
                     Log.i("cliente-usuario:", "Cliente ainda não cadastrado, será cadastrado e vinculado ao usuário.");
+
                     //Gera um identificador para o cliente
                     String chave = ref.child("cliente").push().getKey();
 
                     //Chama a classe de CRUD de usuário, fazendo referencia ao nó do banco de dados
                     Cliente cliente_usuario_ins = new Cliente(chave, "", user.getEmail(), user.getUid(),
-                            false, new Endereco(), "");
+                            false, new Endereco("", "", "", "", ""), "");
 
                     //Chama a classe de CRUD de cliente, fazendo referencia ao nó raiz do cadastro de cliente
                     ClienteDao clienteDao = new ClienteDao();
                     clienteDao.associaClienteUsuario(chave, Cliente.MapCliente(cliente_usuario_ins));
 
+                    //Define a variavel global do cliente logado como sendo o cliente que foi retornado
                     Util.setClienteLogado(cliente_usuario_ins);
-
 
                 } else {
                     Cliente cliente = null;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        //Mapeia o retorno
                         Map<String, Object> cli = (Map<String, Object>) snapshot.getValue();
                         cliente = new Cliente();
                         cliente.setId((String) cli.get("id"));
@@ -212,26 +231,30 @@ public class PrincipalActivity extends AppCompatActivity
                     // admin que cadastrou, entao usuario completa seu cadastro.)
                     if (cliente.getId_usuario() == null || cliente.getId_usuario().equals("")) {
                         ref.child("cliente").child(cliente.getId()).child("id_usuario").setValue(user.getUid());
+                        //Informacao no log, apenas para o programador
                         Log.i("cliente-usuario:", "Email já cadastrado anteriormente, vinculando usuário.");
                     } else {
+                        //Informacao no log, apenas para o programador
                         Log.i("cliente-usuario:", "Email já vinculado ao usuário.");
                     }
+                    //Se o usuario tem funções administrativas, mostra o menu completo.
                     if (cliente.getAdmin()) {
                         mostraItensUsuarioAdmin();
                     }
+                    //Informacao no log, apenas para o programador
                     Log.i("cliente admin:", cliente.getAdmin().toString());
 
+                    //Define a variavel global do cliente logado como sendo o cliente que foi retornado
                     Util.setClienteLogado(cliente);
                 }
 
+                //encerra o progressDialog
                 progressDialog.dismiss();
 
                 //Seleciona o item de Menu de pedidos
-
                 NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
                 Menu nav_Menu = navigationView.getMenu();
                 MenuItem menuPedidos = nav_Menu.findItem(R.id.nav_criar_pedido);
-
                 nav_Menu.findItem(menuPedidos.getItemId()).setChecked(true);
                 onNavigationItemSelected(menuPedidos);
             }
@@ -243,6 +266,8 @@ public class PrincipalActivity extends AppCompatActivity
         });
     }
 
+    //Se o usuário que se logou for um usuário Administrativo, mostrar o menu completo, com acesso ao cadastro de clientes,
+    //produtos e forma de pagamento.
     private void mostraItensUsuarioAdmin() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
@@ -251,21 +276,12 @@ public class PrincipalActivity extends AppCompatActivity
         nav_Menu.findItem(R.id.nav_forma_pgto).setVisible(true);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
     }
 
+    @NonNull
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -275,7 +291,6 @@ public class PrincipalActivity extends AppCompatActivity
     }
 
     public void displayView(int viewId) {
-
         Fragment fragment = null;
         String titulo = getString(R.string.app_name);
 
@@ -313,27 +328,14 @@ public class PrincipalActivity extends AppCompatActivity
         }
 
         if (viewId == R.id.nav_sair) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(PrincipalActivity.this);
-            builder.setMessage("Deseja realmente sair do sistema?");
-            builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            });
-            builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    FirebaseAuth.getInstance().signOut();
-                    startActivity(new Intent(PrincipalActivity.this, LoginActivity.class));
-                    finish();
-                }
-            });
-            builder.create().show();
+            //Exibe um alerta ao usuário perguntando sobre a saida do sistema
+            exibeAlertaSairSistema();
+
 
         } else if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.nav_container, fragment);
-            if (blnCommitFragment) {
+            if (booleanCommitFragment) {
                 ft.commit();
             }
         }
@@ -342,44 +344,64 @@ public class PrincipalActivity extends AppCompatActivity
             getSupportActionBar().setTitle(titulo);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    //Exibe um alerta ao usuário perguntando se o mesmo deseja sair do sistema
+    private void exibeAlertaSairSistema() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(PrincipalActivity.this);
+        builder.setMessage("Deseja realmente sair do sistema?");
+        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(PrincipalActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
+        builder.create().show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        blnCommitFragment = false;
+        booleanCommitFragment = false;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        blnCommitFragment = false;
+        booleanCommitFragment = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        blnCommitFragment = false;
+        booleanCommitFragment = false;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        blnCommitFragment = false;
+        booleanCommitFragment = false;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        blnCommitFragment = false;
+        booleanCommitFragment = false;
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        blnCommitFragment = true;
+        booleanCommitFragment = true;
     }
 
     @Override

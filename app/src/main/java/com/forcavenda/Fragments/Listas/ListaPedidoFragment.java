@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public class ListaPedidoFragment extends Fragment {
     private static final String PARAM_CLIENTE = "cliente";
-    List<Pedido> listaPedidos = new ArrayList<Pedido>();
+    List<Pedido> listaPedidos = new ArrayList<>();
     private Cliente clienteLogado;
 
     public ListaPedidoFragment() {
@@ -70,7 +70,7 @@ public class ListaPedidoFragment extends Fragment {
             @Override
             public void onItemClick(Pedido pedido) {
                 android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-                PedidoFragment fragment = PedidoFragment.newInstance(pedido,clienteLogado);
+                PedidoFragment fragment = PedidoFragment.newInstance(pedido, clienteLogado);
                 fragment.show(fm, "Alterar pedido");
 
             }
@@ -123,7 +123,6 @@ public class ListaPedidoFragment extends Fragment {
                     }
                     pedido.setListaItens(itens);
                 }
-
                 if ((Admin == true) || (Admin == false && pedido.getCliente().getId().equals(clienteLogado.getId())))
                     listaPedidos.add(pedido);
                 adapter.notifyDataSetChanged();
@@ -155,14 +154,18 @@ public class ListaPedidoFragment extends Fragment {
                     pedido.setListaItens(itens);
                 }
 
-                if ((Admin == true) || (Admin == false && pedido.getCliente().getId().equals(clienteLogado.getId())))
-                    listaPedidos.add(pedido);
-                adapter.notifyDataSetChanged();
+                if ((Admin == true) || (Admin == false && pedido.getCliente().getId().equals(clienteLogado.getId()))) {
+
+                    java.util.Collections.reverse(listaPedidos);
+                    adapter.atualiza(pedido);
+                }
+
                 progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+
 
             }
 

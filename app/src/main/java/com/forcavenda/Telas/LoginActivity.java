@@ -24,18 +24,20 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
-    private ProgressBar progressBar;
+
+    //Autenticação do usuário
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    //Componentes da tela
     private TextInputLayout input_email;
     private TextInputLayout input_senha;
-
     private TextView txt_Email;
     private TextView txt_Senha;
     private Button btnlogin;
     private Button btnCadastrar;
     private Button btnEsqueci;
+    private ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         btnCadastrar = (Button) findViewById(R.id.btn_cadastrar);
         btnEsqueci = (Button) findViewById(R.id.btn_esqueci);
 
+        //clique do botao esqueci senha
         btnEsqueci.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //Clique do botao cadastrar
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //clique do botao de login
         btnlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,21 +110,17 @@ public class LoginActivity extends AppCompatActivity {
                                             }
 
                                         } else {
-                                            progressBar.setVisibility(View.GONE); //Mostra a progressBar
-
+                                            progressBar.setVisibility(View.GONE); //oculta a progressBar
+                                            //Navega para a tela principal
                                             Intent intent = new Intent(LoginActivity.this, PrincipalActivity.class);
                                             startActivity(intent);
                                             finish();
                                         }
-
                                     }
                                 });
                     }
-
-
                 } else {
-
-                    Snackbar.make(findViewById(android.R.id.content), "Verifique sua conexão com a internet.", Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Verifique sua conexão com a internet.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -137,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 } else {
                     //Usuário saindo do sistema
-                    Log.d("TAG", "onAuthStateChanged:saindo");
+                    Log.d("Log", "onAuthStateChanged:saindo");
                 }
             }
         };

@@ -20,36 +20,39 @@ import java.util.Map;
 /**
  * Created by Leo on 09/02/2017.
  */
-
 public class PedidoDao {
+    //Contexto da inclusão do pedido
     private Context context;
+    //pedido a ser incluido
     private Pedido pedido_insupd;
+    //Identificador do pedido a ser incluido
+    private Long novoIdentificador = 0L;
 
+    //Construtor com os parametros da classe
     public PedidoDao(Context context, Pedido pedido) {
         this.context = context;
         pedido_insupd = pedido;
     }
 
+    //Rotina que inclui um pedido no registro do firebase
     public DatabaseReference IncluirNoRegistro(DatabaseReference ref, String chave, Map<String, Object> pedido) {
         Map<String, Object> objDao = new HashMap<>();
         objDao.put("pedido/" + chave, pedido);
         ref.updateChildren(objDao);
-        DatabaseReference refNovoPedido = ref.child("pedido").child(chave);
-        return refNovoPedido;
+        return ref.child("pedido").child(chave);
     }
 
+    //rotina que altera um status de um pedido
     public void alteraStatus(Status status) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         ref.child("pedido").child(pedido_insupd.getChave()).child("status").setValue(status.toString());
-
         Toast.makeText(context, "Pedido " + String.valueOf(pedido_insupd.getIdPedido()) + " alterado com sucesso.", Toast.LENGTH_SHORT).show();
-
     }
 
-    public Long novoIdentificador = Long.valueOf(0);
 
+    //Rotina que inclui o identificador do pedido
     public void IncluirIdPedido(final Context context) {
-
+        //Chama um progressDialog enquanto estiver rodando a rotina
         final ProgressDialog progressDialog = Util.CriaProgressDialog(context);
         progressDialog.show();
 
@@ -63,7 +66,7 @@ public class PedidoDao {
             public Transaction.Result doTransaction(MutableData currentData) {
                 //Se não houver registros atualmente no nó, então o primeiro registro será o 1.
                 if (currentData.getValue() == null) {
-                    novoIdentificador = Long.valueOf(1);
+                    novoIdentificador = 1L;
                 } else {
                     //caso haja registro, consulta e adiciona 1 ao contador
                     novoIdentificador = (Long) currentData.getValue() + 1;
@@ -72,7 +75,7 @@ public class PedidoDao {
                 currentData.setValue(novoIdentificador);
                 //recupera a referencia do pedido criado e atualiza seu identificador
                 banco.getReference("pedido").child(pedido_insupd.getChave()).child("idPedido").setValue(novoIdentificador);
-
+                //retorna o sucesso da operação
                 return Transaction.success(currentData);
             }
 

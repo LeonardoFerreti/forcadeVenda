@@ -70,4 +70,6 @@
     <string name="selecione_forma_pgto">Selecione uma forma de pagamento.</string>
     <string name="cancelar_pedido">Cancelar pedido</string>
     <string name="fechar">Fechar</string>
+    <string name="voltar">VOLTAR</string>
+    <string name="cancelarPedido">CANCELAR</string>
 </resources>

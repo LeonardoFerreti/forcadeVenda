@@ -15,15 +15,17 @@ import com.forcavenda.R;
 /**
  * Created by Leo on 14/02/2017.
  */
-
 public class Util {
 
+    //Armazena o cliente logado no sistema
     public static Cliente clienteLogado;
 
+    //Define a variavel global do cliente logado no sistema
     public static void setClienteLogado(Cliente cliente){
         clienteLogado = cliente;
     }
 
+    //Verifica se o aparelho está conectado à internet.
     public static boolean estaConectadoInternet(Context context) {
         boolean conectado;
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -36,6 +38,7 @@ public class Util {
         return conectado;
     }
 
+    //Cria uma progressDialog
     public static ProgressDialog CriaProgressDialog(Context context) {
         ProgressDialog dialog = new ProgressDialog(context);
         dialog.setMessage("Carregando dados...");

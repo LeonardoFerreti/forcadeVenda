@@ -31,6 +31,22 @@ public class ListaPedidoRecyclerAdapter extends RecyclerView.Adapter {
         this.listener = listener;
     }
 
+
+    public void atualiza(Pedido pedidoAlterado){
+        for (Pedido pedido : pedidos) {
+            if (pedido.getChave().equals(pedidoAlterado.getChave())) {
+                pedido.setIdPedido(pedidoAlterado.getIdPedido());
+                pedido.setFormaPgto(pedidoAlterado.getFormaPgto());
+                pedido.setCliente(pedidoAlterado.getCliente());
+                pedido.setListaItens(pedidoAlterado.getListaItens());
+                pedido.setValorTotal(pedidoAlterado.getValorTotal());
+                pedido.setOnline(pedidoAlterado.getOnline());
+                pedido.setStatus(pedidoAlterado.getStatus());
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context)
@@ -51,8 +67,11 @@ public class ListaPedidoRecyclerAdapter extends RecyclerView.Adapter {
         holder.txtValor.setText(formatter.format(pedido.getValorTotal()));
     }
 
+
     @Override
     public int getItemCount() {
         return pedidos.size();
     }
+
+
 }

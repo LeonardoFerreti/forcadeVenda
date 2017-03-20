@@ -40,7 +40,6 @@ public class CadastroPedidoFragment extends DialogFragment {
     private static final String ARG_CLIENTE = "cliente";
     Pedido pedido;
     Cliente cliente;
-    AlertDialog viewPedido;
     List<ItemPedido> itensSelecionados = new ArrayList<ItemPedido>();
 
     //construtor padrão
@@ -86,6 +85,8 @@ public class CadastroPedidoFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_pedido_cliente, container, false);
         final Button btn_cancelar = (Button) view.findViewById(R.id.btn_cancelar);
         final Button btn_salvar = (Button) view.findViewById(R.id.btn_salvar);
+        final Button btn_voltar = (Button) view.findViewById(R.id.btn_voltar);
+
         final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
 
         //adiciona as tabs do cadastro de pedido
@@ -104,6 +105,14 @@ public class CadastroPedidoFragment extends DialogFragment {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                Fragment fragmentItens = adapter.getItem(0);
+                if (fragmentItens instanceof SelecionaItensPedidoFragment) {
+                    itensSelecionados = ((SelecionaItensPedidoFragment) fragmentItens).getItensVenda();
+                    if (((SelecionaItensPedidoFragment) fragmentItens).getClienteSelecionado() != null) {
+                        cliente = ((SelecionaItensPedidoFragment) fragmentItens).getClienteSelecionado();
+                    }
+                }
+                                
                 viewPager.setCurrentItem(tab.getPosition());
                 Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
                 adapter.setClienteSelecionado();
@@ -111,9 +120,11 @@ public class CadastroPedidoFragment extends DialogFragment {
                     btn_salvar.setText("SALVAR");
                     ((FinalizaPedidoFragment) fragment).setListaItensPedido(itensSelecionados);
                     btn_salvar.setEnabled(itensSelecionados.size() > 0);
+                    btn_voltar.setVisibility(View.VISIBLE);
                 } else if (fragment instanceof SelecionaItensPedidoFragment) {
                     btn_salvar.setText("AVANÇAR");
                     btn_salvar.setEnabled(true);
+                    btn_voltar.setVisibility(View.GONE);
                 }
             }
 
@@ -141,6 +152,15 @@ public class CadastroPedidoFragment extends DialogFragment {
             }
         });
 
+        btn_voltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Avança para a proxima tela
+                viewPager.setCurrentItem(0);
+                btn_voltar.setVisibility(View.GONE);
+            }
+        });
+
         btn_salvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,15 +183,15 @@ public class CadastroPedidoFragment extends DialogFragment {
 
                     cliente_pedido = ((FinalizaPedidoFragment) fragment).getCliente();
 
-                    if (cliente_pedido.getEndereco() != null) {
+                    if (validaCliente(cliente_pedido)) {
                         formaPgto = ((FinalizaPedidoFragment) fragment).getFormaPgto();
                         itensPedido = ((FinalizaPedidoFragment) fragment).getListaItensPedido();
                         lblValorTotal = ((FinalizaPedidoFragment) fragment).getLblValorTotal();
 
                         if (formaPgto != null) {
-                            boolean online = (!cliente_pedido.getAdmin()) ? true : false;
+                            boolean online = (!cliente_pedido.getAdmin());
                             final Pedido pedido = new Pedido(Long.valueOf(String.valueOf(0)), "", cliente, formaPgto, itensPedido,
-                                    Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), Double.valueOf(String.valueOf(0)), Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), online);
+                                       Double.valueOf(lblValorTotal.getText().toString().replace("R$", "").replace(",", ".")), online);
 
                             final Pedido novo_pedido = InsereNovoPedido(pedido, cliente, formaPgto, itensPedido);
 
@@ -199,6 +219,7 @@ public class CadastroPedidoFragment extends DialogFragment {
                     //Avança para a proxima tela
                     viewPager.setCurrentItem(1);
                     adapter.setClienteSelecionado();
+                    fragment = adapter.getItem(viewPager.getCurrentItem());
                     if (fragment instanceof FinalizaPedidoFragment) {
                         ((FinalizaPedidoFragment) fragment).setListaItensPedido(itensSelecionados);
                     }
@@ -220,8 +241,8 @@ public class CadastroPedidoFragment extends DialogFragment {
         //Gera e captura o identificador do pedido
         String chave = ref.child("pedido").push().getKey();
         //Mapeia o objeto pedido
-        Pedido pedido = new Pedido(chave, pedido_ins.getIdPedido(), pedido_ins.getValorTotal(), pedido_ins.getDesconto(),
-                pedido_ins.getValorPago(), pedido_ins.getOnline(), Status.Pendente,cliente,formaPgto);
+        Pedido pedido = new Pedido(chave, pedido_ins.getIdPedido(), pedido_ins.getValorTotal(),
+                 pedido_ins.getOnline(), Status.Pendente, cliente, formaPgto);
 
         //Insere o pedido
         PedidoDao pedidoDao = new PedidoDao(getActivity().getApplicationContext(), pedido);
@@ -244,7 +265,7 @@ public class CadastroPedidoFragment extends DialogFragment {
             //captura o identificador do pedido
             String chave_item = item.getProduto().getId();
             //Mapeia o item atual do loop, inserindo na referencia do pedido
-            Map<String, Object> objDao  = new HashMap<>();
+            Map<String, Object> objDao = new HashMap<>();
             objDao.put("item", item);
             refNovoPedido.child("itens").child(chave_item).updateChildren(objDao);
 
@@ -256,5 +277,15 @@ public class CadastroPedidoFragment extends DialogFragment {
         }
 
         return pedido;
+    }
+
+    //Valida as informacoes do cliente logado
+    public boolean validaCliente(Cliente cliente) {
+        boolean validado = true;
+        if (cliente.getNome().equals("") || cliente.getTelefone().equals("") ||
+                cliente.getEndereco().getLogradouro().equals("") || cliente.getEndereco().getReferencia().equals("")) {
+            validado = false;
+        }
+        return validado;
     }
 }
