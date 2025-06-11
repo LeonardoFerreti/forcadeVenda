@@ -145,7 +145,7 @@ public class CadastroProdutoFragment extends DialogFragment {
                                     String texto = (produto == null) ? "incluído" : "alterado";
                                     texto = "Produto " + texto + " com sucesso.";
                                     //Chama o evento de alterar o produto
-                                    produtoDao.IncluirAlterar(getActivity().getApplicationContext(), chave, novoProduto.MapFormaPgto(novoProduto),texto);
+                                    produtoDao.IncluirAlterar(getActivity().getApplicationContext(), chave, Produto.MapProduto(novoProduto), texto);
                                     produto = novoProduto;
                                     getDialog().dismiss();
 

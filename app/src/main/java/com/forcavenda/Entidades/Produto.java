@@ -66,8 +66,8 @@ public class Produto implements Serializable {
         this.descricao = descricao;
     }
 
-    //Retorna um HasMap com a propriedades e os valores de um objeto Produto
-    public static Map<String, Object> MapFormaPgto(Produto produto) {
+    //Retorna um HashMap com as propriedades e os valores de um objeto Produto
+    public static Map<String, Object> MapProduto(Produto produto) {
         HashMap<String, Object> resultado = new HashMap<>();
         resultado.put("id", produto.getId());
         resultado.put("nome", produto.getNome());
